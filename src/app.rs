@@ -66,6 +66,12 @@ pub struct JsonViewApp {
     pub locale: i18n::Locale,
     pub show_settings: bool,
 
+    // editor search (Cmd+F)
+    pub show_editor_search: bool,
+    pub editor_search: String,
+    pub editor_search_matches: Vec<usize>, // byte offsets of match starts
+    pub editor_search_idx: usize,          // current match index
+
     // compose
     pub show_compose: bool,
     pub compose_template: String,
@@ -134,6 +140,10 @@ impl JsonViewApp {
             auto_save,
             locale,
             show_settings: false,
+            show_editor_search: false,
+            editor_search: String::new(),
+            editor_search_matches: Vec::new(),
+            editor_search_idx: 0,
             show_compose: false,
             compose_template: String::new(),
             compose_preview: None,
@@ -363,6 +373,22 @@ impl JsonViewApp {
         }
     }
 
+    pub fn run_editor_search(&mut self) {
+        self.editor_search_matches.clear();
+        self.editor_search_idx = 0;
+        let q = self.editor_search.to_lowercase();
+        if q.is_empty() {
+            return;
+        }
+        let text = self.editor_text.to_lowercase();
+        let mut start = 0;
+        while let Some(pos) = text[start..].find(&q) {
+            let abs = start + pos;
+            self.editor_search_matches.push(abs);
+            start = abs + q.len().max(1);
+        }
+    }
+
     /// Select a template file: read content, detect variables, reset values.
     pub fn select_template(&mut self, path: std::path::PathBuf) {
         match std::fs::read_to_string(&path) {
@@ -567,6 +593,14 @@ impl eframe::App for JsonViewApp {
         // global Cmd+S
         if ctx.input(|i| i.modifiers.command && i.key_pressed(egui::Key::S)) {
             self.save();
+        }
+        // global Cmd+F — toggle editor search
+        if ctx.input(|i| i.modifiers.command && i.key_pressed(egui::Key::F)) {
+            self.show_editor_search = !self.show_editor_search;
+            if !self.show_editor_search {
+                self.editor_search.clear();
+                self.editor_search_matches.clear();
+            }
         }
 
         // debounced reparse after typing

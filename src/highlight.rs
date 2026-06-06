@@ -6,7 +6,7 @@
 use crate::model::Kind;
 use crate::theme::Palette;
 use eframe::egui::{
-    text::{LayoutJob, TextFormat},
+    text::{LayoutJob, LayoutSection, TextFormat},
     Color32, FontId,
 };
 
@@ -80,6 +80,85 @@ pub fn layout_job(text: &str, pal: &Palette, font: FontId, wrap_width: f32) -> L
         }
     }
     job
+}
+
+/// Same as `layout_job` but overlays a highlight background on all occurrences of `search`.
+pub fn layout_job_search(
+    text: &str,
+    pal: &Palette,
+    font: FontId,
+    wrap_width: f32,
+    search: &str,
+) -> LayoutJob {
+    let mut job = layout_job(text, pal, font, wrap_width);
+    if search.is_empty() {
+        return job;
+    }
+
+    let lower_text = text.to_lowercase();
+    let lower_search = search.to_lowercase();
+    let match_bg = if pal.dark {
+        Color32::from_rgba_unmultiplied(0xff, 0xcc, 0x00, 70)
+    } else {
+        Color32::from_rgba_unmultiplied(0xff, 0xcc, 0x00, 110)
+    };
+
+    let highlights: Vec<(usize, usize)> = lower_text
+        .match_indices(lower_search.as_str())
+        .map(|(s, _)| (s, s + lower_search.len()))
+        .collect();
+
+    if highlights.is_empty() {
+        return job;
+    }
+
+    let old_sections = std::mem::take(&mut job.sections);
+    for section in old_sections {
+        split_section(&mut job.sections, section, &highlights, match_bg);
+    }
+    job
+}
+
+fn split_section(
+    out: &mut Vec<LayoutSection>,
+    orig: LayoutSection,
+    highlights: &[(usize, usize)],
+    bg: Color32,
+) {
+    let mut cursor = orig.byte_range.start;
+    let end = orig.byte_range.end;
+
+    for &(h_start, h_end) in highlights {
+        if h_end <= cursor || h_start >= end {
+            continue;
+        }
+        let ol_start = h_start.max(cursor);
+        let ol_end = h_end.min(end);
+
+        if cursor < ol_start {
+            out.push(LayoutSection {
+                leading_space: 0.0,
+                byte_range: cursor..ol_start,
+                format: orig.format.clone(),
+            });
+        }
+        let mut fmt = orig.format.clone();
+        fmt.background = bg;
+        out.push(LayoutSection {
+            leading_space: 0.0,
+            byte_range: ol_start..ol_end,
+            format: fmt,
+        });
+        cursor = ol_end;
+    }
+
+    if cursor < end {
+        out.push(LayoutSection {
+            leading_space: 0.0,
+            byte_range: cursor..end,
+            format: orig.format,
+        });
+    }
 }
 
 fn fmt(font: FontId, color: Color32) -> TextFormat {
