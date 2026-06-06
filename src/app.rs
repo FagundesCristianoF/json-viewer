@@ -66,6 +66,11 @@ pub struct JsonViewApp {
     pub locale: i18n::Locale,
     pub show_settings: bool,
 
+    // compose
+    pub show_compose: bool,
+    pub compose_template: String,
+    pub compose_preview: Option<Result<String, String>>,
+
     // key collector
     pub key_collect_query: String,
     pub key_collect_results: Vec<(String, Vec<String>)>, // (parent_path, child_keys)
@@ -118,6 +123,9 @@ impl JsonViewApp {
             auto_save,
             locale,
             show_settings: false,
+            show_compose: false,
+            compose_template: String::new(),
+            compose_preview: None,
             key_collect_query: String::new(),
             key_collect_results: Vec::new(),
             show_replace: false,
@@ -515,5 +523,6 @@ impl eframe::App for JsonViewApp {
         self.ui_editor(ctx);
         self.ui_settings(ctx);
         self.ui_replace(ctx);
+        self.ui_compose(ctx);
     }
 }

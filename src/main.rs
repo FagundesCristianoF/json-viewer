@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
+mod compose;
 mod config;
 mod git;
 mod highlight;
@@ -15,6 +16,7 @@ mod theme;
 mod workspace;
 
 mod ui {
+    pub mod compose;
     pub mod editor;
     pub mod history;
     pub mod issues;

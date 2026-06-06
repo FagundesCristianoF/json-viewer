@@ -80,6 +80,14 @@ impl JsonViewApp {
                         self.show_replace = true;
                         self.replace_preview = None;
                     }
+                    if ui
+                        .button("Compose…")
+                        .on_hover_text("Build JSON from {{file.json}} templates")
+                        .clicked()
+                    {
+                        self.show_compose = true;
+                        self.compose_preview = None;
+                    }
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         // Settings icon button
