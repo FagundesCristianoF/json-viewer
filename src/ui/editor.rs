@@ -4,6 +4,19 @@ use crate::app::JsonViewApp;
 use eframe::egui::{self, FontFamily, FontId};
 use std::time::Instant;
 
+/// If `text_before_cursor` ends inside an unclosed `{{...`, return the byte
+/// offset of `{{` in the full `editor_text` and the partial token typed so far.
+fn detect_brace_token(full_text: &str, cursor_byte: usize) -> Option<(usize, String)> {
+    let before = &full_text[..cursor_byte];
+    let last_open = before.rfind("{{")?;
+    let after_open = &before[last_open + 2..];
+    // Already closed → not in autocomplete context
+    if after_open.contains("}}") {
+        return None;
+    }
+    Some((last_open, after_open.to_string()))
+}
+
 const EDITOR_ID: &str = "main_editor";
 
 impl JsonViewApp {
@@ -174,7 +187,7 @@ impl JsonViewApp {
                 egui::TextEdit::store_state(ctx, editor_id, state);
             }
 
-            egui::ScrollArea::both()
+            let editor_rect = egui::ScrollArea::both()
                 .auto_shrink([false, false])
                 .show(ui, |ui| {
                     let resp = ui.add_sized(
@@ -189,12 +202,122 @@ impl JsonViewApp {
                         self.dirty = true;
                         self.needs_parse = true;
                         self.last_edit = Some(Instant::now());
-                        // keep search matches in sync while editing
                         if self.show_editor_search && !self.editor_search.is_empty() {
                             self.run_editor_search();
                         }
                     }
-                });
+
+                    // Detect {{ autocomplete context from cursor position
+                    if let Some(state) = egui::TextEdit::load_state(ctx, editor_id) {
+                        if let Some(range) = state.cursor.char_range() {
+                            let char_idx = range.primary.index;
+                            let byte_offset = self.editor_text
+                                .char_indices()
+                                .nth(char_idx)
+                                .map(|(i, _)| i)
+                                .unwrap_or(self.editor_text.len());
+                            match detect_brace_token(&self.editor_text, byte_offset) {
+                                Some((pos, partial)) => {
+                                    self.editor_ac_pos = Some(pos);
+                                    self.editor_ac_partial = partial;
+                                }
+                                None => {
+                                    self.editor_ac_pos = None;
+                                    self.editor_ac_partial.clear();
+                                }
+                            }
+                        }
+                    }
+
+                    resp.rect
+                })
+                .inner;
+
+            // ── Autocomplete popup ────────────────────────────────
+            if self.editor_ac_pos.is_some() && !self.compose_ws_files.is_empty() {
+                let partial = self.editor_ac_partial.to_lowercase();
+                let current_name = self.selected.as_ref()
+                    .and_then(|p| p.file_name())
+                    .map(|n| n.to_string_lossy().into_owned())
+                    .unwrap_or_default();
+
+                let suggestions: Vec<String> = self.compose_ws_files.iter()
+                    .filter(|f| {
+                        let basename = std::path::Path::new(f)
+                            .file_name()
+                            .map(|n| n.to_string_lossy().into_owned())
+                            .unwrap_or_default();
+                        basename != current_name
+                            && (partial.is_empty()
+                                || f.to_lowercase().contains(&partial))
+                    })
+                    .cloned()
+                    .collect();
+
+                if !suggestions.is_empty() {
+                    let popup_pos = egui::pos2(
+                        editor_rect.left() + 12.0,
+                        editor_rect.top() + 4.0,
+                    );
+                    let ac_id = egui::Id::new("editor_ac_popup");
+                    egui::Area::new(ac_id)
+                        .fixed_pos(popup_pos)
+                        .order(egui::Order::Foreground)
+                        .show(ctx, |ui| {
+                            let p = self.pal();
+                            egui::Frame::none()
+                                .fill(p.sidebar)
+                                .stroke(egui::Stroke::new(1.0, p.sep))
+                                .rounding(egui::Rounding::same(6.0))
+                                .inner_margin(egui::Margin::same(6.0))
+                                .show(ui, |ui| {
+                                    ui.set_max_width(300.0);
+                                    ui.label(
+                                        egui::RichText::new("Insert file")
+                                            .size(10.0)
+                                            .color(p.dim),
+                                    );
+                                    ui.add_space(2.0);
+                                    let mut chosen: Option<String> = None;
+                                    for f in suggestions.iter().take(8) {
+                                        let basename = std::path::Path::new(f)
+                                            .file_name()
+                                            .map(|n| n.to_string_lossy().into_owned())
+                                            .unwrap_or_else(|| f.clone());
+                                        let label = egui::RichText::new(&basename)
+                                            .monospace()
+                                            .size(12.0)
+                                            .color(p.text);
+                                        if ui.selectable_label(false, label).clicked() {
+                                            chosen = Some(f.clone());
+                                        }
+                                    }
+                                    if let Some(file) = chosen {
+                                        if let Some(pos) = self.editor_ac_pos {
+                                            let end = pos + 2 + self.editor_ac_partial.len();
+                                            let replacement = format!("{{{{{}}}}}", file);
+                                            self.editor_text.replace_range(pos..end, &replacement);
+                                            self.dirty = true;
+                                            self.needs_parse = true;
+                                            self.last_edit = Some(Instant::now());
+                                            self.editor_ac_pos = None;
+                                            self.editor_ac_partial.clear();
+                                            // place cursor after inserted token
+                                            let new_cursor_byte = pos + replacement.len();
+                                            let char_idx = self.editor_text[..new_cursor_byte].chars().count();
+                                            let mut st = egui::TextEdit::load_state(ctx, editor_id)
+                                                .unwrap_or_default();
+                                            let c = egui::text::CCursor::new(char_idx);
+                                            st.cursor.set_char_range(Some(
+                                                egui::text::CCursorRange::one(c),
+                                            ));
+                                            egui::TextEdit::store_state(ctx, editor_id, st);
+                                        }
+                                    }
+                                });
+                        });
+                }
+            }
         });
     }
 }

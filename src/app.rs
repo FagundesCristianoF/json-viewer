@@ -81,8 +81,10 @@ pub struct JsonViewApp {
     pub key_collect_query: String,
     pub key_collect_results: Vec<(String, Vec<String>)>, // (parent_path, child_keys)
 
-    // compose file picker
+    // compose file picker + editor autocomplete
     pub compose_ws_files: Vec<String>, // all workspace json filenames (relative to ws_root)
+    pub editor_ac_pos: Option<usize>,  // byte offset of {{ in editor_text (None = no popup)
+    pub editor_ac_partial: String,     // text typed after {{
 
     // template modal
     pub show_template: bool,
@@ -148,6 +150,8 @@ impl JsonViewApp {
             compose_template: String::new(),
             compose_preview: None,
             compose_ws_files: Vec::new(),
+            editor_ac_pos: None,
+            editor_ac_partial: String::new(),
             show_template: false,
             template_files: Vec::new(),
             template_selected: None,
