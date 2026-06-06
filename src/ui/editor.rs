@@ -114,6 +114,7 @@ impl JsonViewApp {
                             if count > 0 {
                                 self.editor_search_idx =
                                     (self.editor_search_idx + count - 1) % count;
+                                self.editor_search_navigate = true;
                             }
                         }
                         if ui.small_button("↓").clicked()
@@ -124,6 +125,7 @@ impl JsonViewApp {
                             if count > 0 {
                                 self.editor_search_idx =
                                     (self.editor_search_idx + 1) % count;
+                                self.editor_search_navigate = true;
                             }
                         }
                     });
@@ -171,25 +173,37 @@ impl JsonViewApp {
 
             let editor_id = egui::Id::new(EDITOR_ID);
 
-            // Scroll to current search match by placing cursor there
-            if self.show_editor_search
+            // Compute scroll offset when navigation is requested
+            let scroll_to: Option<f32> = if self.editor_search_navigate
                 && !self.editor_search_matches.is_empty()
-                && !self.editor_search.is_empty()
             {
+                self.editor_search_navigate = false;
                 let byte_offset = self.editor_search_matches[self.editor_search_idx];
+                // Set cursor to match position
                 let char_idx = self.editor_text[..byte_offset].chars().count();
                 let mut state = egui::TextEdit::load_state(ctx, editor_id)
-                    .unwrap_or_else(egui::text_edit::TextEditState::default);
+                    .unwrap_or_default();
                 let cursor = egui::text::CCursor::new(char_idx);
-                state
-                    .cursor
-                    .set_char_range(Some(egui::text::CCursorRange::one(cursor)));
+                state.cursor.set_char_range(Some(
+                    egui::text::CCursorRange::one(cursor),
+                ));
                 egui::TextEdit::store_state(ctx, editor_id, state);
+                // Compute line-based scroll offset
+                let line = self.editor_text[..byte_offset]
+                    .bytes()
+                    .filter(|&b| b == b'\n')
+                    .count();
+                Some((line as f32 * 18.0 - 80.0).max(0.0))
+            } else {
+                None
+            };
+
+            let mut scroll_area = egui::ScrollArea::both().auto_shrink([false, false]);
+            if let Some(y) = scroll_to {
+                scroll_area = scroll_area.scroll_offset(egui::vec2(0.0, y));
             }
 
-            let editor_rect = egui::ScrollArea::both()
-                .auto_shrink([false, false])
-                .show(ui, |ui| {
+            let editor_rect = scroll_area.show(ui, |ui| {
                     let resp = ui.add_sized(
                         ui.available_size(),
                         egui::TextEdit::multiline(&mut self.editor_text)

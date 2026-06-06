@@ -71,6 +71,7 @@ pub struct JsonViewApp {
     pub editor_search: String,
     pub editor_search_matches: Vec<usize>, // byte offsets of match starts
     pub editor_search_idx: usize,          // current match index
+    pub editor_search_navigate: bool,      // true = scroll editor to current match this frame
 
     // compose
     pub show_compose: bool,
@@ -146,6 +147,7 @@ impl JsonViewApp {
             editor_search: String::new(),
             editor_search_matches: Vec::new(),
             editor_search_idx: 0,
+            editor_search_navigate: false,
             show_compose: false,
             compose_template: String::new(),
             compose_preview: None,
@@ -391,6 +393,22 @@ impl JsonViewApp {
             self.editor_search_matches.push(abs);
             start = abs + q.len().max(1);
         }
+        if !self.editor_search_matches.is_empty() {
+            self.editor_search_navigate = true;
+        }
+    }
+
+    /// Navigate to a specific byte offset in the editor (used by issues, search).
+    pub fn navigate_to_byte(&mut self, byte_offset: usize) {
+        self.editor_search_navigate = true;
+        self.editor_search_matches = vec![byte_offset];
+        self.editor_search_idx = 0;
+    }
+
+    /// Navigate to a 1-based line/col position (from parse errors).
+    pub fn navigate_to_line_col(&mut self, line: usize, col: usize) {
+        let byte = line_col_to_byte(&self.editor_text, line, col);
+        self.navigate_to_byte(byte);
     }
 
     /// Select a template file: read content, detect variables, reset values.
@@ -554,6 +572,24 @@ impl JsonViewApp {
         }
         set
     }
+}
+
+/// Convert 1-based line/col to a byte offset in `text`.
+fn line_col_to_byte(text: &str, target_line: usize, target_col: usize) -> usize {
+    let mut line = 1;
+    let mut col = 1;
+    for (i, ch) in text.char_indices() {
+        if line == target_line && col == target_col {
+            return i;
+        }
+        if ch == '\n' {
+            line += 1;
+            col = 1;
+        } else {
+            col += 1;
+        }
+    }
+    text.len().saturating_sub(1)
 }
 
 /// Collect all JSON filenames relative to `root` (depth-first).

@@ -86,11 +86,23 @@ impl JsonViewApp {
                             .auto_shrink([false, false])
                             .show(ui, |ui| match self.issues_tab {
                                 IssuesTab::Syntax => {
-                                    if let Some(e) = &self.parse_error {
-                                        ui.colored_label(
-                                            err_color,
-                                            format!("{} (line {}, col {})", e.message, e.line, e.col),
+                                    if let Some(e) = &self.parse_error.clone() {
+                                        let label = format!(
+                                            "⚠ {} (line {}, col {})",
+                                            e.message, e.line, e.col
                                         );
+                                        let resp = ui.add(
+                                            egui::Label::new(
+                                                egui::RichText::new(&label)
+                                                    .color(err_color)
+                                                    .size(12.0),
+                                            )
+                                            .sense(egui::Sense::click()),
+                                        );
+                                        if resp.clicked() {
+                                            self.navigate_to_line_col(e.line, e.col);
+                                        }
+                                        resp.on_hover_text("Click to jump to error");
                                     } else {
                                         ui.label(egui::RichText::new("No syntax errors.").color(p.dim));
                                     }
@@ -99,13 +111,32 @@ impl JsonViewApp {
                                     if self.smells.is_empty() {
                                         ui.label(egui::RichText::new("No smells.").color(p.dim));
                                     }
-                                    for s in &self.smells {
-                                        ui.horizontal(|ui| {
+                                    let smells = self.smells.clone();
+                                    for s in &smells {
+                                        let resp = ui.horizontal(|ui| {
                                             ui.label(
-                                                egui::RichText::new(&s.path).monospace().color(p.accent),
+                                                egui::RichText::new(&s.path)
+                                                    .monospace()
+                                                    .color(p.accent),
                                             );
-                                            ui.label(egui::RichText::new(&s.message).color(p.text));
+                                            ui.label(
+                                                egui::RichText::new(&s.message).color(p.text),
+                                            );
                                         });
+                                        if resp.response.interact(egui::Sense::click()).clicked() {
+                                            // Search for the last key segment in the text
+                                            let key = s.path
+                                                .split('.')
+                                                .last()
+                                                .unwrap_or(&s.path)
+                                                .trim_matches(|c: char| c == '$' || c == '[' || c == ']')
+                                                .to_string();
+                                            if !key.is_empty() {
+                                                self.editor_search = key;
+                                                self.show_editor_search = true;
+                                                self.run_editor_search();
+                                            }
+                                        }
                                     }
                                 }
                                 IssuesTab::History | IssuesTab::Keys => unreachable!(),
