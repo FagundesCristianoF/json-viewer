@@ -18,6 +18,8 @@ mod ui {
     pub mod editor;
     pub mod history;
     pub mod issues;
+    pub mod keys;
+    pub mod replace;
     pub mod settings;
     pub mod sidebar;
     pub mod status;

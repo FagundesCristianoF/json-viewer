@@ -62,6 +62,7 @@ impl JsonViewApp {
                 let syntax_count = usize::from(self.parse_error.is_some());
                 let smells_count = self.smells.len();
                 let history_count = self.history.len();
+                let keys_count = self.key_collect_results.iter().map(|(_, ks)| ks.len()).sum::<usize>();
                 let syntax_label = self.t("issues.syntax");
                 let smells_label = self.t("issues.smells");
                 let history_label = self.t("history.tab");
@@ -69,12 +70,16 @@ impl JsonViewApp {
                     self.issue_tab(ui, IssuesTab::Syntax, syntax_label, syntax_count);
                     self.issue_tab(ui, IssuesTab::Smells, smells_label, smells_count);
                     self.issue_tab(ui, IssuesTab::History, history_label, history_count);
+                    self.issue_tab(ui, IssuesTab::Keys, "Keys", keys_count);
                 });
                 ui.add_space(2.0);
 
                 match self.issues_tab {
                     IssuesTab::History => {
                         self.ui_history_body(ui);
+                    }
+                    IssuesTab::Keys => {
+                        self.ui_key_collector(ui);
                     }
                     _ => {
                         egui::ScrollArea::vertical()
@@ -103,7 +108,7 @@ impl JsonViewApp {
                                         });
                                     }
                                 }
-                                IssuesTab::History => unreachable!(),
+                                IssuesTab::History | IssuesTab::Keys => unreachable!(),
                             });
                     }
                 }

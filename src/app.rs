@@ -17,6 +17,7 @@ pub enum IssuesTab {
     Syntax,
     Smells,
     History,
+    Keys,
 }
 
 /// A pending sidebar text-input dialog.
@@ -65,6 +66,16 @@ pub struct JsonViewApp {
     pub locale: i18n::Locale,
     pub show_settings: bool,
 
+    // key collector
+    pub key_collect_query: String,
+    pub key_collect_results: Vec<(String, Vec<String>)>, // (parent_path, child_keys)
+
+    // replace tool
+    pub show_replace: bool,
+    pub replace_path: String,
+    pub replace_content: String,
+    pub replace_preview: Option<Result<String, String>>,
+
     // git history
     pub history: Vec<git::CommitInfo>,
     pub history_preview: Option<String>, // content shown in preview pane
@@ -107,6 +118,12 @@ impl JsonViewApp {
             auto_save,
             locale,
             show_settings: false,
+            key_collect_query: String::new(),
+            key_collect_results: Vec::new(),
+            show_replace: false,
+            replace_path: String::new(),
+            replace_content: String::new(),
+            replace_preview: None,
             history: Vec::new(),
             history_preview: None,
             history_selected: None,
@@ -287,6 +304,31 @@ impl JsonViewApp {
                     self.toast(self.t("toast.saved"));
                 }
                 Err(e) => self.toast(format!("Save failed: {}", e)),
+            }
+        }
+    }
+
+    /// Collect all child keys of every node whose own key equals `query`.
+    pub fn run_key_collect(&mut self) {
+        self.key_collect_results.clear();
+        let query = self.key_collect_query.trim().to_string();
+        if query.is_empty() {
+            return;
+        }
+        let Some(arena) = &self.arena else { return };
+
+        // Find every node whose own key matches `query` (case-sensitive).
+        for (idx, node) in arena.nodes.iter().enumerate() {
+            if node.key.as_deref() == Some(&query) && node.kind == model::Kind::Object {
+                // Collect immediate child keys.
+                let child_keys: Vec<String> = node
+                    .children
+                    .clone()
+                    .filter_map(|c| arena.nodes[c].key.clone())
+                    .collect();
+                if !child_keys.is_empty() {
+                    self.key_collect_results.push((node.path.clone(), child_keys));
+                }
             }
         }
     }
@@ -472,5 +514,6 @@ impl eframe::App for JsonViewApp {
         self.ui_tree(ctx);
         self.ui_editor(ctx);
         self.ui_settings(ctx);
+        self.ui_replace(ctx);
     }
 }

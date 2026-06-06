@@ -56,6 +56,95 @@ pub fn remove_nulls(text: &str, indent: usize) -> Result<String, ParseError> {
     Ok(String::from_utf8(buf).expect("serde_json emits utf8"))
 }
 
+/// Replace every node matched by `jsonpath` in `source` with `replacement`.
+/// Returns the re-formatted result, or an error string.
+pub fn json_replace(
+    source: &str,
+    jsonpath: &str,
+    replacement: &str,
+    indent: usize,
+) -> Result<String, String> {
+    let mut root: Value =
+        serde_json::from_str(source).map_err(|e| format!("source: {e}"))?;
+    let repl: Value =
+        serde_json::from_str(replacement).map_err(|e| format!("replacement: {e}"))?;
+
+    let arena = Arena::build(&root);
+    let matches =
+        crate::path::query(&arena, jsonpath).map_err(|e| format!("jsonpath: {e}"))?;
+
+    if matches.is_empty() {
+        return Err("no matches".to_string());
+    }
+
+    for idx in &matches {
+        let node_path = &arena.nodes[*idx].path;
+        let pointer = arena_path_to_pointer(node_path);
+        if pointer.is_empty() {
+            // Replacing root
+            root = repl.clone();
+        } else if let Some(node) = root.pointer_mut(&pointer) {
+            *node = repl.clone();
+        }
+    }
+
+    let pad = " ".repeat(indent);
+    let mut buf = Vec::new();
+    let fmt = serde_json::ser::PrettyFormatter::with_indent(pad.as_bytes());
+    let mut ser = serde_json::Serializer::with_formatter(&mut buf, fmt);
+    root.serialize(&mut ser).map_err(|e| e.to_string())?;
+    Ok(String::from_utf8(buf).expect("serde_json emits utf8"))
+}
+
+/// Convert a JSONPath like `$.a[0]['b c']` → JSON Pointer `/a/0/b c`.
+fn arena_path_to_pointer(path: &str) -> String {
+    let s = path.trim_start_matches('$');
+    let mut result = String::new();
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        match bytes[i] {
+            b'.' => {
+                i += 1;
+                let start = i;
+                while i < bytes.len() && bytes[i] != b'.' && bytes[i] != b'[' {
+                    i += 1;
+                }
+                if i > start {
+                    result.push('/');
+                    result.push_str(&s[start..i]);
+                }
+            }
+            b'[' => {
+                i += 1;
+                // strip optional quote
+                let quote = if i < bytes.len() && (bytes[i] == b'\'' || bytes[i] == b'"') {
+                    let q = bytes[i];
+                    i += 1;
+                    Some(q)
+                } else {
+                    None
+                };
+                let start = i;
+                while i < bytes.len() && bytes[i] != b']' {
+                    i += 1;
+                }
+                let mut key = &s[start..i];
+                // strip closing quote if present
+                if quote.is_some() && key.ends_with(|c| c == '\'' || c == '"') {
+                    key = &key[..key.len() - 1];
+                }
+                result.push('/');
+                // RFC 6901: escape '~' as '~0', '/' as '~1'
+                result.push_str(&key.replace('~', "~0").replace('/', "~1"));
+                i += 1; // skip ']'
+            }
+            _ => i += 1,
+        }
+    }
+    result
+}
+
 fn strip_nulls(v: Value) -> Value {
     match v {
         Value::Object(map) => Value::Object(
@@ -117,6 +206,39 @@ mod tests {
         let out = remove_nulls(r#"[1, null, 2, null, 3]"#, 2).unwrap();
         let v: serde_json::Value = serde_json::from_str(&out).unwrap();
         assert_eq!(v, serde_json::json!([1, 2, 3]));
+    }
+
+    #[test]
+    fn json_replace_array_item() {
+        let src = r#"{"a": [{"id": "x", "type": "y"}, {"id": "z", "type": "w"}]}"#;
+        let out = json_replace(src, r#"$.a[?(@.id == "x")]"#, r#"{"id": "x", "type": "replaced"}"#, 2).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(v["a"][0]["type"], serde_json::json!("replaced"));
+        // second element untouched
+        assert_eq!(v["a"][1]["type"], serde_json::json!("w"));
+    }
+
+    #[test]
+    fn json_replace_no_match_errors() {
+        let src = r#"{"a": [{"id": "x"}]}"#;
+        let err = json_replace(src, r#"$.a[?(@.id == "z")]"#, r#"{}"#, 2).unwrap_err();
+        assert!(err.contains("no matches"));
+    }
+
+    #[test]
+    fn json_replace_nested_key() {
+        let src = r#"{"store": {"item": {"price": 10}}}"#;
+        let out = json_replace(src, "$.store.item", r#"{"price": 99}"#, 2).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert_eq!(v["store"]["item"]["price"], serde_json::json!(99));
+    }
+
+    #[test]
+    fn arena_path_to_pointer_variants() {
+        assert_eq!(arena_path_to_pointer("$"), "");
+        assert_eq!(arena_path_to_pointer("$.a.b"), "/a/b");
+        assert_eq!(arena_path_to_pointer("$.a[0]"), "/a/0");
+        assert_eq!(arena_path_to_pointer("$['weird/key']"), "/weird~1key");
     }
 
     #[test]

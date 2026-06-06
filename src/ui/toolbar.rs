@@ -72,6 +72,14 @@ impl JsonViewApp {
                             Err(e) => self.toast(format!("Failed: {}", e.message)),
                         }
                     }
+                    if ui
+                        .add_enabled(has_text, egui::Button::new("Replace…"))
+                        .on_hover_text("Replace nodes matched by JSONPath")
+                        .clicked()
+                    {
+                        self.show_replace = true;
+                        self.replace_preview = None;
+                    }
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         // Settings icon button
