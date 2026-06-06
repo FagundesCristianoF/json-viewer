@@ -203,7 +203,10 @@ impl JsonViewApp {
                 scroll_area = scroll_area.scroll_offset(egui::vec2(0.0, y));
             }
 
-            let editor_rect = scroll_area.show(ui, |ui| {
+            // Viewport rect in screen coords — needed to position the AC popup
+            let viewport_rect = ui.available_rect_before_wrap();
+
+            let sa_output = scroll_area.show(ui, |ui| {
                     let resp = ui.add_sized(
                         ui.available_size(),
                         egui::TextEdit::multiline(&mut self.editor_text)
@@ -242,10 +245,7 @@ impl JsonViewApp {
                             }
                         }
                     }
-
-                    resp.rect
-                })
-                .inner;
+                });
 
             // ── Autocomplete popup ────────────────────────────────
             if self.editor_ac_pos.is_some() && !self.compose_ws_files.is_empty() {
@@ -269,10 +269,33 @@ impl JsonViewApp {
                     .collect();
 
                 if !suggestions.is_empty() {
-                    let popup_pos = egui::pos2(
-                        editor_rect.left() + 12.0,
-                        editor_rect.top() + 4.0,
-                    );
+                    // Compute cursor screen position from line/col + scroll offset
+                    let ac_byte = self.editor_ac_pos.unwrap_or(0);
+                    let cursor_line = self.editor_text[..ac_byte]
+                        .bytes().filter(|&b| b == b'\n').count();
+                    let cursor_col = self.editor_text[..ac_byte]
+                        .rfind('\n')
+                        .map(|nl| ac_byte - nl - 1)
+                        .unwrap_or(ac_byte);
+                    let line_h = 18.0_f32;
+                    let char_w = 7.5_f32; // IBM Plex Mono 12.5px approx
+                    let scroll_offset = sa_output.state.offset;
+                    let popup_x = (viewport_rect.min.x
+                        + cursor_col as f32 * char_w
+                        - scroll_offset.x
+                        + 8.0)
+                        .clamp(viewport_rect.min.x + 4.0, viewport_rect.max.x - 320.0);
+                    let raw_y = viewport_rect.min.y
+                        + (cursor_line + 1) as f32 * line_h
+                        - scroll_offset.y;
+                    // Flip above cursor if not enough space below
+                    let popup_y = if raw_y + 180.0 > viewport_rect.max.y {
+                        raw_y - line_h - 180.0
+                    } else {
+                        raw_y
+                    }.clamp(viewport_rect.min.y, viewport_rect.max.y - 40.0);
+
+                    let popup_pos = egui::pos2(popup_x, popup_y);
                     let ac_id = egui::Id::new("editor_ac_popup");
                     egui::Area::new(ac_id)
                         .fixed_pos(popup_pos)
