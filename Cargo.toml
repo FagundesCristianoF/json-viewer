@@ -10,7 +10,7 @@ license = "MIT"
 [package.metadata.bundle]
 name = "Json Viewer"
 identifier = "com.fagundes.jsonview"
-icon = ["assets/icons/32x32.png", "assets/icons/128x128.png", "assets/icons/512x512.png"]
+icon = ["assets/icons/jsonviewer.icns"]
 version = "0.1.0"
 copyright = "Copyright © 2025 Cristiano Fagundes"
 category = "public.app-category.developer-tools"
