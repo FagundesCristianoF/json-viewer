@@ -17,26 +17,22 @@ impl JsonViewApp {
             .resizable(true)
             .default_width(380.0)
             .show(ctx, |ui| {
-                ui.horizontal(|ui| {
-                    crate::theme::section_label(ui, "Tree");
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if self.arena.is_some() {
-                        ui.with_layout(
-                            egui::Layout::right_to_left(egui::Align::Center),
-                            |ui| {
-                                if ui.small_button("collapse").clicked() {
-                                    self.expanded.clear();
-                                    if let Some(a) = &self.arena {
-                                        self.expanded.insert(a.root);
-                                    }
-                                }
-                                if ui.small_button("expand").clicked() {
-                                    if let Some(a) = &self.arena {
-                                        self.expanded = (0..a.nodes.len()).collect();
-                                    }
-                                }
-                            },
-                        );
+                        if ui.small_button("collapse").clicked() {
+                            self.expanded.clear();
+                            if let Some(a) = &self.arena {
+                                self.expanded.insert(a.root);
+                            }
+                        }
+                        if ui.small_button("expand").clicked() {
+                            if let Some(a) = &self.arena {
+                                self.expanded = (0..a.nodes.len()).collect();
+                            }
+                        }
                     }
+                    // label last → renders leftmost in right-to-left
+                    crate::theme::section_label(ui, "Tree");
                 });
                 ui.add_space(4.0);
 

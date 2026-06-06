@@ -87,22 +87,44 @@ impl JsonViewApp {
                             .show(ui, |ui| match self.issues_tab {
                                 IssuesTab::Syntax => {
                                     if let Some(e) = &self.parse_error.clone() {
-                                        let label = format!(
-                                            "⚠ {} (line {}, col {})",
-                                            e.message, e.line, e.col
-                                        );
-                                        let resp = ui.add(
-                                            egui::Label::new(
-                                                egui::RichText::new(&label)
-                                                    .color(err_color)
-                                                    .size(12.0),
-                                            )
-                                            .sense(egui::Sense::click()),
-                                        );
-                                        if resp.clicked() {
-                                            self.navigate_to_line_col(e.line, e.col);
+                                        // If the text contains {{...}} tokens it's a compose
+                                        // template — raw JSON parse errors are expected.
+                                        let is_template = self.editor_text.contains("{{")
+                                            && self.editor_text.contains("}}");
+                                        if is_template {
+                                            ui.horizontal(|ui| {
+                                                ui.label(
+                                                    egui::RichText::new("Compose template — resolve {{}} tokens before parsing.")
+                                                        .color(p.dim)
+                                                        .size(12.0),
+                                                );
+                                                if ui.small_button("Open in Compose").clicked() {
+                                                    self.compose_template = self.editor_text.clone();
+                                                    self.show_compose = true;
+                                                    let base_dir = self.selected.as_ref()
+                                                        .and_then(|f| f.parent().map(|p| p.to_path_buf()))
+                                                        .or_else(|| self.ws_root.clone());
+                                                    self.update_compose_preview(base_dir.as_deref());
+                                                }
+                                            });
+                                        } else {
+                                            let label = format!(
+                                                "⚠ {} (line {}, col {})",
+                                                e.message, e.line, e.col
+                                            );
+                                            let resp = ui.add(
+                                                egui::Label::new(
+                                                    egui::RichText::new(&label)
+                                                        .color(err_color)
+                                                        .size(12.0),
+                                                )
+                                                .sense(egui::Sense::click()),
+                                            );
+                                            if resp.clicked() {
+                                                self.navigate_to_line_col(e.line, e.col);
+                                            }
+                                            resp.on_hover_text("Click to jump to error");
                                         }
-                                        resp.on_hover_text("Click to jump to error");
                                     } else {
                                         ui.label(egui::RichText::new("No syntax errors.").color(p.dim));
                                     }
