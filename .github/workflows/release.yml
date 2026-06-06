@@ -37,6 +37,8 @@ jobs:
         run: |
           KEYCHAIN_PATH=$RUNNER_TEMP/signing.keychain-db
           KEYCHAIN_PASS=ci-keychain
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> $GITHUB_ENV
+          echo "KEYCHAIN_PASS=$KEYCHAIN_PASS"  >> $GITHUB_ENV
 
           security create-keychain -p "$KEYCHAIN_PASS" "$KEYCHAIN_PATH"
           security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
@@ -50,31 +52,45 @@ jobs:
             -T /usr/bin/security
           rm /tmp/cert.p12
 
-          # Add to the user keychain search list (keeps login.keychain intact)
           security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASS" "$KEYCHAIN_PATH"
 
+          echo "=== identities in CI keychain ==="
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+
       - name: Build and bundle
         run: make bundle
-        env:
-          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
 
       - name: Sign
-        run: make sign
         env:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+        run: |
+          APP="target/release/bundle/osx/Json Viewer.app"
+          codesign --deep --force --options runtime \
+            --entitlements assets/entitlements.plist \
+            --keychain "$KEYCHAIN_PATH" \
+            --sign "$APPLE_IDENTITY" \
+            "$APP"
+          codesign --verify --deep --strict "$APP"
+          echo "Signed: $APP"
 
       - name: Notarize
-        run: make notarize
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          APP="target/release/bundle/osx/Json Viewer.app"
+          ditto -c -k --keepParent "$APP" /tmp/jsonviewer-notarize.zip
+          xcrun notarytool submit /tmp/jsonviewer-notarize.zip \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+          rm /tmp/jsonviewer-notarize.zip
 
       - name: Staple and create DMG
         run: make dmg
-        env:
-          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
 
       - name: Upload DMG to GitHub Release
         uses: softprops/action-gh-release@v2
