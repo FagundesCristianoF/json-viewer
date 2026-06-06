@@ -1,4 +1,4 @@
-cask "jsonview" do
+cask "json-viewer" do
   version "0.1.1"
 
   # Update url and sha256 after each release (run `make brew-sha` to get the hash).
