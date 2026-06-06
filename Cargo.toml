@@ -1,6 +1,6 @@
 [package]
 name = "jsonview"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Fast native macOS JSON workspace app"
 authors = ["Cristiano Fagundes <fagundescristianof@gmail.com>"]
@@ -11,7 +11,7 @@ license = "MIT"
 name = "Json Viewer"
 identifier = "com.fagundes.jsonview"
 icon = ["assets/icons/jsonviewer.icns"]
-version = "0.1.1"
+version = "0.1.2"
 copyright = "Copyright © 2025 Cristiano Fagundes"
 category = "public.app-category.developer-tools"
 short_description = "Fast native macOS JSON workspace"
