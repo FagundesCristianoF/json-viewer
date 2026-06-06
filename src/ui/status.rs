@@ -48,13 +48,17 @@ impl JsonViewApp {
                     }
 
                     if has_error {
-                        // Alert icon
-                        let icon_rect = egui::Rect::from_min_size(
-                            ui.cursor().min + egui::Vec2::new(2.0, 1.0),
-                            egui::Vec2::splat(12.0),
+                        // Alert icon — allocated inline so it centres on the text baseline
+                        let (icon_rect, _) = ui.allocate_exact_size(
+                            egui::vec2(12.0, 12.0),
+                            egui::Sense::hover(),
                         );
-                        crate::icons::draw(&ui.painter(), crate::icons::Icon::AlertCircle, icon_rect, name_color);
-                        ui.add_space(14.0);
+                        crate::icons::draw(
+                            &ui.painter(),
+                            crate::icons::Icon::AlertCircle,
+                            icon_rect,
+                            name_color,
+                        );
                         if let Some(e) = &self.parse_error {
                             ui.label(
                                 RichText::new(format!("line {}, col {}", e.line, e.col))

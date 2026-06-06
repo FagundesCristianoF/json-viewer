@@ -94,11 +94,34 @@ impl JsonViewApp {
                                         if is_template {
                                             ui.horizontal(|ui| {
                                                 ui.label(
-                                                    egui::RichText::new("Compose template — resolve {{}} tokens before parsing.")
+                                                    egui::RichText::new("Compose template — {{}} tokens need resolving.")
                                                         .color(p.dim)
                                                         .size(12.0),
                                                 );
-                                                if ui.small_button("Open in Compose").clicked() {
+                                                if ui.small_button("Resolve now").clicked() {
+                                                    let base_dir = self.selected.as_ref()
+                                                        .and_then(|f| f.parent().map(|p| p.to_path_buf()))
+                                                        .or_else(|| self.ws_root.clone());
+                                                    if let Some(dir) = base_dir {
+                                                        match crate::compose::compose(
+                                                            &self.editor_text.clone(),
+                                                            &dir,
+                                                            self.config.indent,
+                                                        ) {
+                                                            Ok(resolved) => {
+                                                                self.editor_text = resolved;
+                                                                self.dirty = true;
+                                                                self.needs_parse = true;
+                                                                self.last_edit = Some(std::time::Instant::now());
+                                                                self.toast("Composed");
+                                                            }
+                                                            Err(e) => self.toast(format!("Compose failed: {e}")),
+                                                        }
+                                                    } else {
+                                                        self.toast("Open a workspace first");
+                                                    }
+                                                }
+                                                if ui.small_button("Open in Compose…").clicked() {
                                                     self.compose_template = self.editor_text.clone();
                                                     self.show_compose = true;
                                                     let base_dir = self.selected.as_ref()

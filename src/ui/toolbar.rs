@@ -101,7 +101,7 @@ impl JsonViewApp {
                     }
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        // Settings icon button
+                        // Settings icon — always rightmost
                         if crate::icons::toolbar_button(ui, Icon::Settings, 28.0, p.dim, p.hover)
                             .on_hover_text(self.t("toolbar.settings"))
                             .clicked()
@@ -109,9 +109,15 @@ impl JsonViewApp {
                             self.show_settings = !self.show_settings;
                         }
 
-                        // Toast message
+                        // Toast — truncated so it never pushes over buttons
                         if let Some((msg, _)) = &self.toast {
-                            ui.colored_label(p.accent, msg);
+                            let display = if msg.chars().count() > 48 {
+                                format!("{}…", msg.chars().take(48).collect::<String>())
+                            } else {
+                                msg.clone()
+                            };
+                            ui.colored_label(p.accent, display)
+                                .on_hover_text(msg.as_str());
                         }
                     });
                 });
