@@ -1,0 +1,33 @@
+[package]
+name = "jsonview"
+version = "0.1.0"
+edition = "2021"
+description = "Fast native macOS JSON workspace app"
+authors = ["Cristiano Fagundes <fagundescristianof@gmail.com>"]
+repository = "https://github.com/FagundesCristianoF/json-viewer"
+license = "MIT"
+
+[package.metadata.bundle]
+name = "Json Viewer"
+identifier = "com.fagundes.jsonview"
+icon = ["assets/icons/32x32.png", "assets/icons/128x128.png", "assets/icons/512x512.png"]
+version = "0.1.0"
+copyright = "Copyright © 2025 Cristiano Fagundes"
+category = "public.app-category.developer-tools"
+short_description = "Fast native macOS JSON workspace"
+long_description = "Json Viewer is a fast native macOS app for browsing, editing, and querying JSON files with JSONPath."
+osx_minimum_system_version = "12.0"
+osx_frameworks = []
+
+[dependencies]
+eframe = "0.28"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+directories = "5"
+rfd = "0.14"
+
+[profile.release]
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
