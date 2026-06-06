@@ -1,5 +1,5 @@
 cask "jsonview" do
-  version "0.1.0"
+  version "0.1.1"
 
   # Update url and sha256 after each release (run `make brew-sha` to get the hash).
   url "https://github.com/FagundesCristianoF/json-viewer/releases/download/v#{version}/JsonViewer-#{version}.dmg"

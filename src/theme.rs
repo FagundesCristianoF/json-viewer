@@ -249,6 +249,20 @@ pub fn badge(ui: &mut egui::Ui, text: &str, color: Color32) {
     ui.painter().galley(rect.min + pad, galley, color);
 }
 
+/// Clickable badge — same visual as `badge` but returns a Response.
+pub fn badge_button(ui: &mut egui::Ui, text: &str, color: Color32) -> egui::Response {
+    let font = FontId::new(10.0, FontFamily::Name(MONO_SEMI.into()));
+    let galley = ui.painter().layout_no_wrap(text.to_string(), font, color);
+    let pad = Vec2::new(5.0, 2.0);
+    let (rect, response) =
+        ui.allocate_exact_size(galley.size() + pad * 2.0, egui::Sense::click());
+    let bg_alpha = if response.hovered() { 60u8 } else { 36u8 };
+    let bg = Color32::from_rgba_unmultiplied(color.r(), color.g(), color.b(), bg_alpha);
+    ui.painter().rect_filled(rect, Rounding::same(4.0), bg);
+    ui.painter().galley(rect.min + pad, galley, color);
+    response
+}
+
 /// A segmented-control style toggle button.
 pub fn segment(ui: &mut egui::Ui, selected: bool, text: &str) -> egui::Response {
     let p = palette(ui.visuals().dark_mode);

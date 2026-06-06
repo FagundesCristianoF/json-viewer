@@ -1,6 +1,6 @@
 //! egui app state + update loop. Wires the pure modules to the UI.
 
-use crate::{config, git, i18n, model, parser, path, smells, telemetry, theme, workspace};
+use crate::{config, git, i18n, model, parser, path, smells, telemetry, template, theme, workspace};
 use eframe::egui;
 use std::collections::HashSet;
 use std::path::PathBuf;
@@ -75,6 +75,17 @@ pub struct JsonViewApp {
     pub key_collect_query: String,
     pub key_collect_results: Vec<(String, Vec<String>)>, // (parent_path, child_keys)
 
+    // compose file picker
+    pub compose_ws_files: Vec<String>, // all workspace json filenames (relative to ws_root)
+
+    // template modal
+    pub show_template: bool,
+    pub template_files: Vec<std::path::PathBuf>, // .template.json files in workspace
+    pub template_selected: Option<std::path::PathBuf>,
+    pub template_content: String,
+    pub template_vars: Vec<(String, String)>, // (var_name, current_value)
+    pub template_preview: Option<Result<String, String>>,
+
     // replace tool
     pub show_replace: bool,
     pub replace_path: String,
@@ -126,6 +137,13 @@ impl JsonViewApp {
             show_compose: false,
             compose_template: String::new(),
             compose_preview: None,
+            compose_ws_files: Vec::new(),
+            show_template: false,
+            template_files: Vec::new(),
+            template_selected: None,
+            template_content: String::new(),
+            template_vars: Vec::new(),
+            template_preview: None,
             key_collect_query: String::new(),
             key_collect_results: Vec::new(),
             show_replace: false,
@@ -186,6 +204,10 @@ impl JsonViewApp {
                             self.select_file(first);
                         }
                     }
+                    // collect all json filenames for compose picker
+                    self.compose_ws_files = collect_json_names(&t, &root);
+                    // collect template files
+                    self.template_files = template::list_templates(&root);
                     self.tree = Some(t);
                 }
                 Err(e) => {
@@ -341,6 +363,50 @@ impl JsonViewApp {
         }
     }
 
+    /// Select a template file: read content, detect variables, reset values.
+    pub fn select_template(&mut self, path: std::path::PathBuf) {
+        match std::fs::read_to_string(&path) {
+            Ok(content) => {
+                let vars = template::find_variables(&content);
+                self.template_vars = vars.into_iter().map(|v| (v, String::new())).collect();
+                self.template_content = content;
+                self.template_selected = Some(path);
+                self.template_preview = None;
+            }
+            Err(e) => self.toast(format!("Read failed: {e}")),
+        }
+    }
+
+    /// Re-render template preview from current var values.
+    pub fn update_template_preview(&mut self) {
+        let content = self.template_content.clone();
+        if content.trim().is_empty() {
+            self.template_preview = None;
+            return;
+        }
+        let vars: std::collections::HashMap<String, String> =
+            self.template_vars.iter().cloned().collect();
+        let base_dir = self
+            .template_selected
+            .as_ref()
+            .and_then(|p| p.parent().map(|d| d.to_path_buf()))
+            .or_else(|| self.ws_root.clone());
+
+        let expanded = match template::render_vars(&content, &vars) {
+            Ok(s) => s,
+            Err(e) => {
+                self.template_preview = Some(Err(e));
+                return;
+            }
+        };
+
+        self.template_preview = Some(match base_dir {
+            Some(dir) => crate::compose::compose(&expanded, &dir, self.config.indent),
+            None => crate::parser::format(&expanded, self.config.indent)
+                .map_err(|e| e.message.clone()),
+        });
+    }
+
     pub fn reload_history(&mut self) {
         if let (Some(ws), Some(file)) = (self.ws_root.clone(), self.selected.clone()) {
             self.history = git::log(&ws, &file, 50).unwrap_or_default();
@@ -460,6 +526,23 @@ impl JsonViewApp {
     }
 }
 
+/// Collect all JSON filenames relative to `root` (depth-first).
+fn collect_json_names(entry: &workspace::Entry, root: &PathBuf) -> Vec<String> {
+    let mut names = Vec::new();
+    collect_json_names_inner(entry, root, &mut names);
+    names
+}
+
+fn collect_json_names_inner(entry: &workspace::Entry, root: &PathBuf, out: &mut Vec<String>) {
+    for child in &entry.children {
+        if child.is_dir {
+            collect_json_names_inner(child, root, out);
+        } else if let Ok(rel) = child.path.strip_prefix(root) {
+            out.push(rel.to_string_lossy().into_owned());
+        }
+    }
+}
+
 /// Depth-first search for the first `.json` file in the tree.
 fn first_file(entry: &workspace::Entry) -> Option<PathBuf> {
     for child in &entry.children {
@@ -524,5 +607,6 @@ impl eframe::App for JsonViewApp {
         self.ui_settings(ctx);
         self.ui_replace(ctx);
         self.ui_compose(ctx);
+        self.ui_template(ctx);
     }
 }

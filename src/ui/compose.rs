@@ -77,6 +77,43 @@ impl JsonViewApp {
                     });
                 }
 
+                // ── File picker ────────────────────────────────────
+                let refs_set: std::collections::HashSet<String> = refs.iter().cloned().collect();
+                let current_name = self
+                    .selected
+                    .as_ref()
+                    .and_then(|p| p.file_name())
+                    .map(|n| n.to_string_lossy().into_owned())
+                    .unwrap_or_default();
+                let insertable: Vec<String> = self
+                    .compose_ws_files
+                    .iter()
+                    .filter(|f| {
+                        let basename = std::path::Path::new(f)
+                            .file_name()
+                            .map(|n| n.to_string_lossy().into_owned())
+                            .unwrap_or_default();
+                        basename != current_name && !refs_set.contains(f.as_str())
+                    })
+                    .cloned()
+                    .collect();
+                if !insertable.is_empty() {
+                    ui.add_space(4.0);
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(egui::RichText::new("Insert file:").color(p.dim).size(11.0));
+                        for f in &insertable {
+                            let basename = std::path::Path::new(f)
+                                .file_name()
+                                .map(|n| n.to_string_lossy().into_owned())
+                                .unwrap_or_else(|| f.clone());
+                            if crate::theme::badge_button(ui, &basename, p.dim).clicked() {
+                                self.compose_template.push_str(&format!("{{{{{}}}}} ", f));
+                                self.update_compose_preview(base_dir.as_deref());
+                            }
+                        }
+                    });
+                }
+
                 ui.add_space(8.0);
 
                 // ── Preview ────────────────────────────────────────

@@ -88,6 +88,17 @@ impl JsonViewApp {
                         self.show_compose = true;
                         self.compose_preview = None;
                     }
+                    if ui
+                        .button("Template…")
+                        .on_hover_text("Fill variables in a .template.json file")
+                        .clicked()
+                    {
+                        self.show_template = true;
+                        self.template_preview = None;
+                        if let Some(root) = self.ws_root.clone() {
+                            self.template_files = crate::template::list_templates(&root);
+                        }
+                    }
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         // Settings icon button

@@ -12,6 +12,7 @@ mod parser;
 mod path;
 mod smells;
 mod telemetry;
+mod template;
 mod theme;
 mod workspace;
 
@@ -25,6 +26,7 @@ mod ui {
     pub mod settings;
     pub mod sidebar;
     pub mod status;
+    pub mod template;
     pub mod toolbar;
     pub mod tree;
 }
