@@ -3,7 +3,7 @@ cask "json-viewer" do
 
   # Update url and sha256 after each release (run `make brew-sha` to get the hash).
   url "https://github.com/FagundesCristianoF/json-viewer/releases/download/v#{version}/JsonViewer-#{version}.dmg"
-  sha256 "c5674ede897f69b343f10332f77cb88200029ca94085b133a74aa8e5f927562e"
+  sha256 "d5b5605fbe03279a433de0a202356e00959acbc2379a8aef353cbd0627ef98e2"
 
   name "Json Viewer"
   desc "Fast native macOS JSON workspace — browse, edit, and query JSON with JSONPath"
