@@ -61,6 +61,7 @@
 		F239F8EED928FACE17F5C88C /* OptionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EFEC7423CC438F2DCA56DC /* OptionRow.swift */; };
 		F3EA940DE869B94F5E1D3F74 /* CurlParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638EB2AB96727EBEC7014949 /* CurlParserTests.swift */; };
 		F755EB78806BA4E4C353FDDF /* test_statusDot_pending.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 90CF8E0A89A07A15978C609E /* test_statusDot_pending.1.png */; };
+		F788F31B7B51922DC4FC4A70 /* SplitViewAutosaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61387168364BBE71A33E224B /* SplitViewAutosaver.swift */; };
 		FA678FD92435BB947B161D9A /* HistoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DE7316929B8EB00E140BC4 /* HistoryEntry.swift */; };
 		FBE1B2FF87FA466208CE510B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9ADF86D4A5D3D6B6554D248 /* Assets.xcassets */; };
 		FE9527DDC81253945FC273C4 /* test_sectionHeader_title_only.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 062215CA9C04FD75E00AACC7 /* test_sectionHeader_title_only.1.png */; };
@@ -109,6 +110,7 @@
 		55EFEC7423CC438F2DCA56DC /* OptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionRow.swift; sourceTree = "<group>"; };
 		57532140374B6182E78ABE86 /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		5E601934B0B5E64A7FB91C6D /* JsonViewApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JsonViewApp.entitlements; sourceTree = "<group>"; };
+		61387168364BBE71A33E224B /* SplitViewAutosaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewAutosaver.swift; sourceTree = "<group>"; };
 		62F42A3E015E8131B2B7ED00 /* test_optionRow_pending.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test_optionRow_pending.1.png; sourceTree = "<group>"; };
 		638EB2AB96727EBEC7014949 /* CurlParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurlParserTests.swift; sourceTree = "<group>"; };
 		646C4B96FC3F2B0897B57A4D /* JsonEditorDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonEditorDetailView.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				7CE0CD1714635DDBC40AC830 /* JSONTreeView.swift */,
 				0F1DE34A1FF9D05D242A2F4B /* Models.swift */,
 				B8F0EF4B0317A0269029B835 /* RustBridge.swift */,
+				61387168364BBE71A33E224B /* SplitViewAutosaver.swift */,
 				A8BEE80276367AC8B879620E /* StatusBarView.swift */,
 				6553574244D14A3BB3E63E9B /* Theme.swift */,
 				1BACC49EAC7D638A346F14AB /* ToolbarView.swift */,
@@ -543,6 +546,7 @@
 				4D5B7166E7E84ADDE50E289F /* ScanViewModel.swift in Sources */,
 				EBC34BAA5DA747EFAD676EF5 /* ScannerSidebarView.swift in Sources */,
 				40615BFB0FCF209FFFB82104 /* SettingsView.swift in Sources */,
+				F788F31B7B51922DC4FC4A70 /* SplitViewAutosaver.swift in Sources */,
 				34DC64C52179D32EB49A01C5 /* StatusBarView.swift in Sources */,
 				531351D15D80A2EFB4CD7E55 /* SuggestionTextField.swift in Sources */,
 				386412C2E5FD3CD4AB54DBC7 /* TextNormalizer.swift in Sources */,

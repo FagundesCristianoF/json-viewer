@@ -12,17 +12,25 @@ struct JsonEditorDetailView: View {
                     HSplitView {
                         EditorView()
                             .frame(minWidth: 300)
-                        if model.showTree {
-                            JSONTreeView()
-                                .frame(minWidth: 220, idealWidth: 280, maxWidth: 400)
-                        }
+                        // Always in hierarchy — keep position when tree is toggled.
+                        JSONTreeView()
+                            .frame(
+                                minWidth: model.showTree ? 220 : 0,
+                                idealWidth: model.showTree ? 280 : 0,
+                                maxWidth: model.showTree ? 400 : 0
+                            )
                     }
                     .frame(minHeight: 200)
-                    if model.showIssues {
-                        IssuesView()
-                            .frame(minHeight: 100, idealHeight: 160, maxHeight: 280)
-                    }
+                    .background(SplitViewAutosaver(name: "editor-horizontal"))
+                    // Always in hierarchy — keep position when issues panel toggled.
+                    IssuesView()
+                        .frame(
+                            minHeight: model.showIssues ? 100 : 0,
+                            idealHeight: model.showIssues ? 160 : 0,
+                            maxHeight: model.showIssues ? 280 : 0
+                        )
                 }
+                .background(SplitViewAutosaver(name: "editor-vertical"))
             }
 
             if let msg = model.toast {
