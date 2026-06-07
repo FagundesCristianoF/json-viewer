@@ -1,6 +1,26 @@
 import Foundation
 import Combine
 
+enum AppTheme: String, CaseIterable {
+    case system, light, dark
+
+    var label: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .system: return "circle.lefthalf.filled"
+        case .light: return "sun.max"
+        case .dark: return "moon"
+        }
+    }
+}
+
 /// Single source of truth for all persisted app preferences.
 /// All UserDefaults access goes through here.
 final class Preferences: ObservableObject {
@@ -9,19 +29,22 @@ final class Preferences: ObservableObject {
     // MARK: - Keys
 
     private enum Key {
-        static let darkMode            = "darkMode"
+        static let theme               = "appTheme"
         static let autoSave            = "autoSave"
         static let indentSize          = "indentSize"
         static let workspaceRoot       = "workspaceRoot"
         static let devKitMode          = "devKitMode"
         static let historyDirectory    = "historyDirectory"
+        static let analytics           = "analytics"
+    }
+
+    // MARK: - Appearance
+
+    @Published var theme: AppTheme {
+        didSet { UserDefaults.standard.set(theme.rawValue, forKey: Key.theme) }
     }
 
     // MARK: - Editor
-
-    @Published var darkMode: Bool {
-        didSet { UserDefaults.standard.set(darkMode, forKey: Key.darkMode) }
-    }
 
     @Published var autoSave: Bool {
         didSet { UserDefaults.standard.set(autoSave, forKey: Key.autoSave) }
@@ -29,6 +52,12 @@ final class Preferences: ObservableObject {
 
     @Published var indentSize: Int {
         didSet { UserDefaults.standard.set(indentSize, forKey: Key.indentSize) }
+    }
+
+    // MARK: - Privacy
+
+    @Published var analytics: Bool {
+        didSet { UserDefaults.standard.set(analytics, forKey: Key.analytics) }
     }
 
     // MARK: - History / Collection folder
@@ -53,8 +82,15 @@ final class Preferences: ObservableObject {
     // MARK: - Init
 
     private init() {
-        // darkMode — default false
-        darkMode = UserDefaults.standard.bool(forKey: Key.darkMode)
+        // theme — migrate legacy darkMode bool if present, default .system
+        if let raw = UserDefaults.standard.string(forKey: Key.theme),
+           let saved = AppTheme(rawValue: raw) {
+            theme = saved
+        } else if UserDefaults.standard.object(forKey: "darkMode") != nil {
+            theme = UserDefaults.standard.bool(forKey: "darkMode") ? .dark : .light
+        } else {
+            theme = .system
+        }
 
         // autoSave — default true
         let savedAutoSave = UserDefaults.standard.object(forKey: Key.autoSave)
@@ -63,6 +99,10 @@ final class Preferences: ObservableObject {
         // indentSize — default 2
         let savedIndent = UserDefaults.standard.integer(forKey: Key.indentSize)
         indentSize = savedIndent > 0 ? savedIndent : 2
+
+        // analytics — default true
+        let savedAnalytics = UserDefaults.standard.object(forKey: Key.analytics)
+        analytics = savedAnalytics != nil ? UserDefaults.standard.bool(forKey: Key.analytics) : true
 
         // historyDirectory — default to ~/Library/Application Support/DevKit/
         if let saved = UserDefaults.standard.string(forKey: Key.historyDirectory) {

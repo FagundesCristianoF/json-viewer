@@ -5,6 +5,15 @@ import AppKit
 
 struct ContentView: View {
     @EnvironmentObject var devKit: DevKitModel
+    @ObservedObject private var prefs = Preferences.shared
+
+    private var preferredScheme: ColorScheme? {
+        switch prefs.theme {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -19,7 +28,7 @@ struct ContentView: View {
             DevKitToolbar()
         }
         .environmentObject(devKit.editorModel)
-        .preferredColorScheme(devKit.editorModel.darkMode ? .dark : .light)
+        .preferredColorScheme(preferredScheme)
     }
 
     @ViewBuilder

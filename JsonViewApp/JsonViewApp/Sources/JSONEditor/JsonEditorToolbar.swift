@@ -2,6 +2,7 @@ import SwiftUI
 
 struct JsonEditorToolbarItems: ToolbarContent {
     @EnvironmentObject var model: AppModel
+    @ObservedObject private var prefs = Preferences.shared
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
@@ -12,10 +13,12 @@ struct JsonEditorToolbarItems: ToolbarContent {
         }
 
         ToolbarItemGroup(placement: .automatic) {
-            Button { model.darkMode.toggle() } label: {
-                Image(systemName: model.darkMode ? "sun.max" : "moon")
+            Button {
+                prefs.theme = prefs.theme == .dark ? .light : .dark
+            } label: {
+                Image(systemName: prefs.theme == .dark ? "sun.max" : "moon")
             }
-            .help(model.darkMode ? "Light Mode" : "Dark Mode")
+            .help(prefs.theme == .dark ? "Switch to Light Mode" : "Switch to Dark Mode")
 
             Button { model.showTree.toggle() } label: {
                 Image(systemName: "list.bullet.indent")

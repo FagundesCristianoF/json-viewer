@@ -33,8 +33,10 @@ final class AppModel: ObservableObject {
     // MARK: - UI state
 
     @Published var expandedNodes: Set<Int> = []
-    @Published var darkMode: Bool = Preferences.shared.darkMode {
-        didSet { Preferences.shared.darkMode = darkMode }
+    /// Toolbar toggle: flips between .light and .dark (does not affect .system preference).
+    var darkMode: Bool {
+        get { Preferences.shared.theme == .dark }
+        set { Preferences.shared.theme = newValue ? .dark : .light }
     }
     @Published var autoSave: Bool = Preferences.shared.autoSave {
         didSet { Preferences.shared.autoSave = autoSave }
