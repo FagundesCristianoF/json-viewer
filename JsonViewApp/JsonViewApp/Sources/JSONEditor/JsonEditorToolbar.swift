@@ -5,13 +5,6 @@ struct JsonEditorToolbarItems: ToolbarContent {
     @ObservedObject private var prefs = Preferences.shared
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigation) {
-            Button { model.showSidebar.toggle() } label: {
-                Image(systemName: "sidebar.left")
-            }
-            .help("Toggle Sidebar")
-        }
-
         ToolbarItemGroup(placement: .automatic) {
             Button {
                 prefs.theme = prefs.theme == .dark ? .light : .dark
