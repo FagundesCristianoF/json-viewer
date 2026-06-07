@@ -26,7 +26,7 @@ struct ResultsView: View {
                     EmptySelectionView()
                 }
             } else {
-                EmptyStateView()
+                ScannerEmptyStateView()
             }
         }
         .background(Color(nsColor: .textBackgroundColor))
@@ -275,7 +275,7 @@ struct NoMatchesView: View {
     }
 }
 
-struct EmptyStateView: View {
+struct ScannerEmptyStateView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "network")

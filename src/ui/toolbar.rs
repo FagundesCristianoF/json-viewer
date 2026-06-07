@@ -9,8 +9,8 @@ impl JsonViewApp {
     pub fn ui_toolbar(&mut self, ctx: &egui::Context) {
         let p = self.pal();
         let frame = egui::Frame::none()
-            .fill(p.window)
-            .inner_margin(egui::Margin::symmetric(12.0, 8.0));
+            .fill(p.elevated)
+            .inner_margin(egui::Margin::symmetric(12.0, 6.0));
 
         egui::TopBottomPanel::top("toolbar")
             .frame(frame)
@@ -43,7 +43,9 @@ impl JsonViewApp {
                     }
                     sep(ui, p);
 
-                    let has_text = !self.editor_text.trim().is_empty();
+                    // Disable transforms when viewing compose result (raw template has {{}} tokens)
+                    let in_result_view = self.pointer_resolved.is_some() && !self.editor_raw_mode;
+                    let has_text = !self.editor_text.trim().is_empty() && !in_result_view;
                     if ui
                         .add_enabled(has_text, egui::Button::new(self.t("toolbar.format")))
                         .clicked()
@@ -109,10 +111,11 @@ impl JsonViewApp {
                             self.show_settings = !self.show_settings;
                         }
 
-                        // Toast — truncated so it never pushes over buttons
+                        // Toast — fixed max width so it never overlaps buttons
                         if let Some((msg, _)) = &self.toast {
-                            let display = if msg.chars().count() > 48 {
-                                format!("{}…", msg.chars().take(48).collect::<String>())
+                            ui.set_max_width(260.0);
+                            let display = if msg.chars().count() > 40 {
+                                format!("{}…", msg.chars().take(40).collect::<String>())
                             } else {
                                 msg.clone()
                             };

@@ -234,11 +234,75 @@ mod tests {
 
     #[test]
     fn key_vs_value_string() {
-        // both strings present; tokenizer must not panic and must color them
         let job = layout_job(r#"{"key": "value"}"#, &palette(false), FontId::monospace(12.0), 400.0);
         assert!(!job.sections.is_empty());
-        // covers the full text length
         let total: usize = job.sections.iter().map(|s| s.byte_range.len()).sum();
         assert_eq!(total, r#"{"key": "value"}"#.len());
+    }
+
+    #[test]
+    fn covers_full_text_for_all_primitives() {
+        let inputs = [
+            r#"null"#,
+            r#"true"#,
+            r#"false"#,
+            r#"42"#,
+            r#"-3.14"#,
+            r#""hello world""#,
+            r#"{"a": [1, null, true, "x"]}"#,
+        ];
+        for input in inputs {
+            let job = layout_job(input, &palette(false), FontId::monospace(12.0), 400.0);
+            let total: usize = job.sections.iter().map(|s| s.byte_range.len()).sum();
+            assert_eq!(total, input.len(), "coverage failed for: {input}");
+        }
+    }
+
+    #[test]
+    fn search_highlights_add_background() {
+        let text = r#"{"name": "Alice", "nickname": "Ali"}"#;
+        let plain = layout_job(text, &palette(false), FontId::monospace(12.0), 400.0);
+        let with_hl = layout_job_search(text, &palette(false), FontId::monospace(12.0), 400.0, "Ali");
+        assert!(with_hl.sections.len() >= plain.sections.len());
+        let has_bg = with_hl.sections.iter().any(|s| s.format.background.a() > 0);
+        assert!(has_bg, "search highlight must set a background");
+    }
+
+    #[test]
+    fn search_empty_string_unchanged() {
+        let text = r#"{"a": 1}"#;
+        let plain = layout_job(text, &palette(false), FontId::monospace(12.0), 400.0);
+        let with_empty = layout_job_search(text, &palette(false), FontId::monospace(12.0), 400.0, "");
+        assert_eq!(plain.sections.len(), with_empty.sections.len());
+    }
+
+    #[test]
+    fn search_no_match_no_background() {
+        let text = r#"{"a": 1}"#;
+        let with_hl = layout_job_search(text, &palette(false), FontId::monospace(12.0), 400.0, "zzz");
+        let has_bg = with_hl.sections.iter().any(|s| s.format.background.a() > 0);
+        assert!(!has_bg);
+    }
+
+    #[test]
+    fn search_is_case_insensitive() {
+        let text = r#""HELLO world""#;
+        let hl = layout_job_search(text, &palette(false), FontId::monospace(12.0), 400.0, "hello");
+        let has_bg = hl.sections.iter().any(|s| s.format.background.a() > 0);
+        assert!(has_bg);
+    }
+
+    #[test]
+    fn search_covers_full_text_length() {
+        let text = r#"{"key": "value", "other": 123}"#;
+        let hl = layout_job_search(text, &palette(false), FontId::monospace(12.0), 400.0, "key");
+        let total: usize = hl.sections.iter().map(|s| s.byte_range.len()).sum();
+        assert_eq!(total, text.len());
+    }
+
+    #[test]
+    fn dark_theme_does_not_panic() {
+        let job = layout_job(r#"{"dark": true, "val": null}"#, &palette(true), FontId::monospace(12.0), 400.0);
+        assert!(job.sections.len() > 3);
     }
 }

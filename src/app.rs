@@ -82,10 +82,22 @@ pub struct JsonViewApp {
     pub key_collect_query: String,
     pub key_collect_results: Vec<(String, Vec<String>)>, // (parent_path, child_keys)
 
+    // compose view mode: editor_text = raw template; pointer_resolved = cached resolved output
+    pub pointer_resolved: Option<String>, // Some → file is a compose template
+    pub editor_raw_mode: bool,            // true = editing raw, false = viewing resolved
+
     // compose file picker + editor autocomplete
     pub compose_ws_files: Vec<String>, // all workspace json filenames (relative to ws_root)
     pub editor_ac_pos: Option<usize>,  // byte offset of {{ in editor_text (None = no popup)
     pub editor_ac_partial: String,     // text typed after {{
+    pub editor_ac_idx: Option<usize>,  // keyboard-selected suggestion index
+
+    // editor find/replace (Cmd+H)
+    pub show_editor_replace: bool,
+    pub editor_replace: String,
+
+    // editor code folding
+    pub folded_lines: std::collections::HashSet<usize>, // start-line numbers that are collapsed
 
     // template modal
     pub show_template: bool,
@@ -151,9 +163,15 @@ impl JsonViewApp {
             show_compose: false,
             compose_template: String::new(),
             compose_preview: None,
+            pointer_resolved: None,
+            editor_raw_mode: false,
             compose_ws_files: Vec::new(),
             editor_ac_pos: None,
             editor_ac_partial: String::new(),
+            editor_ac_idx: None,
+            show_editor_replace: false,
+            editor_replace: String::new(),
+            folded_lines: std::collections::HashSet::new(),
             show_template: false,
             template_files: Vec::new(),
             template_selected: None,
@@ -237,10 +255,28 @@ impl JsonViewApp {
     pub fn select_file(&mut self, path: PathBuf) {
         match std::fs::read_to_string(&path) {
             Ok(text) => {
+                // editor_text always holds the raw template
                 self.editor_text = text;
+                self.pointer_resolved = None;
+                self.editor_raw_mode = false;
+
+                // If file has compose tokens, resolve and cache the result
+                let is_template = self.editor_text.contains("{{") && self.editor_text.contains("}}");
+                if is_template {
+                    let base_dir = path.parent().map(|p| p.to_path_buf())
+                        .or_else(|| self.ws_root.clone());
+                    if let Some(dir) = base_dir {
+                        match crate::compose::compose(&self.editor_text, &dir, self.config.indent) {
+                            Ok(resolved) => { self.pointer_resolved = Some(resolved); }
+                            Err(_) => { self.editor_raw_mode = true; } // can't resolve, open raw
+                        }
+                    }
+                }
+
                 self.selected = Some(path);
                 self.dirty = false;
                 self.expanded.clear();
+                self.folded_lines.clear();
                 self.history.clear();
                 self.history_preview = None;
                 self.history_selected = None;
@@ -254,10 +290,55 @@ impl JsonViewApp {
         }
     }
 
+    /// Re-resolve the compose template, update the cache, and reparse.
+    pub fn refresh_pointer_resolved(&mut self) {
+        let base_dir = self.selected.as_ref()
+            .and_then(|f| f.parent().map(|p| p.to_path_buf()))
+            .or_else(|| self.ws_root.clone());
+        if let Some(dir) = base_dir {
+            match crate::compose::compose(&self.editor_text, &dir, self.config.indent) {
+                Ok(resolved) => {
+                    self.pointer_resolved = Some(resolved);
+                    self.reparse();
+                }
+                Err(e) => { self.toast(format!("Compose failed: {e}")); }
+            }
+        }
+    }
+
     pub fn reparse(&mut self) {
-        match parser::parse(&self.editor_text) {
+        let is_compose = self.editor_text.contains("{{") && self.editor_text.contains("}}");
+
+        // Raw compose mode: {{}} aren't valid JSON — skip parse silently.
+        if self.editor_raw_mode && is_compose {
+            self.parse_error = None;
+            self.arena = None;
+            self.smells = Vec::new();
+            self.run_jsonpath();
+            self.needs_parse = false;
+            return;
+        }
+
+        // Result mode but compose not yet resolved — skip silently, don't fall
+        // back to raw template (which would produce spurious parse errors).
+        if !self.editor_raw_mode && is_compose && self.pointer_resolved.is_none() {
+            self.parse_error = None;
+            self.arena = None;
+            self.smells = Vec::new();
+            self.run_jsonpath();
+            self.needs_parse = false;
+            return;
+        }
+
+        // Result mode: parse the resolved output; plain file: parse editor text.
+        let text = if !self.editor_raw_mode && self.pointer_resolved.is_some() {
+            self.pointer_resolved.clone().unwrap()
+        } else {
+            self.editor_text.clone()
+        };
+        match parser::parse(&text) {
             Ok(a) => {
-                self.smells = smells::scan(&a, &self.editor_text);
+                self.smells = smells::scan(&a, &text);
                 self.parse_error = None;
                 self.arena = Some(a);
             }
@@ -505,6 +586,8 @@ impl JsonViewApp {
                     self.selected = None;
                     self.editor_text.clear();
                     self.arena = None;
+                    self.pointer_resolved = None;
+                    self.editor_raw_mode = false;
                 }
                 telemetry::log_event(self.config.telemetry_enabled, "delete");
                 self.toast(self.t("toast.deleted"));
@@ -640,6 +723,20 @@ impl eframe::App for JsonViewApp {
             if !self.show_editor_search {
                 self.editor_search.clear();
                 self.editor_search_matches.clear();
+                self.show_editor_replace = false;
+            }
+        }
+        // global Cmd+H — toggle find+replace
+        if ctx.input(|i| i.modifiers.command && i.key_pressed(egui::Key::H)) {
+            if self.show_editor_replace {
+                self.show_editor_replace = false;
+                self.show_editor_search = false;
+                self.editor_search.clear();
+                self.editor_search_matches.clear();
+                self.editor_replace.clear();
+            } else {
+                self.show_editor_search = true;
+                self.show_editor_replace = true;
             }
         }
 
@@ -670,6 +767,11 @@ impl eframe::App for JsonViewApp {
             } else {
                 ctx.request_repaint_after(std::time::Duration::from_millis(250));
             }
+        }
+
+        // Ensure arena is populated in Result mode before any panel renders.
+        if self.arena.is_none() && !self.editor_raw_mode && self.pointer_resolved.is_some() {
+            self.reparse();
         }
 
         self.ui_toolbar(ctx);

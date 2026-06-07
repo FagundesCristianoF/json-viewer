@@ -22,7 +22,6 @@ struct DevKitToolbar: ToolbarContent {
         // JSON Editor mode items
         if devKit.mode == .jsonEditor {
             JsonEditorToolbarItems()
-                .environmentObject(devKit.editorModel)
         }
     }
 }

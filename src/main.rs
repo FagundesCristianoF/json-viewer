@@ -3,6 +3,7 @@
 mod app;
 mod compose;
 mod config;
+mod folding;
 mod git;
 mod highlight;
 mod i18n;
@@ -29,6 +30,7 @@ mod ui {
     pub mod template;
     pub mod toolbar;
     pub mod tree;
+    pub mod view_mode;
 }
 
 use eframe::egui;

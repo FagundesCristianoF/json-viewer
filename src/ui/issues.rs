@@ -15,6 +15,7 @@ impl JsonViewApp {
             .frame(frame)
             .resizable(true)
             .default_height(184.0)
+            .min_height(120.0)
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
                     crate::theme::section_label(ui, self.t("jp.section"));
@@ -74,120 +75,79 @@ impl JsonViewApp {
                 });
                 ui.add_space(2.0);
 
-                match self.issues_tab {
-                    IssuesTab::History => {
-                        self.ui_history_body(ui);
-                    }
-                    IssuesTab::Keys => {
-                        self.ui_key_collector(ui);
-                    }
-                    _ => {
-                        egui::ScrollArea::vertical()
-                            .auto_shrink([false, false])
-                            .show(ui, |ui| match self.issues_tab {
-                                IssuesTab::Syntax => {
-                                    if let Some(e) = &self.parse_error.clone() {
-                                        // If the text contains {{...}} tokens it's a compose
-                                        // template — raw JSON parse errors are expected.
-                                        let is_template = self.editor_text.contains("{{")
-                                            && self.editor_text.contains("}}");
-                                        if is_template {
-                                            ui.horizontal(|ui| {
-                                                ui.label(
-                                                    egui::RichText::new("Compose template — {{}} tokens need resolving.")
-                                                        .color(p.dim)
-                                                        .size(12.0),
-                                                );
-                                                if ui.small_button("Resolve now").clicked() {
-                                                    let base_dir = self.selected.as_ref()
-                                                        .and_then(|f| f.parent().map(|p| p.to_path_buf()))
-                                                        .or_else(|| self.ws_root.clone());
-                                                    if let Some(dir) = base_dir {
-                                                        match crate::compose::compose(
-                                                            &self.editor_text.clone(),
-                                                            &dir,
-                                                            self.config.indent,
-                                                        ) {
-                                                            Ok(resolved) => {
-                                                                self.editor_text = resolved;
-                                                                self.dirty = true;
-                                                                self.needs_parse = true;
-                                                                self.last_edit = Some(std::time::Instant::now());
-                                                                self.toast("Composed");
-                                                            }
-                                                            Err(e) => self.toast(format!("Compose failed: {e}")),
-                                                        }
-                                                    } else {
-                                                        self.toast("Open a workspace first");
-                                                    }
-                                                }
-                                                if ui.small_button("Open in Compose…").clicked() {
-                                                    self.compose_template = self.editor_text.clone();
-                                                    self.show_compose = true;
-                                                    let base_dir = self.selected.as_ref()
-                                                        .and_then(|f| f.parent().map(|p| p.to_path_buf()))
-                                                        .or_else(|| self.ws_root.clone());
-                                                    self.update_compose_preview(base_dir.as_deref());
-                                                }
-                                            });
-                                        } else {
-                                            let label = format!(
-                                                "⚠ {} (line {}, col {})",
-                                                e.message, e.line, e.col
-                                            );
-                                            let resp = ui.add(
-                                                egui::Label::new(
-                                                    egui::RichText::new(&label)
-                                                        .color(err_color)
-                                                        .size(12.0),
-                                                )
-                                                .sense(egui::Sense::click()),
-                                            );
-                                            if resp.clicked() {
-                                                self.navigate_to_line_col(e.line, e.col);
-                                            }
-                                            resp.on_hover_text("Click to jump to error");
-                                        }
-                                    } else {
-                                        ui.label(egui::RichText::new("No syntax errors.").color(p.dim));
+                egui::ScrollArea::vertical()
+                    .auto_shrink([false, false])
+                    .show(ui, |ui| {
+                        match self.issues_tab {
+                            IssuesTab::History => {
+                                self.ui_history_body(ui);
+                            }
+                            IssuesTab::Keys => {
+                                self.ui_key_collector(ui);
+                            }
+                            IssuesTab::Syntax => {
+                                let is_compose = self.editor_text.contains("{{")
+                                    && self.editor_text.contains("}}");
+                                if is_compose && self.editor_raw_mode {
+                                    ui.label(
+                                        egui::RichText::new("Compose template — switch to Result view to inspect JSON.")
+                                            .color(p.dim)
+                                            .size(12.0),
+                                    );
+                                } else if let Some(e) = &self.parse_error.clone() {
+                                    let label = format!(
+                                        "⚠ {} (line {}, col {})",
+                                        e.message, e.line, e.col
+                                    );
+                                    let resp = ui.add(
+                                        egui::Label::new(
+                                            egui::RichText::new(&label)
+                                                .color(err_color)
+                                                .size(12.0),
+                                        )
+                                        .sense(egui::Sense::click()),
+                                    );
+                                    if resp.clicked() {
+                                        self.navigate_to_line_col(e.line, e.col);
                                     }
+                                    resp.on_hover_text("Click to jump to error");
+                                } else {
+                                    ui.label(egui::RichText::new("No syntax errors.").color(p.dim));
                                 }
-                                IssuesTab::Smells => {
-                                    if self.smells.is_empty() {
-                                        ui.label(egui::RichText::new("No smells.").color(p.dim));
-                                    }
-                                    let smells = self.smells.clone();
-                                    for s in &smells {
-                                        let resp = ui.horizontal(|ui| {
-                                            ui.label(
-                                                egui::RichText::new(&s.path)
-                                                    .monospace()
-                                                    .color(p.accent),
-                                            );
-                                            ui.label(
-                                                egui::RichText::new(&s.message).color(p.text),
-                                            );
-                                        });
-                                        if resp.response.interact(egui::Sense::click()).clicked() {
-                                            // Search for the last key segment in the text
-                                            let key = s.path
-                                                .split('.')
-                                                .last()
-                                                .unwrap_or(&s.path)
-                                                .trim_matches(|c: char| c == '$' || c == '[' || c == ']')
-                                                .to_string();
-                                            if !key.is_empty() {
-                                                self.editor_search = key;
-                                                self.show_editor_search = true;
-                                                self.run_editor_search();
-                                            }
+                            }
+                            IssuesTab::Smells => {
+                                if self.smells.is_empty() {
+                                    ui.label(egui::RichText::new("No smells.").color(p.dim));
+                                }
+                                let smells = self.smells.clone();
+                                for s in &smells {
+                                    let resp = ui.horizontal(|ui| {
+                                        ui.label(
+                                            egui::RichText::new(&s.path)
+                                                .monospace()
+                                                .color(p.accent),
+                                        );
+                                        ui.label(
+                                            egui::RichText::new(&s.message).color(p.text),
+                                        );
+                                    });
+                                    if resp.response.interact(egui::Sense::click()).clicked() {
+                                        let key = s.path
+                                            .split('.')
+                                            .last()
+                                            .unwrap_or(&s.path)
+                                            .trim_matches(|c: char| c == '$' || c == '[' || c == ']')
+                                            .to_string();
+                                        if !key.is_empty() {
+                                            self.editor_search = key;
+                                            self.show_editor_search = true;
+                                            self.run_editor_search();
                                         }
                                     }
                                 }
-                                IssuesTab::History | IssuesTab::Keys => unreachable!(),
-                            });
-                    }
-                }
+                            }
+                        }
+                    });
             });
     }
 

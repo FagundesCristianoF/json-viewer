@@ -18,6 +18,7 @@ struct ContentView: View {
         .toolbar {
             DevKitToolbar()
         }
+        .environmentObject(devKit.editorModel)
         .preferredColorScheme(devKit.editorModel.darkMode ? .dark : .light)
     }
 
@@ -63,7 +64,6 @@ struct ScannerDetailView: View {
         }
         .toolbar {
             ScannerToolbarItems(showHistory: $showHistory)
-                .environmentObject(vm)
         }
         .popover(isPresented: $showHistory, arrowEdge: .bottom) {
             HistoryView(isPresented: $showHistory)

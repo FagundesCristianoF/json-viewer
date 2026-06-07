@@ -22,7 +22,7 @@ impl JsonViewApp {
 
         let frame = egui::Frame::none()
             .fill(bg)
-            .inner_margin(egui::Margin::symmetric(12.0, 4.0));
+            .inner_margin(egui::Margin::symmetric(12.0, 3.0));
 
         egui::TopBottomPanel::bottom("status")
             .frame(frame)

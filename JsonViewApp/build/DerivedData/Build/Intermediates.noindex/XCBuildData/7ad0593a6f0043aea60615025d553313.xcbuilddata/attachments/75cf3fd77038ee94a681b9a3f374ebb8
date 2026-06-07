@@ -1,0 +1,129 @@
+{
+  "" : {
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JsonViewApp-primary.dia",
+    "emit-module-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JsonViewApp-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JsonViewApp-primary-emit-module.dia",
+    "pch" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JsonViewApp-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JsonViewApp-primary.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/App.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/App~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/AppModel.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/AppModel~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/ContentView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/EditorView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/EditorView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/IssuesView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/IssuesView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONTreeView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/JSONTreeView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Models.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/Models~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/RustBridge.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/RustBridge~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/SidebarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/SidebarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/StatusBarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/StatusBarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/ToolbarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/ToolbarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DerivedData/Build/Intermediates.noindex/JsonViewApp.build/Debug/JsonViewApp.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}
