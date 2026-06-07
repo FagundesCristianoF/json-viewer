@@ -152,7 +152,7 @@ final class AppModel: ObservableObject {
             reparse()
             loadGitHistory()
         } catch {
-            showToast("Failed to read file: \(error.localizedDescription)")
+            showToast(String(format: String(localized: "editor.toast.file_read_failed"), error.localizedDescription))
         }
     }
 
@@ -200,9 +200,9 @@ final class AppModel: ObservableObject {
         do {
             try editorText.write(to: url, atomically: true, encoding: .utf8)
             isDirty = false
-            showToast("Saved")
+            showToast(String(localized: "editor.toast.saved"))
         } catch {
-            showToast("Save failed: \(error.localizedDescription)")
+            showToast(String(format: String(localized: "editor.toast.save_failed"), error.localizedDescription))
         }
     }
 
@@ -210,7 +210,7 @@ final class AppModel: ObservableObject {
 
     func format() {
         guard let formatted = RustBridge.format(editorText, indent: indentSize) else {
-            showToast("Format failed — invalid JSON")
+            showToast(String(localized: "editor.toast.format_failed"))
             return
         }
         applyTransform(formatted)
@@ -218,7 +218,7 @@ final class AppModel: ObservableObject {
 
     func minify() {
         guard let minified = RustBridge.minify(editorText) else {
-            showToast("Minify failed — invalid JSON")
+            showToast(String(localized: "editor.toast.minify_failed"))
             return
         }
         applyTransform(minified)
@@ -226,7 +226,7 @@ final class AppModel: ObservableObject {
 
     func removeNulls() {
         guard let cleaned = RustBridge.removeNulls(editorText, indent: indentSize) else {
-            showToast("Remove nulls failed — invalid JSON")
+            showToast(String(localized: "editor.toast.remove_nulls_failed"))
             return
         }
         applyTransform(cleaned)
@@ -250,13 +250,13 @@ final class AppModel: ObservableObject {
             return
         }
         guard let handle = parseResult, handle.error == nil else {
-            jsonPathError = "Cannot run query — document has parse errors"
+            jsonPathError = String(localized: "editor.jsonpath.parse_error")
             jsonPathMatches = []
             return
         }
         let ids = RustBridge.jsonPath(handle, query: query)
         if ids.isEmpty {
-            jsonPathError = "No matches"
+            jsonPathError = String(localized: "editor.jsonpath.no_matches")
             jsonPathMatches = []
         } else {
             jsonPathError = nil
@@ -268,13 +268,13 @@ final class AppModel: ObservableObject {
 
     func resolveCompose() {
         guard let dir = workspaceRoot?.path else {
-            showToast("Open a workspace folder first")
+            showToast(String(localized: "editor.toast.open_workspace_first"))
             return
         }
         if let result = RustBridge.compose(editorText, dir: dir, indent: indentSize) {
             resolvedCompose = result
         } else {
-            showToast("Compose resolve failed")
+            showToast(String(localized: "editor.toast.compose_failed"))
         }
     }
 

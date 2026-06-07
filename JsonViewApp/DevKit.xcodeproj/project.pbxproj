@@ -26,6 +26,7 @@
 		3B2ED85967633158F0474E21 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F1DE34A1FF9D05D242A2F4B /* Models.swift */; };
 		40615BFB0FCF209FFFB82104 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839822F2337AF6213B84E63D /* SettingsView.swift */; };
 		40A5A1EA8D88D1240662B84D /* JSONPathEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E46B3D645F805FD601267 /* JSONPathEvaluator.swift */; };
+		48166E926C773EF1C2C459FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1B7E59A2C37ACBE2E2A7C0D9 /* InfoPlist.strings */; };
 		4B9563F8EE353486FF81E3D6 /* JSONTreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0CD1714635DDBC40AC830 /* JSONTreeView.swift */; };
 		4D5B7166E7E84ADDE50E289F /* ScanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB21CB4634143F609CD2742 /* ScanViewModel.swift */; };
 		50D8749F45BA7CD03F031F38 /* JSONColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0857E255E5C6B3368C15444D /* JSONColorView.swift */; };
@@ -46,6 +47,7 @@
 		B6EC5257A5F9B8EBF9B0B0BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91169E0B0DAA8621205D967 /* ContentView.swift */; };
 		BCE8E7E75AB481EA6722A06C /* test_optionRow_error.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 018C72256403CA69D8A99029 /* test_optionRow_error.1.png */; };
 		C3550664B038839A1DC537C1 /* ScanConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C4D3571592D6694E59D47 /* ScanConfigTests.swift */; };
+		CC45018C7D2B4DD0798C26E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E40927600ED2C7C982F691C2 /* Localizable.strings */; };
 		D1047E7CB64D49182D0EA4E9 /* JsonEditorToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B9D18E2A12A771A3F7DF95 /* JsonEditorToolbar.swift */; };
 		D43574390AA9D3E18DCFEC97 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BACC49EAC7D638A346F14AB /* ToolbarView.swift */; };
 		D76E4E36B03B5AFFDC196A34 /* ScanResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE09F55E34BBC796989BFA /* ScanResultsView.swift */; };
@@ -95,6 +97,7 @@
 		1DB21CB4634143F609CD2742 /* ScanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewModel.swift; sourceTree = "<group>"; };
 		222F278EE84170C65F220F21 /* JsonEditorSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonEditorSidebarView.swift; sourceTree = "<group>"; };
 		272C4D3571592D6694E59D47 /* ScanConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanConfigTests.swift; sourceTree = "<group>"; };
+		2B24465173A74BCA860E9121 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2E9B316D7B3CDE419454CACD /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		3551FB783A7D467CB35E4924 /* AppModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModeTests.swift; sourceTree = "<group>"; };
 		3C3BD646DABD48405502E700 /* HTTPExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPExecutor.swift; sourceTree = "<group>"; };
@@ -110,6 +113,7 @@
 		638EB2AB96727EBEC7014949 /* CurlParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurlParserTests.swift; sourceTree = "<group>"; };
 		646C4B96FC3F2B0897B57A4D /* JsonEditorDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonEditorDetailView.swift; sourceTree = "<group>"; };
 		6553574244D14A3BB3E63E9B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		69BB3ABF702DBF513BEE81CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6CAE7C25A43A198D233FBC47 /* DevKitSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DevKitSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EBFD8C78C23444C5300622 /* ConfigPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigPanelView.swift; sourceTree = "<group>"; };
 		75748E20BAF037519245C590 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 				AE8CF56E5BA5EF1EEC3DA5B3 /* Info.plist */,
 				A59478103C4500B4F6F80174 /* JsonViewApp-Bridging-Header.h */,
 				5E601934B0B5E64A7FB91C6D /* JsonViewApp.entitlements */,
+				1B7E59A2C37ACBE2E2A7C0D9 /* InfoPlist.strings */,
+				E40927600ED2C7C982F691C2 /* Localizable.strings */,
 				41F06E87A480E04713BB660D /* Sources */,
 			);
 			path = JsonViewApp;
@@ -457,6 +463,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBE1B2FF87FA466208CE510B /* Assets.xcassets in Resources */,
+				48166E926C773EF1C2C459FB /* InfoPlist.strings in Resources */,
+				CC45018C7D2B4DD0798C26E8 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,6 +573,25 @@
 			targetProxy = 7E2E0963E29E023DC54F9B37 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1B7E59A2C37ACBE2E2A7C0D9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B24465173A74BCA860E9121 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E40927600ED2C7C982F691C2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				69BB3ABF702DBF513BEE81CE /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5297C095B9EBDA3C701358E7 /* Debug */ = {

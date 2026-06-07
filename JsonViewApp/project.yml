@@ -42,6 +42,8 @@ targets:
     resources:
       - JsonViewApp/Resources
       - JsonViewApp/Assets.xcassets
+      - path: JsonViewApp/en.lproj
+        type: folder
     settings:
       base:
         INFOPLIST_FILE: JsonViewApp/Info.plist

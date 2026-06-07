@@ -1,0 +1,302 @@
+// MARK: - AppModel toasts
+
+/* Toast shown after a file is successfully saved */
+"editor.toast.saved" = "Saved";
+
+/* Toast shown when a file cannot be read */
+"editor.toast.file_read_failed" = "Failed to read file: %@";
+
+/* Toast shown when saving fails */
+"editor.toast.save_failed" = "Save failed: %@";
+
+/* Toast shown when formatting fails because JSON is invalid */
+"editor.toast.format_failed" = "Format failed — invalid JSON";
+
+/* Toast shown when minify fails because JSON is invalid */
+"editor.toast.minify_failed" = "Minify failed — invalid JSON";
+
+/* Toast shown when remove-nulls fails because JSON is invalid */
+"editor.toast.remove_nulls_failed" = "Remove nulls failed — invalid JSON";
+
+/* Toast shown when user tries compose without a workspace open */
+"editor.toast.open_workspace_first" = "Open a workspace folder first";
+
+/* Toast shown when compose resolve fails */
+"editor.toast.compose_failed" = "Compose resolve failed";
+
+// MARK: - JSONPath errors
+
+/* Shown in JSONPath field when document has parse errors */
+"editor.jsonpath.parse_error" = "Cannot run query — document has parse errors";
+
+/* Shown in JSONPath field when query returns no results */
+"editor.jsonpath.no_matches" = "No matches";
+
+// MARK: - Status bar
+
+/* Shown in status bar when no file is open */
+"editor.status.no_file" = "No file open";
+
+/* Label for node count stat chip */
+"editor.status.nodes" = "nodes";
+
+/* Label for match count stat chip */
+"editor.status.matches" = "matches";
+
+/* Label for smell count stat chip */
+"editor.status.smells" = "smells";
+
+// MARK: - Sidebar (JSON Editor)
+
+/* Header label for the files panel */
+"sidebar.header.files" = "FILES";
+
+/* Placeholder for the file search/filter field */
+"sidebar.search.placeholder" = "Filter files";
+
+/* Shown when no workspace is open */
+"sidebar.empty.no_workspace" = "No workspace open";
+
+/* Button to open a workspace folder */
+"sidebar.button.open_workspace" = "Open Workspace";
+
+/* Context menu: reveal file in Finder */
+"sidebar.context.reveal_in_finder" = "Reveal in Finder";
+
+/* Context menu: copy file path */
+"sidebar.context.copy_path" = "Copy Path";
+
+// MARK: - Toolbar (JSON Editor)
+
+/* Tooltip for the dark/light mode toggle when currently in dark mode */
+"toolbar.tooltip.switch_to_light" = "Switch to Light Mode";
+
+/* Tooltip for the dark/light mode toggle when currently in light mode */
+"toolbar.tooltip.switch_to_dark" = "Switch to Dark Mode";
+
+/* Tooltip for the tree panel toggle */
+"toolbar.tooltip.toggle_tree" = "Toggle Tree";
+
+/* Tooltip for the issues panel toggle */
+"toolbar.tooltip.toggle_issues" = "Toggle Issues";
+
+/* Tooltip for the mode segmented picker */
+"toolbar.tooltip.switch_mode" = "Switch mode";
+
+// MARK: - Action Bar / Toolbar buttons
+
+/* Tooltip for the Format JSON button */
+"actionbar.tooltip.format" = "Format JSON";
+
+/* Tooltip for the Minify JSON button */
+"actionbar.tooltip.minify" = "Minify JSON";
+
+/* Tooltip for the Remove Nulls button */
+"actionbar.tooltip.remove_nulls" = "Remove Nulls";
+
+/* Tooltip for the Find & Replace button */
+"actionbar.tooltip.find_replace" = "Find & Replace";
+
+/* Label for the Replace button in the action bar */
+"actionbar.label.replace" = "Replace";
+
+/* Title for the Find & Replace popover */
+"actionbar.popover.find_replace_title" = "Find & Replace";
+
+/* Label for the Find field in Find & Replace */
+"actionbar.label.find" = "Find";
+
+/* Label for the Replace field in Find & Replace */
+"actionbar.label.replace_field" = "Replace";
+
+/* Placeholder for the Find field */
+"actionbar.placeholder.search" = "Search…";
+
+/* Placeholder for the Replace field */
+"actionbar.placeholder.replacement" = "Replacement…";
+
+/* Button: replace all occurrences */
+"actionbar.button.replace_all" = "Replace All";
+
+/* Placeholder for the JSONPath query field */
+"actionbar.jsonpath.placeholder" = "JSONPath…";
+
+// MARK: - Scanner Sidebar
+
+/* Section header: cURL command input */
+"section.curl_command" = "Curl Command";
+
+/* Section header: options list */
+"section.options" = "Options";
+
+/* Button tooltip: clear the text field */
+"action.clear" = "Clear";
+
+/* Button tooltip: import content from a file */
+"action.import_file" = "Import from file";
+
+// MARK: - Config Panel
+
+/* Section header: parameter configuration */
+"section.parameter" = "Parameter";
+
+/* Field label: which parameter to replace */
+"field.replace_param" = "Replace param";
+
+/* Section header: filter configuration */
+"section.filters" = "Filters";
+
+/* Field label: JSONPath filter expression */
+"field.jsonpath" = "JSONPath filter";
+
+/* Field label: path that must return results */
+"field.require_results" = "Require results";
+
+/* Field label: body search query */
+"field.body_query" = "Body query";
+
+/* Section header: execution settings */
+"section.execution" = "Execution";
+
+/* Field label: number of parallel workers */
+"field.workers" = "Workers";
+
+/* Field label: per-request timeout in seconds */
+"field.timeout" = "Timeout";
+
+/* Status badge shown when filter mode is active */
+"status.filter_mode_active" = "Filter mode active";
+
+/* Status badge shown when running in dump (non-filter) mode */
+"status.dump_mode" = "Dump mode — no filters set";
+
+// MARK: - Results View
+
+/* Placeholder when a response has no body */
+"results.no_response_body" = "No response body";
+
+/* Tooltip for the copy-response button */
+"results.tooltip.copy_response" = "Copy response";
+
+/* Label for the copy-error button (normal state) */
+"results.button.copy_error" = "Copy error";
+
+/* Label for the copy-error button (after copying) */
+"results.button.copied" = "Copied";
+
+/* Label for the copy JSON button */
+"results.button.copy_json" = "Copy JSON";
+
+/* Button to stop the running scan */
+"results.button.stop" = "Stop";
+
+/* Hint shown in unfiltered mode: no option selected */
+"results.hint.select_option" = "Select an option from the sidebar to view its response";
+
+/* Hint shown in filter mode before results appear */
+"results.hint.filter_mode" = "Filter mode — matching options will appear here";
+
+/* Heading for no-matches empty state */
+"results.empty.no_matches_title" = "No matches found";
+
+/* Detail text for no-matches empty state */
+"results.empty.no_matches_detail" = "No options matched the active filters.\nTry adjusting the JSONPath or filter criteria.";
+
+/* Heading for scanner initial empty state */
+"results.empty.scanner_title" = "HTTP Scanner";
+
+/* Detail text for scanner initial empty state */
+"results.empty.scanner_detail" = "Paste a curl command in the sidebar,\nadd option IDs, configure filters, then run.";
+
+// MARK: - Settings
+
+/* Tab label: General settings */
+"settings.tab.general" = "General";
+
+/* Tab label: Storage settings */
+"settings.tab.storage" = "Storage";
+
+/* Tab label: About */
+"settings.tab.about" = "About";
+
+/* Section header: Appearance */
+"settings.section.appearance" = "Appearance";
+
+/* Section header: Language & Region */
+"settings.section.language" = "Language & Region";
+
+/* Section footer: language follows system */
+"settings.footer.language" = "Change language in System Settings → Language & Region.";
+
+/* LabeledContent label: Language */
+"settings.label.language" = "Language";
+
+/* Text shown for language: follows system */
+"settings.language.follows_system" = "Follows System";
+
+/* Section header: Analytics */
+"settings.section.analytics" = "Analytics";
+
+/* Toggle label: share anonymous usage data */
+"settings.toggle.analytics" = "Share anonymous usage data";
+
+/* Section footer: analytics explanation */
+"settings.footer.analytics" = "Helps improve DevKit. No personal data is collected.";
+
+/* Section header: Editor */
+"settings.section.editor" = "Editor";
+
+/* Toggle label: auto-save on format/transform */
+"settings.toggle.autosave" = "Auto-save on format / transform";
+
+/* LabeledContent label: Indent size */
+"settings.label.indent_size" = "Indent size";
+
+/* Section header: History & Collection Folder */
+"settings.section.history_folder" = "History & Collection Folder";
+
+/* Button to choose a custom history folder */
+"settings.button.choose_folder" = "Choose Folder…";
+
+/* Button to reset history folder to default */
+"settings.button.reset_default" = "Reset to Default";
+
+/* Section footer: history folder location explanation */
+"settings.footer.history_folder" = "Scan history and saved collections are stored in this folder. Default: ~/Library/Application Support/DevKit/";
+
+/* LabeledContent label: Theme */
+"settings.label.theme" = "Theme";
+
+/* App description in About tab */
+"settings.about.description" = "JSON editor and HTTP parameter scanner for macOS";
+
+/* Button in About tab: report a bug */
+"settings.about.report_bug" = "Report a Bug";
+
+/* Button in About tab: check for updates */
+"settings.about.check_updates" = "Check for Updates";
+
+// MARK: - App Commands (menu bar)
+
+/* Menu item: Save the current file */
+"menu.save" = "Save";
+
+/* Menu item: Open a workspace folder */
+"menu.open_workspace" = "Open Workspace…";
+
+/* Menu item: Open Find bar */
+"menu.find" = "Find…";
+
+/* Menu: Scan actions */
+"menu.scan" = "Scan";
+
+/* Menu item: Run the scan */
+"menu.scan.run" = "Run";
+
+/* Menu item: Stop the scan */
+"menu.scan.stop" = "Stop";
+
+// MARK: - Open panel prompts
+
+/* NSOpenPanel prompt button for opening a workspace */
+"panel.open_workspace.prompt" = "Open Workspace";
