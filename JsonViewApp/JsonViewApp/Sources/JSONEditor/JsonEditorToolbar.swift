@@ -2,24 +2,30 @@ import SwiftUI
 
 struct JsonEditorToolbarItems: ToolbarContent {
     @EnvironmentObject var model: AppModel
-    @ObservedObject private var prefs = Preferences.shared
 
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .automatic) {
-            Button {
-                prefs.theme = prefs.theme == .dark ? .light : .dark
-            } label: {
-                Image(systemName: prefs.theme == .dark ? "sun.max" : "moon")
-            }
-            .help(prefs.theme == .dark ? "Switch to Light Mode" : "Switch to Dark Mode")
-
+            ThemeToggleButton()
             Button { model.showTree.toggle() } label: {
                 Image(systemName: "list.bullet.indent")
             }
             .help("Toggle Tree")
-
             JsonEditorIssuesToggle()
         }
+    }
+}
+
+// Separate View so @ObservedObject wiring is stable across toolbar redraws.
+private struct ThemeToggleButton: View {
+    @ObservedObject private var prefs = Preferences.shared
+
+    var body: some View {
+        Button {
+            prefs.theme = prefs.theme == .dark ? .light : .dark
+        } label: {
+            Image(systemName: prefs.theme == .dark ? "sun.max" : "moon")
+        }
+        .help(prefs.theme == .dark ? "Switch to Light Mode" : "Switch to Dark Mode")
     }
 }
 
