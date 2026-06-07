@@ -16,18 +16,26 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationSplitView {
-            sidebarContent
-                .navigationSplitViewColumnWidth(min: 200, ideal: 260, max: 360)
-                .animation(.easeInOut(duration: 0.2), value: devKit.mode)
-                .clipped()
-        } detail: {
-            detailContent
-                .frame(minWidth: 420)
-                .animation(.easeInOut(duration: 0.2), value: devKit.mode)
-        }
-        .toolbar {
-            DevKitToolbar()
+        VStack(spacing: 0) {
+            NavigationSplitView {
+                sidebarContent
+                    .navigationSplitViewColumnWidth(min: 200, ideal: 260, max: 360)
+                    .animation(.easeInOut(duration: 0.2), value: devKit.mode)
+            } detail: {
+                detailContent
+                    .frame(minWidth: 420)
+                    .animation(.easeInOut(duration: 0.2), value: devKit.mode)
+            }
+            .toolbar {
+                DevKitToolbar()
+            }
+
+            // Status bar lives outside NavigationSplitView to avoid
+            // sidebar chrome rounded corner bleeding over it.
+            if devKit.mode == .jsonEditor {
+                StatusBarView()
+                    .environmentObject(devKit.editorModel)
+            }
         }
         .environmentObject(devKit.editorModel)
         .preferredColorScheme(preferredScheme)

@@ -23,7 +23,6 @@ struct JsonEditorDetailView: View {
                             .frame(minHeight: 100, idealHeight: 160, maxHeight: 280)
                     }
                 }
-                StatusBarView()
             }
 
             if let msg = model.toast {

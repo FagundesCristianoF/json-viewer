@@ -136,6 +136,9 @@ struct CodeEditorRepresentable: NSViewRepresentable {
         scrollView.rulersVisible = true
         scrollView.hasVerticalRuler = true
 
+        // Breathing room at top so line 1 isn't flush against the action bar
+        textView.textContainerInset = NSSize(width: 0, height: 6)
+
         // Delegate
         textView.delegate = context.coordinator
         context.coordinator.textView = textView
