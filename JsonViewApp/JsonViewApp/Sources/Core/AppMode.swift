@@ -22,17 +22,12 @@ enum AppMode: String, CaseIterable {
 
 @MainActor
 final class DevKitModel: ObservableObject {
-    @Published var mode: AppMode = .jsonEditor {
+    @Published var mode: AppMode = AppMode(
+        rawValue: UserDefaults.standard.string(forKey: "devKitMode") ?? ""
+    ) ?? .jsonEditor {
         didSet { UserDefaults.standard.set(mode.rawValue, forKey: "devKitMode") }
     }
 
     let editorModel = AppModel()
     let scannerModel = ScanViewModel()
-
-    init() {
-        if let raw = UserDefaults.standard.string(forKey: "devKitMode"),
-           let saved = AppMode(rawValue: raw) {
-            mode = saved
-        }
-    }
 }
