@@ -33,11 +33,15 @@ final class AppModel: ObservableObject {
     // MARK: - UI state
 
     @Published var expandedNodes: Set<Int> = []
-    @Published var darkMode: Bool = UserDefaults.standard.bool(forKey: "darkMode") {
-        didSet { UserDefaults.standard.set(darkMode, forKey: "darkMode") }
+    @Published var darkMode: Bool = Preferences.shared.darkMode {
+        didSet { Preferences.shared.darkMode = darkMode }
     }
-    @Published var autoSave: Bool = true
-    @Published var indentSize: Int = 2
+    @Published var autoSave: Bool = Preferences.shared.autoSave {
+        didSet { Preferences.shared.autoSave = autoSave }
+    }
+    @Published var indentSize: Int = Preferences.shared.indentSize {
+        didSet { Preferences.shared.indentSize = indentSize }
+    }
     @Published var toast: String? = nil
     @Published var showFind: Bool = false
     @Published var foldRanges: [FoldRange] = []

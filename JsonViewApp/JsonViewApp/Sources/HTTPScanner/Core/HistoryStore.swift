@@ -5,12 +5,9 @@ final class HistoryStore {
     static let shared = HistoryStore()
     private let maxEntries = 50
 
-    private let fileURL: URL = {
-        let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let dir = support.appendingPathComponent("DevKit", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        return dir.appendingPathComponent("history.json")
-    }()
+    private var fileURL: URL {
+        Preferences.shared.historyFileURL
+    }
 
     private(set) var entries: [HistoryEntry] = []
 
