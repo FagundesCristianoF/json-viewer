@@ -8,7 +8,7 @@ struct DevKitApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(devKit)
-                .frame(minWidth: 900, minHeight: 600)
+                .frame(minWidth: 1000, minHeight: 600)
         }
         .commands {
             AppCommands(devKit: devKit)

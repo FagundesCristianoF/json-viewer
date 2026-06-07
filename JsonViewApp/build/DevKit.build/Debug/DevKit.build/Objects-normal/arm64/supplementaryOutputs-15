@@ -1,0 +1,30 @@
+{
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/JSONPathEvaluator.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONPathEvaluator.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONPathEvaluator.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONPathEvaluator.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONPathEvaluator.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONPathEvaluator.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/IssuesView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/IssuesView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/IssuesView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/IssuesView.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/IssuesView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/IssuesView.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONTreeView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONTreeView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONTreeView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONTreeView.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONTreeView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONTreeView.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Shared/JSONColorView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONColorView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONColorView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONColorView.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONColorView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/JSONColorView.swiftdeps"
+  }
+}

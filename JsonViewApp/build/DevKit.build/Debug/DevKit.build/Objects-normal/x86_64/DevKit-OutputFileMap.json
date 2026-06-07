@@ -1,0 +1,389 @@
+{
+  "" : {
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/DevKit-primary.dia",
+    "emit-module-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/DevKit-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/DevKit-primary-emit-module.dia",
+    "pch" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/DevKit-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/DevKit-primary.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/App.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/App~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/AppModel.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppModel~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/ContentView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ContentView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Core/AppMode.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/AppMode~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/EditorView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/EditorView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/ConfigPanelView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ConfigPanelView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/CurlParser.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/CurlParser~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/Filters.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Filters~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HTTPExecutor.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HistoryStore.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/JSONPathEvaluator.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONPathEvaluator~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/OptionsParser.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionsParser~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/RequestBuilder.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RequestBuilder~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/TextNormalizer.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/TextNormalizer~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/HistoryView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/HistoryEntry.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/OptionEntry.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionEntry~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ParsedCurl.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ParsedCurl~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanConfig.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanResult.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/ScanResultsView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResultsView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/ScanViewModel.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanViewModel~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/ScannerSidebarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScannerSidebarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/IssuesView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/IssuesView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONEditor/JsonEditorDetailView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorDetailView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONEditor/JsonEditorSidebarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorSidebarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONEditor/JsonEditorToolbar.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JsonEditorToolbar~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/JSONTreeView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONTreeView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Models.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Models~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/RustBridge.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Shared/JSONColorView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/JSONColorView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Shared/MonoTextView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/MonoTextView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Shared/OptionRow.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/OptionRow~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Shared/SuggestionTextField.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/SuggestionTextField~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/StatusBarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/StatusBarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/Theme.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/Theme~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/ToolbarView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ToolbarView~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

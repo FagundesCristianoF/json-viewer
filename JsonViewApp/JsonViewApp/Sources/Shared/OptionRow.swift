@@ -6,7 +6,7 @@ struct OptionRow: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            StatusDot(status: result.status)
+            StatusDot(status: result.status, statusCode: result.statusCode)
             VStack(alignment: .leading, spacing: 1) {
                 Text(result.displayName ?? result.id)
                     .font(.system(size: 12, weight: .medium))
@@ -93,15 +93,27 @@ struct OptionRow: View {
 
 struct StatusDot: View {
     let status: ResultStatus
+    var statusCode: Int? = nil
 
     var color: Color {
         switch status {
         case .pending: return .secondary.opacity(0.4)
         case .running: return .accentColor
-        case .matched: return .green
+        case .matched:
+            if let code = statusCode { return httpStatusColor(code) }
+            return .green
         case .notMatched: return Color(nsColor: .systemGray)
         case .error: return .red
         case .skipped: return .orange
+        }
+    }
+
+    private func httpStatusColor(_ code: Int) -> Color {
+        switch code {
+        case 200...299: return .green
+        case 400...499: return .orange
+        case 500...599: return .red
+        default: return .secondary
         }
     }
 

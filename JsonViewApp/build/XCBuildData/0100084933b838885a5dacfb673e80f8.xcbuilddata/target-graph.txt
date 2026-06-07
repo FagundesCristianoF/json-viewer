@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'DevKitTests' in project 'DevKit'
+➜ Explicit dependency on target 'DevKit' in project 'DevKit'
+Target 'DevKit' in project 'DevKit' (no dependencies)

@@ -1,0 +1,23 @@
+{
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanConfig.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanConfig.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanResult.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/ScanResult.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/RustBridge.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/RustBridge.swiftdeps"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HTTPExecutor.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HTTPExecutor.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HistoryStore.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryStore.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/HistoryView.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryView.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/HistoryEntry.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/x86_64/HistoryEntry.swiftdeps"
+  }
+}

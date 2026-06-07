@@ -1,0 +1,23 @@
+{
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/OptionsParser.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/OptionsParser.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/OptionsParser.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/OptionsParser.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/OptionsParser.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/OptionsParser.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/RequestBuilder.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/RequestBuilder.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/RequestBuilder.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/RequestBuilder.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/RequestBuilder.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/RequestBuilder.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ParsedCurl.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/ParsedCurl.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/ParsedCurl.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/ParsedCurl.dia",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/ParsedCurl.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKit.build/Objects-normal/arm64/ParsedCurl.swiftdeps"
+  }
+}

@@ -18,10 +18,12 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             sidebarContent
-                .frame(minWidth: 200, idealWidth: 260, maxWidth: 360)
+                .navigationSplitViewColumnWidth(min: 200, ideal: 260, max: 360)
                 .animation(.easeInOut(duration: 0.2), value: devKit.mode)
+                .clipped()
         } detail: {
             detailContent
+                .frame(minWidth: 420)
                 .animation(.easeInOut(duration: 0.2), value: devKit.mode)
         }
         .toolbar {

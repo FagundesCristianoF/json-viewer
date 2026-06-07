@@ -1,0 +1,59 @@
+{
+  "" : {
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/DevKitTests-primary.dia",
+    "emit-module-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/DevKitTests-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/DevKitTests-primary-emit-module.dia",
+    "pch" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/DevKitTests-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/DevKitTests-primary.swiftdeps"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Tests/DevKitTests/AppModeTests.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/AppModeTests~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Tests/DevKitTests/CurlParserTests.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/CurlParserTests~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Tests/DevKitTests/FiltersTests.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/FiltersTests~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Tests/DevKitTests/OptionsParserTests.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/OptionsParserTests~partial.swiftmodule"
+  },
+  "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/JsonViewApp/Tests/DevKitTests/ScanConfigTests.swift" : {
+    "const-values" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.swiftconstvalues",
+    "dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.d",
+    "diagnostics" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.dia",
+    "index-unit-output-path" : "/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.o",
+    "llvm-bc" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.bc",
+    "object" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.o",
+    "swift-dependencies" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests.swiftdeps",
+    "swiftmodule" : "/Users/cristianofagundes/Projects/jsonview/JsonViewApp/build/DevKit.build/Debug/DevKitTests.build/Objects-normal/x86_64/ScanConfigTests~partial.swiftmodule"
+  }
+}
