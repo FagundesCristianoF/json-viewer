@@ -61,6 +61,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: YES
 
   DevKitSnapshotTests:
     type: bundle.unit-test
@@ -70,6 +71,8 @@ targets:
     dependencies:
       - target: DevKit
       - package: swift-snapshot-testing
+        product: SnapshotTesting
     settings:
       base:
         SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: YES
