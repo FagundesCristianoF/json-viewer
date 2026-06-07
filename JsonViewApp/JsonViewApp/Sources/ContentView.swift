@@ -74,12 +74,13 @@ struct ScannerDetailView: View {
     @State private var showHistory = false
 
     var body: some View {
-        HSplitView {
+        HStack(spacing: 0) {
             ConfigPanelView()
-                .frame(minWidth: 240, idealWidth: 300, maxWidth: 380)
+                .frame(width: 300)
                 .environmentObject(vm)
+            Divider()
             ResultsView()
-                .frame(minWidth: 300)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .environmentObject(vm)
         }
         .toolbar {

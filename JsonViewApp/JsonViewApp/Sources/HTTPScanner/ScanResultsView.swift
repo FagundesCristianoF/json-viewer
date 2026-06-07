@@ -280,9 +280,9 @@ struct ScannerEmptyStateView: View {
         VStack(spacing: 12) {
             Image(systemName: "network")
                 .font(.system(size: 36)).foregroundStyle(.tertiary)
-            Text("ParamScan")
+            Text("HTTP Scanner")
                 .font(.system(size: 18, weight: .semibold)).foregroundStyle(.secondary)
-            Text("Paste a curl command, add option IDs,\nconfigure filters, then run.")
+            Text("Paste a curl command in the sidebar,\nadd option IDs, configure filters, then run.")
                 .font(.system(size: 13)).foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
