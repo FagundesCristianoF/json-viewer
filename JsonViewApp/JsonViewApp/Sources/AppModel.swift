@@ -57,7 +57,9 @@ final class AppModel: ObservableObject {
 
     // MARK: - Compose
 
-    @Published var isRawMode: Bool = false
+    @Published var isRawMode: Bool = false {
+        didSet { if oldValue != isRawMode { reparse() } }
+    }
     @Published var resolvedCompose: String? = nil
 
     // MARK: - Issues tab

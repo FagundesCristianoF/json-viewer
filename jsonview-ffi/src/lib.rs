@@ -504,8 +504,8 @@ pub extern "C" fn jv_fold_ranges(text: *const c_char) -> *mut c_char {
                 .iter()
                 .map(|r| {
                     serde_json::json!({
-                        "start": r.start_line,
-                        "end": r.end_line,
+                        "start": r.start_line + 1,
+                        "end": r.end_line + 1,
                     })
                 })
                 .collect();
