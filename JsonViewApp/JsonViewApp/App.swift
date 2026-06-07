@@ -13,5 +13,9 @@ struct DevKitApp: App {
         .commands {
             AppCommands(devKit: devKit)
         }
+
+        Settings {
+            SettingsView()
+        }
     }
 }
