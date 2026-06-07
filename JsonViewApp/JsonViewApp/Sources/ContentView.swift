@@ -26,6 +26,7 @@ struct ContentView: View {
                     .frame(minWidth: 420)
                     .animation(.easeInOut(duration: 0.2), value: devKit.mode)
             }
+            .navigationSplitViewStyle(.balanced)
             .toolbar {
                 DevKitToolbar()
             }
