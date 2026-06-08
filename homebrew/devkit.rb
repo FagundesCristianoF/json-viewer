@@ -1,5 +1,5 @@
 cask "devkit" do
-  version "1.0.0"
+  version "0.2.0"
 
   url "https://github.com/FagundesCristianoF/json-viewer/releases/download/v#{version}/DevKit-#{version}.dmg"
   sha256 "PLACEHOLDER"
