@@ -1,8 +1,8 @@
 cask "brace" do
-  version "0.2.2"
+  version "0.2.3"
 
   url "https://github.com/FagundesCristianoF/json-viewer/releases/download/v#{version}/Brace-#{version}.dmg"
-  sha256 "ac09e5867e5403b09c28ad0a84a90b198f2994a3e5e596cbe422ba3867c36fc8"
+  sha256 "869446575cde4abb494bb5f030766086e695be74e77741360009b562725663e3"
 
   name "Brace"
   desc "Native macOS developer toolkit — JSON viewer, editor, and HTTP scanner"
