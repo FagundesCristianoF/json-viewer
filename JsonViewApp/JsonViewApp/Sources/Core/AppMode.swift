@@ -21,7 +21,7 @@ enum AppMode: String, CaseIterable {
 }
 
 @MainActor
-final class DevKitModel: ObservableObject {
+final class BraceModel: ObservableObject {
     @Published var mode: AppMode = AppMode(
         rawValue: UserDefaults.standard.string(forKey: "devKitMode") ?? ""
     ) ?? .jsonEditor {

@@ -1,10 +1,10 @@
 import SwiftUI
 import AppKit
 
-// MARK: - DevKit Root
+// MARK: - Brace Root
 
 struct ContentView: View {
-    @EnvironmentObject var devKit: DevKitModel
+    @EnvironmentObject var devKit: BraceModel
     @ObservedObject private var prefs = Preferences.shared
 
     private var preferredScheme: ColorScheme? {
@@ -28,7 +28,7 @@ struct ContentView: View {
             }
             .navigationSplitViewStyle(.balanced)
             .toolbar {
-                DevKitToolbar()
+                BraceToolbar()
             }
 
             // Status bar lives outside NavigationSplitView to avoid
@@ -96,7 +96,7 @@ struct ScannerDetailView: View {
 // MARK: - AppCommands (menu bar)
 
 struct AppCommands: Commands {
-    @ObservedObject var devKit: DevKitModel
+    @ObservedObject var devKit: BraceModel
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) { }

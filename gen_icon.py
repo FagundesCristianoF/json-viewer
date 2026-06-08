@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate DevKit macOS app icon — { globe } concept."""
+"""Generate Brace macOS app icon — { globe } concept."""
 
 import math
 import os

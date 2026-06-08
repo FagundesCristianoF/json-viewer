@@ -1,10 +1,10 @@
 import SwiftUI
 import AppKit
 
-// MARK: - DevKit Toolbar (mode toggle + per-mode items)
+// MARK: - Brace Toolbar (mode toggle + per-mode items)
 
-struct DevKitToolbar: ToolbarContent {
-    @EnvironmentObject var devKit: DevKitModel
+struct BraceToolbar: ToolbarContent {
+    @EnvironmentObject var devKit: BraceModel
 
     var body: some ToolbarContent {
         // Mode toggle — centered, always visible

@@ -1,8 +1,8 @@
 import SwiftUI
 
 @main
-struct DevKitApp: App {
-    @StateObject private var devKit = DevKitModel()
+struct BraceApp: App {
+    @StateObject private var devKit = BraceModel()
 
     var body: some Scene {
         WindowGroup {

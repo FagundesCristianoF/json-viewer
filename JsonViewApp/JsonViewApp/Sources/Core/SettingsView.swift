@@ -62,7 +62,7 @@ private struct GeneralSettingsTab: View {
             } header: {
                 Text("Analytics")
             } footer: {
-                Text("Helps improve DevKit. No personal data is collected.")
+                Text("Helps improve Brace. No personal data is collected.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -141,7 +141,7 @@ private struct StorageSettingsTab: View {
             } header: {
                 Text("History & Collection Folder")
             } footer: {
-                Text("Scan history and saved collections are stored in this folder. Default: ~/Library/Application Support/DevKit/")
+                Text("Scan history and saved collections are stored in this folder. Default: ~/Library/Application Support/Brace/")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -180,7 +180,7 @@ private struct AboutSettingsTab: View {
                     .foregroundStyle(.primary)
                     .symbolRenderingMode(.hierarchical)
 
-                Text("DevKit")
+                Text("Brace")
                     .font(.system(size: 22, weight: .semibold))
 
                 // Version stamp — the memorable moment

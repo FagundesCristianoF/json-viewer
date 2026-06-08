@@ -62,12 +62,12 @@ final class Preferences: ObservableObject {
 
     // MARK: - History / Collection folder
 
-    /// Default: ~/Library/Application Support/DevKit/
+    /// Default: ~/Library/Application Support/Brace/
     static var defaultHistoryDirectory: URL {
         let support = FileManager.default.urls(
             for: .applicationSupportDirectory, in: .userDomainMask
         ).first!
-        return support.appendingPathComponent("DevKit", isDirectory: true)
+        return support.appendingPathComponent("Brace", isDirectory: true)
     }
 
     @Published var historyDirectory: URL {
@@ -104,7 +104,7 @@ final class Preferences: ObservableObject {
         let savedAnalytics = UserDefaults.standard.object(forKey: Key.analytics)
         analytics = savedAnalytics != nil ? UserDefaults.standard.bool(forKey: Key.analytics) : true
 
-        // historyDirectory — default to ~/Library/Application Support/DevKit/
+        // historyDirectory — default to ~/Library/Application Support/Brace/
         if let saved = UserDefaults.standard.string(forKey: Key.historyDirectory) {
             historyDirectory = URL(fileURLWithPath: saved)
         } else {

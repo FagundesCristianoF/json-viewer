@@ -1,4 +1,4 @@
-# DevKit
+# Brace
 
 A native macOS developer toolkit for working with JSON and HTTP APIs. Built with SwiftUI and a Rust core for performance.
 
@@ -86,12 +86,12 @@ A native macOS developer toolkit for working with JSON and HTTP APIs. Built with
 ### Homebrew (recommended)
 
 ```bash
-brew install --cask devkit
+brew install --cask brace
 ```
 
 ### Manual
 
-Download the latest DMG from [Releases](https://github.com/FagundesCristianoF/json-viewer/releases), open it, and drag **DevKit.app** to `/Applications`.
+Download the latest DMG from [Releases](https://github.com/FagundesCristianoF/json-viewer/releases), open it, and drag **Brace.app** to `/Applications`.
 
 ---
 
@@ -104,7 +104,7 @@ Download the latest DMG from [Releases](https://github.com/FagundesCristianoF/js
 
 ## Architecture
 
-DevKit is split into three layers:
+Brace is split into three layers:
 
 ```
 JsonViewApp/          ← SwiftUI macOS app
@@ -156,7 +156,7 @@ cd JsonViewApp
 xcodegen generate
 
 # Open in Xcode
-open DevKit.xcodeproj
+open Brace.xcodeproj
 ```
 
 > The Xcode project links against `target/release/libjsonview_ffi.a`. If you move the repo, update `OTHER_LDFLAGS` in `project.yml` accordingly.
@@ -182,12 +182,12 @@ bash scripts/publish.sh 0.2.0
 
 This will:
 1. Build the Rust FFI in release mode
-2. Build `DevKit.app` with Xcode (Release configuration)
+2. Build `Brace.app` with Xcode (Release configuration)
 3. Notarize with Apple
 4. Staple the notarization ticket
 5. Package as a DMG
 6. Create a GitHub release and upload the DMG
-7. Update `homebrew/devkit.rb` with the new version and sha256
+7. Update `homebrew/brace.rb` with the new version and sha256
 
 ---
 
@@ -208,7 +208,7 @@ Follow the **Building from Source** steps above.
 | FFI bridge | `jsonview-ffi/src/lib.rs` |
 | Xcode project spec | `JsonViewApp/project.yml` |
 | App icon generator | `gen_icon.py` |
-| Homebrew cask | `homebrew/devkit.rb` |
+| Homebrew cask | `homebrew/brace.rb` |
 | Publish script | `scripts/publish.sh` |
 
 ### Workflow

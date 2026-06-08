@@ -5,8 +5,8 @@ set -euo pipefail
 source <(grep -v '^#' secrets.yml | sed 's/: /=/' | sed 's/^/export /' | sed 's/"//g')
 
 VERSION="${1:-1.0.0}"
-APP_NAME="DevKit"
-BUNDLE_ID="com.fagundes.devkit"
+APP_NAME="Brace"
+BUNDLE_ID="com.fagundes.brace"
 REPO="FagundesCristianoF/json-viewer"
 DERIVED="JsonViewApp/build/DerivedData"
 APP_PATH="$DERIVED/Build/Products/Release/$APP_NAME.app"
@@ -18,8 +18,8 @@ cargo build --release -p jsonview-ffi
 echo "==> Building $APP_NAME $VERSION (Release)"
 cd JsonViewApp
 xcodebuild \
-  -project DevKit.xcodeproj \
-  -scheme DevKit \
+  -project Brace.xcodeproj \
+  -scheme Brace \
   -configuration Release \
   -destination "platform=macOS" \
   -derivedDataPath build/DerivedData \
@@ -29,13 +29,13 @@ xcodebuild \
 cd ..
 
 echo "==> Notarizing"
-ditto -c -k --keepParent "$APP_PATH" /tmp/devkit-notarize.zip
-xcrun notarytool submit /tmp/devkit-notarize.zip \
+ditto -c -k --keepParent "$APP_PATH" /tmp/brace-notarize.zip
+xcrun notarytool submit /tmp/brace-notarize.zip \
   --apple-id "$APPLE_ID" \
   --password "$APPLE_APP_PASSWORD" \
   --team-id "$APPLE_TEAM_ID" \
   --wait
-rm /tmp/devkit-notarize.zip
+rm /tmp/brace-notarize.zip
 
 echo "==> Stapling"
 xcrun stapler staple "$APP_PATH"
@@ -59,16 +59,16 @@ echo "sha256: $SHA"
 echo "==> Creating GitHub release v$VERSION"
 gh release create "v$VERSION" "$DMG_PATH" \
   --title "$APP_NAME v$VERSION" \
-  --notes "DevKit v$VERSION — native macOS JSON editor and HTTP scanner." \
+  --notes "Brace v$VERSION — native macOS JSON editor and HTTP scanner." \
   --repo "$REPO"
 
 echo "==> Updating cask"
 sed -i '' \
   -e "s|version \".*\"|version \"$VERSION\"|" \
   -e "s|sha256 \".*\"|sha256 \"$SHA\"|" \
-  homebrew/devkit.rb
+  homebrew/brace.rb
 
-git add homebrew/devkit.rb
+git add homebrew/brace.rb
 git commit -m "chore: bump cask to v$VERSION"
 git push origin HEAD:master
 
