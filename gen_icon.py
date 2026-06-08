@@ -6,8 +6,8 @@ import os
 import json
 from PIL import Image, ImageDraw, ImageFont
 
-AMBER = (124, 107, 248)   # Electric Indigo
-BG = (13, 11, 26)
+AMBER = (0, 212, 170)   # Neon Teal
+BG = (10, 26, 24)
 ICON_DIR = "JsonViewApp/JsonViewApp/Assets.xcassets/AppIcon.appiconset"
 
 
