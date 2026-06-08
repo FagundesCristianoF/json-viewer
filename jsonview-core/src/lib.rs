@@ -16,6 +16,7 @@ pub mod git;
 pub use model::{Arena, Node, Kind};
 pub use parser::{parse, format, minify, remove_nulls, json_replace, ParseError};
 pub use path::query;
+pub use path::aggregate_child_keys;
 pub use smells::{scan as scan_smells, Smell};
 pub use compose::{compose, referenced_files};
 pub use template::{find_variables, render_vars, list_templates};

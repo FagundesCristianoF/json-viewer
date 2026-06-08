@@ -62,6 +62,11 @@ final class AppModel: ObservableObject {
     }
     @Published var resolvedCompose: String? = nil
 
+    // MARK: - Key Inspector
+
+    @Published var parentKeyQuery: String = ""
+    @Published var parentKeyResults: [(key: String, count: Int)] = []
+
     // MARK: - Issues tab
 
     enum IssuesTab { case syntax, smells, history, keys }
@@ -264,6 +269,34 @@ final class AppModel: ObservableObject {
             jsonPathError = nil
             jsonPathMatches = Set(ids)
         }
+    }
+
+    // MARK: - Key Inspector
+
+    func runParentKeySearch() {
+        let q = parentKeyQuery.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty, let handle = parseResult, handle.error == nil else {
+            parentKeyResults = []
+            return
+        }
+        parentKeyResults = RustBridge.keysUnderParent(handle, parentKey: q)
+    }
+
+    func renameKey(from oldKey: String, to newKey: String) {
+        guard !newKey.trimmingCharacters(in: .whitespaces).isEmpty, oldKey != newKey else { return }
+        let escaped = NSRegularExpression.escapedPattern(for: oldKey)
+        guard let regex = try? NSRegularExpression(pattern: "\"" + escaped + "\"(\\s*):", options: []) else { return }
+        let range = NSRange(editorText.startIndex..., in: editorText)
+        let result = regex.stringByReplacingMatches(
+            in: editorText, options: [], range: range,
+            withTemplate: "\"" + newKey + "\"$1:"
+        )
+        guard result != editorText else { return }
+        editorText = result
+        reparse()
+        runParentKeySearch()
+        if autoSave { save() }
+        showToast(String(format: String(localized: "editor.toast.key_renamed"), oldKey, newKey))
     }
 
     // MARK: - Compose

@@ -3,6 +3,8 @@
 //! Supports: `$`, `.key`, `['key']`, `[i]`, `[*]`, `.*`, `..` (recursive
 //! descent), and a basic filter `[?(@.field OP literal)]`.
 
+use std::collections::HashMap;
+
 use crate::model::{collect_subtree, Arena, Kind};
 
 #[derive(Debug)]
@@ -368,6 +370,26 @@ fn parse_lit(s: &str) -> Result<Lit, String> {
         return Ok(Lit::Num(n));
     }
     Err(format!("invalid literal: {}", s))
+}
+
+/// Walk all nodes in `arena`, find every node whose `key == Some(parent_key)`
+/// AND `kind == Kind::Object`, collect the keys of all their direct children,
+/// aggregate counts across matching parent nodes, and return sorted by count
+/// descending then alphabetically ascending.
+pub fn aggregate_child_keys(arena: &Arena, parent_key: &str) -> Vec<(String, usize)> {
+    let mut counts: HashMap<String, usize> = HashMap::new();
+    for node in &arena.nodes {
+        if node.kind == Kind::Object && node.key.as_deref() == Some(parent_key) {
+            for child_idx in node.children.clone() {
+                if let Some(child_key) = &arena.nodes[child_idx].key {
+                    *counts.entry(child_key.clone()).or_insert(0) += 1;
+                }
+            }
+        }
+    }
+    let mut result: Vec<(String, usize)> = counts.into_iter().collect();
+    result.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+    result
 }
 
 #[cfg(test)]

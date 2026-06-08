@@ -10,6 +10,7 @@ use std::os::raw::c_char;
 use std::path::Path;
 
 use jsonview_core::{
+    aggregate_child_keys,
     compose as jcompose,
     folding,
     git as jgit,
@@ -508,6 +509,41 @@ pub extern "C" fn jv_fold_ranges(text: *const c_char) -> *mut c_char {
                         "end": r.end_line + 1,
                     })
                 })
+                .collect();
+            json_to_cptr(&arr)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Aggregate child keys
+// ---------------------------------------------------------------------------
+
+/// Aggregate child keys under all nodes matching `parent_key` (by node key name).
+/// Returns a JSON array: `[{"key":"X","count":2},...]` sorted by count desc.
+/// Caller must free with `jv_string_free`.
+#[no_mangle]
+pub extern "C" fn jv_keys_under_parent(
+    p: *const ParseOutput,
+    parent_key: *const c_char,
+) -> *mut c_char {
+    if p.is_null() {
+        return std::ptr::null_mut();
+    }
+    let arena = unsafe {
+        match (*p).arena.as_ref() {
+            Some(a) => a,
+            None => return std::ptr::null_mut(),
+        }
+    };
+    let key = unsafe { cstr_to_str(parent_key) };
+    match key {
+        None => std::ptr::null_mut(),
+        Some(k) => {
+            let result = aggregate_child_keys(arena, k);
+            let arr: Vec<serde_json::Value> = result
+                .iter()
+                .map(|(key, count)| serde_json::json!({"key": key, "count": count}))
                 .collect();
             json_to_cptr(&arr)
         }

@@ -134,6 +134,15 @@ char *jv_render_vars(const char *text, const char *vars_json);
 /// Caller frees with jv_string_free().
 char *jv_fold_ranges(const char *text);
 
+// ---------------------------------------------------------------------------
+// Key Inspector
+// ---------------------------------------------------------------------------
+
+/// Aggregate child keys across all object nodes whose key equals `parent_key`.
+/// Returns a JSON array sorted by count desc: [{"key":"X","count":2},...]
+/// Returns NULL on error. Caller frees with jv_string_free().
+char *jv_keys_under_parent(const JvParseOutput *p, const char *parent_key);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

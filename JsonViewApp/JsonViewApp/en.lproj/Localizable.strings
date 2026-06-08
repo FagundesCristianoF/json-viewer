@@ -300,3 +300,4 @@
 
 /* NSOpenPanel prompt button for opening a workspace */
 "panel.open_workspace.prompt" = "Open Workspace";
+"editor.toast.key_renamed" = "Renamed \"%@\" → \"%@\"";

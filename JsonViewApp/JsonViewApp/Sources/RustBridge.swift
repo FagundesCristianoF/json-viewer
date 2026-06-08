@@ -156,6 +156,19 @@ enum RustBridge {
         }
     }
 
+    // MARK: Key Inspector
+
+    static func keysUnderParent(_ handle: ParseHandle, parentKey: String) -> [(key: String, count: Int)] {
+        parentKey.withCString { cKey -> [(key: String, count: Int)] in
+            guard let raw = jv_keys_under_parent(handle.ptr, cKey) else { return [] }
+            defer { jv_string_free(raw) }
+            let json = String(cString: raw)
+            struct Entry: Decodable { let key: String; let count: Int }
+            let entries = (try? JSONDecoder().decode([Entry].self, from: Data(json.utf8))) ?? []
+            return entries.map { ($0.key, $0.count) }
+        }
+    }
+
     // MARK: Folding
 
     static func foldRanges(_ text: String) -> [FoldRange] {
