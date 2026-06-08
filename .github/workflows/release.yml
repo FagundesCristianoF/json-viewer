@@ -10,15 +10,17 @@ permissions:
 
 jobs:
   release-macos:
-    runs-on: macos-14   # Apple Silicon runner
+    runs-on: macos-15   # Apple Silicon, Xcode 16
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
 
-      - name: Cache Cargo registry
+      - name: Cache Cargo
         uses: actions/cache@v4
         with:
           path: |
@@ -27,8 +29,8 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Install cargo-bundle
-        run: cargo install cargo-bundle
+      - name: Build Rust FFI (release)
+        run: cargo build --release -p jsonview-ffi
 
       - name: Import signing certificate
         env:
@@ -55,44 +57,71 @@ jobs:
           security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASS" "$KEYCHAIN_PATH"
 
-          echo "=== identities in CI keychain ==="
-          security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+          echo "=== signing identities ==="
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
 
-      - name: Build and bundle
-        run: make bundle
-
-      - name: Sign
-        env:
-          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+      - name: Build DevKit (Release)
         run: |
-          APP="target/release/bundle/osx/Json Viewer.app"
-          codesign --deep --force --options runtime \
-            --entitlements assets/entitlements.plist \
-            --keychain "$KEYCHAIN_PATH" \
-            --sign "$APPLE_IDENTITY" \
-            "$APP"
-          codesign --verify --deep --strict "$APP"
-          echo "Signed: $APP"
+          cd JsonViewApp
+          xcodebuild \
+            -project DevKit.xcodeproj \
+            -scheme DevKit \
+            -configuration Release \
+            -destination "platform=macOS" \
+            -derivedDataPath build/DerivedData \
+            OTHER_LDFLAGS="-L$GITHUB_WORKSPACE/target/release -ljsonview_ffi" \
+            CODE_SIGN_STYLE=Manual \
+            "CODE_SIGN_IDENTITY=${{ secrets.APPLE_IDENTITY }}" \
+            "OTHER_CODE_SIGN_FLAGS=--keychain $KEYCHAIN_PATH" \
+            DEVELOPMENT_TEAM=VP83767PVX \
+            build
 
       - name: Notarize
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          APP="target/release/bundle/osx/Json Viewer.app"
-          ditto -c -k --keepParent "$APP" /tmp/jsonviewer-notarize.zip
-          xcrun notarytool submit /tmp/jsonviewer-notarize.zip \
+          APP="JsonViewApp/build/DerivedData/Build/Products/Release/DevKit.app"
+          ditto -c -k --keepParent "$APP" /tmp/devkit-notarize.zip
+          xcrun notarytool submit /tmp/devkit-notarize.zip \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_APP_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID" \
+            --team-id VP83767PVX \
             --wait
-          rm /tmp/jsonviewer-notarize.zip
+          rm /tmp/devkit-notarize.zip
+          xcrun stapler staple "$APP"
+          xcrun stapler validate "$APP"
 
-      - name: Staple and create DMG
-        run: make dmg
+      - name: Create DMG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          APP="JsonViewApp/build/DerivedData/Build/Products/Release/DevKit.app"
+          STAGING=$(mktemp -d)
+          cp -R "$APP" "$STAGING/"
+          ln -sf /Applications "$STAGING/Applications"
+          hdiutil create \
+            -volname "DevKit" \
+            -srcfolder "$STAGING" \
+            -ov -format UDZO \
+            "DevKit-${VERSION}.dmg"
+          rm -rf "$STAGING"
+          echo "DMG_PATH=DevKit-${VERSION}.dmg" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Upload DMG to GitHub Release
+      - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: target/release/JsonViewer-*.dmg
+          files: ${{ env.DMG_PATH }}
+
+      - name: Update Homebrew cask sha256
+        run: |
+          SHA=$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')
+          sed -i '' \
+            -e "s|version \".*\"|version \"$VERSION\"|" \
+            -e "s|sha256 \".*\"|sha256 \"$SHA\"|" \
+            homebrew/devkit.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add homebrew/devkit.rb
+          git commit -m "chore: bump cask to v$VERSION"
+          git push origin HEAD:master
