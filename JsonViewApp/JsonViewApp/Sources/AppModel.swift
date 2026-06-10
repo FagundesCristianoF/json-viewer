@@ -30,6 +30,10 @@ final class AppModel: ObservableObject {
     @Published var jsonPathMatches: Set<Int> = []
     @Published var jsonPathError: String? = nil
 
+    // MARK: - Sidebar rename state
+    @Published var renamingFileURL: URL? = nil
+    @Published var renameText: String = ""
+
     // MARK: - UI state
 
     @Published var expandedNodes: Set<Int> = []
@@ -41,13 +45,26 @@ final class AppModel: ObservableObject {
     @Published var autoSave: Bool = Preferences.shared.autoSave {
         didSet { Preferences.shared.autoSave = autoSave }
     }
+    @Published var formatOnSave: Bool = Preferences.shared.formatOnSave {
+        didSet { Preferences.shared.formatOnSave = formatOnSave }
+    }
+    @Published var formatOnPaste: Bool = Preferences.shared.formatOnPaste {
+        didSet { Preferences.shared.formatOnPaste = formatOnPaste }
+    }
     @Published var indentSize: Int = Preferences.shared.indentSize {
         didSet { Preferences.shared.indentSize = indentSize }
+    }
+    @Published var editorFontSize: Double = Preferences.shared.editorFontSize {
+        didSet { Preferences.shared.editorFontSize = editorFontSize }
+    }
+    @Published var uiFontSize: Double = Preferences.shared.uiFontSize {
+        didSet { Preferences.shared.uiFontSize = uiFontSize }
     }
     @Published var toast: String? = nil
     @Published var showFind: Bool = false
     @Published var foldRanges: [FoldRange] = []
     @Published var foldedLines: Set<Int> = []
+    var pendingUndoableTransform: Bool = false
 
     // MARK: - Panel visibility
 
@@ -61,6 +78,15 @@ final class AppModel: ObservableObject {
         didSet { if oldValue != isRawMode { reparse() } }
     }
     @Published var resolvedCompose: String? = nil
+
+    var isComposeTemplate: Bool { editorText.contains("{{") }
+
+    // MARK: - Capabilities
+
+    var hasFile: Bool { selectedFile != nil }
+    var canFormat: Bool { hasFile }
+    var canMinify: Bool { hasFile }
+    var canRemoveNulls: Bool { hasFile }
 
     // MARK: - Key Inspector
 
@@ -88,7 +114,8 @@ final class AppModel: ObservableObject {
         if let path = UserDefaults.standard.string(forKey: "workspaceRoot") {
             let url = URL(fileURLWithPath: path)
             if FileManager.default.fileExists(atPath: path) {
-                let tree = Self.buildFileTree(url: url)
+                let order = Self.loadFileOrder()
+                let tree = Self.buildFileTree(url: url, order: order)
                 workspaceRoot = url
                 workspaceFiles = tree
             }
@@ -116,11 +143,93 @@ final class AppModel: ObservableObject {
 
     func openWorkspace(_ url: URL) {
         workspaceRoot = url
-        workspaceFiles = Self.buildFileTree(url: url)
+        workspaceFiles = Self.buildFileTree(url: url, order: Self.loadFileOrder())
         UserDefaults.standard.set(url.path, forKey: "workspaceRoot")
     }
 
-    private static func buildFileTree(url: URL) -> [WorkspaceFile] {
+    // MARK: - File move / reorder
+
+    func moveFile(from source: URL, to targetDir: URL) {
+        guard source.deletingLastPathComponent().path != targetDir.path else { return }
+        let dest = targetDir.appendingPathComponent(source.lastPathComponent)
+        do {
+            try FileManager.default.moveItem(at: source, to: dest)
+            let wasSelected = selectedFile == source
+            if let root = workspaceRoot { openWorkspace(root) }
+            if wasSelected { selectFile(dest) }
+        } catch {
+            showToast("Move failed: \(error.localizedDescription)")
+        }
+    }
+
+    func persistFileOrder(for directory: URL, names: [String]) {
+        var order = Self.loadFileOrder()
+        order[directory.path] = names
+        UserDefaults.standard.set(order, forKey: "workspaceFileOrder")
+    }
+
+    func filesInDirectory(_ dir: URL) -> [WorkspaceFile] {
+        if dir == workspaceRoot { return workspaceFiles }
+        return findFilesInDirectory(dir, from: workspaceFiles)
+    }
+
+    private func findFilesInDirectory(_ dir: URL, from files: [WorkspaceFile]) -> [WorkspaceFile] {
+        for file in files {
+            if file.url == dir { return file.children }
+            if file.isDirectory {
+                let found = findFilesInDirectory(dir, from: file.children)
+                if !found.isEmpty { return found }
+            }
+        }
+        return []
+    }
+
+    func reorderToFirst(sourceURL: URL, in directory: URL, currentFiles: [WorkspaceFile]) {
+        var updated = currentFiles
+        guard let idx = updated.firstIndex(where: { $0.url == sourceURL }) else { return }
+        let item = updated.remove(at: idx)
+        updated.insert(item, at: 0)
+        reorderChildren(in: directory, to: updated)
+    }
+
+    func reorderAfter(sourceURL: URL, afterURL: URL, in directory: URL, currentFiles: [WorkspaceFile]) {
+        var updated = currentFiles
+        guard let srcIdx = updated.firstIndex(where: { $0.url == sourceURL }) else { return }
+        let item = updated.remove(at: srcIdx)
+        if let newTgtIdx = updated.firstIndex(where: { $0.url == afterURL }) {
+            updated.insert(item, at: min(newTgtIdx + 1, updated.endIndex))
+        } else {
+            updated.append(item)
+        }
+        reorderChildren(in: directory, to: updated)
+    }
+
+    func reorderChildren(in directoryURL: URL, to newFiles: [WorkspaceFile]) {
+        if workspaceRoot == directoryURL {
+            workspaceFiles = newFiles
+        } else {
+            reorderInTree(files: &workspaceFiles, directoryURL: directoryURL, newFiles: newFiles)
+        }
+        persistFileOrder(for: directoryURL, names: newFiles.map(\.name))
+    }
+
+    private func reorderInTree(files: inout [WorkspaceFile], directoryURL: URL, newFiles: [WorkspaceFile]) {
+        for i in files.indices {
+            if files[i].url == directoryURL {
+                files[i].children = newFiles
+                return
+            }
+            if files[i].isDirectory {
+                reorderInTree(files: &files[i].children, directoryURL: directoryURL, newFiles: newFiles)
+            }
+        }
+    }
+
+    private static func loadFileOrder() -> [String: [String]] {
+        (UserDefaults.standard.dictionary(forKey: "workspaceFileOrder") as? [String: [String]]) ?? [:]
+    }
+
+    private static func buildFileTree(url: URL, order: [String: [String]] = [:]) -> [WorkspaceFile] {
         let fm = FileManager.default
         guard let contents = try? fm.contentsOfDirectory(
             at: url,
@@ -128,7 +237,7 @@ final class AppModel: ObservableObject {
             options: [.skipsHiddenFiles]
         ) else { return [] }
 
-        return contents
+        let items = contents
             .sorted { $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending }
             .compactMap { child -> WorkspaceFile? in
                 let isDir = (try? child.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
@@ -137,12 +246,23 @@ final class AppModel: ObservableObject {
                         url: child,
                         name: child.lastPathComponent,
                         isDirectory: true,
-                        children: buildFileTree(url: child)
+                        children: buildFileTree(url: child, order: order)
                     )
                 }
                 guard child.pathExtension.lowercased() == "json" else { return nil }
                 return WorkspaceFile(url: child, name: child.lastPathComponent, isDirectory: false, children: [])
             }
+
+        if let savedNames = order[url.path] {
+            var ordered: [WorkspaceFile] = []
+            for name in savedNames {
+                if let item = items.first(where: { $0.name == name }) { ordered.append(item) }
+            }
+            let seen = Set(ordered.map(\.url))
+            ordered.append(contentsOf: items.filter { !seen.contains($0.url) })
+            return ordered
+        }
+        return items
     }
 
     // MARK: - File selection
@@ -163,26 +283,39 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func reloadCurrentFile() {
+        guard let url = selectedFile,
+              let text = try? String(contentsOf: url, encoding: .utf8) else { return }
+        editorText = text
+        isDirty = false
+    }
+
     // MARK: - Parse
 
     func reparse() {
         let rawText = editorText
 
-        // Always resolve compose when workspace available (needed to show/hide toggle)
-        if let dir = workspaceRoot?.path {
+        // Only resolve compose for actual templates (files with {{ tokens).
+        // Plain JSON files without {{ always return their content unchanged from
+        // the Rust compose fn, which would make isResultMode=true for everything
+        // and break the textDidChange raw-edit path.
+        if let dir = workspaceRoot?.path, rawText.contains("{{") {
             resolvedCompose = RustBridge.compose(rawText, dir: dir, indent: indentSize)
         } else {
             resolvedCompose = nil
         }
 
-        // Parse the text that is currently visible in the editor
-        let activeText = (!isRawMode && resolvedCompose != nil) ? resolvedCompose! : rawText
-        let handle = RustBridge.parseHandle(activeText)
+        // Editor display text depends on mode
+        let displayText = (!isRawMode && resolvedCompose != nil) ? resolvedCompose! : rawText
+
+        // Validation always uses the resolved result when compose succeeded,
+        // so that {{...}} template syntax never shows spurious parse errors.
+        let validationText = resolvedCompose ?? rawText
+        let handle = RustBridge.parseHandle(validationText)
         updateParseResult(handle)
 
         if let err = handle.error {
-            // Only surface raw-mode errors as parse errors; result errors are shown differently
-            parseError = isRawMode ? err : nil
+            parseError = err
             treeNodes = []
             smells = []
         } else {
@@ -196,52 +329,110 @@ final class AppModel: ObservableObject {
             runJsonPath()
         }
 
-        // Update fold ranges from the active text
-        foldRanges = RustBridge.foldRanges(activeText)
+        // Update fold ranges from the display text
+        foldRanges = RustBridge.foldRanges(displayText)
     }
 
     // MARK: - Save
 
-    func save() {
+    /// `explicit`: true when triggered by the user (Cmd+S), false when triggered
+    /// by autoSave on every keystroke. Format-on-save only fires for explicit saves.
+    func save(explicit: Bool = true) {
         guard let url = selectedFile else { return }
+        if explicit && formatOnSave && parseResult?.error == nil {
+            let (stubbed, tokens) = stubComposeTokens(editorText)
+            if let formatted = RustBridge.format(stubbed, indent: indentSize) {
+                editorText = restoreComposeTokens(formatted, tokens: tokens)
+                reparse()
+            }
+        }
         do {
             try editorText.write(to: url, atomically: true, encoding: .utf8)
             isDirty = false
-            showToast(String(localized: "editor.toast.saved"))
+            if explicit { showToast(String(localized: "editor.toast.saved")) }
         } catch {
             showToast(String(format: String(localized: "editor.toast.save_failed"), error.localizedDescription))
         }
     }
 
+    /// Format the current editor content without saving.
+    func formatInPlace() {
+        guard parseResult?.error == nil else { return }
+        let (stubbed, tokens) = stubComposeTokens(editorText)
+        guard let formatted = RustBridge.format(stubbed, indent: indentSize) else { return }
+        editorText = restoreComposeTokens(formatted, tokens: tokens)
+        reparse()
+    }
+
     // MARK: - Transforms
 
     func format() {
-        guard let formatted = RustBridge.format(editorText, indent: indentSize) else {
+        let (stubbed, tokens) = stubComposeTokens(editorText)
+        guard let formatted = RustBridge.format(stubbed, indent: indentSize) else {
             showToast(String(localized: "editor.toast.format_failed"))
             return
         }
-        applyTransform(formatted)
+        applyTransform(restoreComposeTokens(formatted, tokens: tokens))
     }
 
     func minify() {
-        guard let minified = RustBridge.minify(editorText) else {
+        let (stubbed, tokens) = stubComposeTokens(editorText)
+        guard let minified = RustBridge.minify(stubbed) else {
             showToast(String(localized: "editor.toast.minify_failed"))
             return
         }
-        applyTransform(minified)
+        applyTransform(restoreComposeTokens(minified, tokens: tokens))
     }
 
     func removeNulls() {
-        guard let cleaned = RustBridge.removeNulls(editorText, indent: indentSize) else {
+        let (stubbed, tokens) = stubComposeTokens(editorText)
+        guard let cleaned = RustBridge.removeNulls(stubbed, indent: indentSize) else {
             showToast(String(localized: "editor.toast.remove_nulls_failed"))
             return
         }
-        applyTransform(cleaned)
+        applyTransform(restoreComposeTokens(cleaned, tokens: tokens))
+    }
+
+    func unwrapPath(_ path: String) {
+        let trimmed = path.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        let (stubbed, tokens) = stubComposeTokens(editorText)
+        guard let result = RustBridge.unwrapPath(stubbed, path: trimmed, indent: indentSize) else {
+            showToast("Unwrap failed — check path and JSON validity")
+            return
+        }
+        applyTransform(restoreComposeTokens(result, tokens: tokens))
+    }
+
+    /// Replace `{{token}}` with `"__BRACE_N__"` so the template parses as valid JSON.
+    private func stubComposeTokens(_ text: String) -> (String, [String]) {
+        var tokens: [String] = []
+        var result = text
+        var searchRange = result.startIndex..<result.endIndex
+        while let openRange = result.range(of: "{{", range: searchRange),
+              let closeRange = result.range(of: "}}", range: openRange.upperBound..<result.endIndex) {
+            let token = String(result[openRange.upperBound..<closeRange.lowerBound])
+            let stub = "__BRACE_\(tokens.count)__"
+            tokens.append(token)
+            result.replaceSubrange(openRange.lowerBound..<closeRange.upperBound, with: "\"\(stub)\"")
+            let offset = result.index(openRange.lowerBound, offsetBy: stub.count + 2)
+            searchRange = offset..<result.endIndex
+        }
+        return (result, tokens)
+    }
+
+    private func restoreComposeTokens(_ text: String, tokens: [String]) -> String {
+        var result = text
+        for (i, token) in tokens.enumerated() {
+            result = result.replacingOccurrences(of: "\"__BRACE_\(i)__\"", with: "{{\(token)}}")
+        }
+        return result
     }
 
     private func applyTransform(_ newText: String) {
-        foldedLines = []        // clear folds — line positions change after transform
-        isRawMode = true        // switch to raw so result is immediately visible
+        foldedLines = []
+        if !isComposeTemplate { isRawMode = true }
+        pendingUndoableTransform = true
         editorText = newText
         reparse()
         if autoSave { save() }
@@ -299,6 +490,27 @@ final class AppModel: ObservableObject {
         showToast(String(format: String(localized: "editor.toast.key_renamed"), oldKey, newKey))
     }
 
+    // MARK: - Rename
+
+    func renameFile(_ file: WorkspaceFile, to newName: String) {
+        var name = newName.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty, name != file.name else { return }
+        if !file.isDirectory && !name.hasSuffix(".json") { name += ".json" }
+        let dest = file.url.deletingLastPathComponent().appendingPathComponent(name)
+        guard !FileManager.default.fileExists(atPath: dest.path) else {
+            showToast("File already exists: \(name)")
+            return
+        }
+        do {
+            try FileManager.default.moveItem(at: file.url, to: dest)
+            let wasSelected = selectedFile == file.url
+            if let root = workspaceRoot { openWorkspace(root) }
+            if wasSelected { selectFile(dest) }
+        } catch {
+            showToast("Rename failed: \(error.localizedDescription)")
+        }
+    }
+
     // MARK: - Compose
 
     func resolveCompose() {
@@ -310,6 +522,42 @@ final class AppModel: ObservableObject {
             resolvedCompose = result
         } else {
             showToast(String(localized: "editor.toast.compose_failed"))
+        }
+    }
+
+    // MARK: - Workspace file creation
+
+    func createFile(named name: String, in directory: URL? = nil) {
+        let dir = directory ?? workspaceRoot
+        guard let dir else { return }
+        var filename = name.trimmingCharacters(in: .whitespaces)
+        if filename.isEmpty { filename = "untitled" }
+        if !filename.hasSuffix(".json") { filename += ".json" }
+        let url = dir.appendingPathComponent(filename)
+        guard !FileManager.default.fileExists(atPath: url.path) else {
+            showToast("File already exists: \(filename)")
+            return
+        }
+        do {
+            try "{\n  \n}".write(to: url, atomically: true, encoding: .utf8)
+            if let root = workspaceRoot { openWorkspace(root) }
+            selectFile(url)
+        } catch {
+            showToast("Could not create file: \(error.localizedDescription)")
+        }
+    }
+
+    func createFolder(named name: String, in directory: URL? = nil) {
+        let dir = directory ?? workspaceRoot
+        guard let dir else { return }
+        let folderName = name.trimmingCharacters(in: .whitespaces)
+        guard !folderName.isEmpty else { return }
+        let url = dir.appendingPathComponent(folderName)
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false)
+            if let root = workspaceRoot { openWorkspace(root) }
+        } catch {
+            showToast("Could not create folder: \(error.localizedDescription)")
         }
     }
 

@@ -54,19 +54,18 @@ struct EditorView: View {
     @EnvironmentObject var model: AppModel
 
     var body: some View {
-        ZStack(alignment: .top) {
-            CodeEditorRepresentable()
-                .environmentObject(model)
-
+        VStack(spacing: 0) {
             if model.showFind {
                 FindBarView()
                     .environmentObject(model)
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
 
-            if model.resolvedCompose != nil {
-                VStack {
-                    Spacer()
+            ZStack(alignment: .bottom) {
+                CodeEditorRepresentable()
+                    .environmentObject(model)
+
+                if model.resolvedCompose != nil {
                     RawResultToggle()
                         .environmentObject(model)
                         .padding(.bottom, 8)
@@ -74,6 +73,173 @@ struct EditorView: View {
             }
         }
         .background(Color(NSColor.textBackgroundColor))
+        .onReceive(NotificationCenter.default.publisher(for: .editorActivateFind)) { _ in
+            withAnimation(.easeInOut(duration: 0.15)) { model.showFind.toggle() }
+        }
+    }
+}
+
+// MARK: - JSONEditorTextView
+
+final class JSONEditorTextView: NSTextView {
+    var onGenerateJSONPath: ((String) -> Void)?
+    var onDidPaste: (() -> Void)?
+
+    // Set by updateNSView so copy: can expand folded blocks
+    var originalText: String?
+    var foldedLines: Set<Int> = []
+    var foldRanges: [FoldRange] = []
+
+    // Workspace JSON filenames for {{ compose completion
+    var composeFileNames: [String] = []
+
+    override func paste(_ sender: Any?) {
+        super.paste(sender)
+        onDidPaste?()
+    }
+
+    var onSave: (() -> Void)?
+
+    // Without an NSDocument, Cmd+S reaches NSTextView unhandled and AppKit beeps.
+    // Intercept at the performKeyEquivalent level and forward to the model.
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        if event.modifierFlags.intersection(.deviceIndependentFlagsMask) == .command,
+           event.charactersIgnoringModifiers == "s" {
+            onSave?()
+            return true
+        }
+        return super.performKeyEquivalent(with: event)
+    }
+
+    override func completions(forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>) -> [String]? {
+        guard !composeFileNames.isEmpty else { return nil }
+        let text = string as NSString
+        let loc = charRange.location
+        guard loc >= 2,
+              text.substring(with: NSRange(location: loc - 2, length: 2)) == "{{" else { return nil }
+        let partial = text.substring(with: charRange).lowercased()
+        let matches = composeFileNames.filter { partial.isEmpty || $0.lowercased().contains(partial) }
+        index.pointee = 0
+        return matches.isEmpty ? nil : matches
+    }
+
+    override func insertCompletion(_ word: String, forPartialWordRange charRange: NSRange, movement: Int, isFinal: Bool) {
+        super.insertCompletion(word, forPartialWordRange: charRange, movement: movement, isFinal: isFinal)
+        guard isFinal else { return }
+        let loc = selectedRange().location
+        let text = string as NSString
+        let alreadyClosed = loc + 2 <= text.length &&
+            text.substring(with: NSRange(location: loc, length: 2)) == "}}"
+        if !alreadyClosed {
+            insertText("}}", replacementRange: NSRange(location: loc, length: 0))
+        }
+    }
+
+    override func copy(_ sender: Any?) {
+        guard let origText = originalText, !foldedLines.isEmpty else {
+            super.copy(sender)
+            return
+        }
+        let sel = selectedRange()
+        guard sel.length > 0 else { return }
+        // Full-document selection: copy unfolded original directly
+        if sel.location == 0 && sel.length >= (string as NSString).length {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(origText, forType: .string)
+            return
+        }
+        guard let expanded = expandedCopy(sel: sel, display: string, original: origText) else {
+            super.copy(sender)
+            return
+        }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(expanded, forType: .string)
+    }
+
+    /// Map a selection range in the collapsed display text to the corresponding
+    /// substring in the original text, expanding any folded blocks within.
+    private func expandedCopy(sel: NSRange, display: String, original: String) -> String? {
+        struct LineInfo {
+            let dStart: Int; let dEnd: Int   // char offsets in display text
+            let oStart: Int; let oEnd: Int   // char offsets in original text
+            let isFold: Bool
+        }
+
+        let dLines = display.components(separatedBy: "\n")
+        let oLines = original.components(separatedBy: "\n")
+        var infos: [LineInfo] = []
+        var dOff = 0, oOff = 0, oIdx = 0
+
+        for dLine in dLines {
+            guard oIdx < oLines.count else { break }
+            let oNum = oIdx + 1
+            let fr = foldedLines.contains(oNum)
+                ? foldRanges.first(where: { $0.start == oNum && $0.end > oNum + 1 })
+                : nil
+
+            if let fr = fr {
+                // Fold opener: origEnd spans opener + hidden + closer content
+                var oEnd = oOff + oLines[oIdx].count
+                for h in (oIdx + 1)..<(fr.end - 1) {
+                    if h < oLines.count { oEnd += 1 + oLines[h].count }
+                }
+                let ci = fr.end - 1
+                if ci < oLines.count { oEnd += 1 + oLines[ci].count }
+                infos.append(LineInfo(dStart: dOff, dEnd: dOff + dLine.count,
+                                      oStart: oOff, oEnd: oEnd, isFold: true))
+                // Advance oOff past opener + hidden (NOT past closer — it renders as next display line)
+                oOff += oLines[oIdx].count + 1
+                for h in (oIdx + 1)..<(fr.end - 1) {
+                    if h < oLines.count { oOff += oLines[h].count + 1 }
+                }
+                oIdx = fr.end - 1  // closer is next display line
+            } else {
+                infos.append(LineInfo(dStart: dOff, dEnd: dOff + dLine.count,
+                                      oStart: oOff, oEnd: oOff + oLines[oIdx].count, isFold: false))
+                oOff += oLines[oIdx].count + 1
+                oIdx += 1
+            }
+            dOff += dLine.count + 1
+        }
+
+        let sStart = sel.location, sEnd = sel.location + sel.length
+        guard let first = infos.first(where: { $0.dEnd >= sStart }),
+              let last  = infos.last(where:  { $0.dStart < sEnd }) else { return nil }
+
+        let oStart = first.oStart + min(max(0, sStart - first.dStart),
+                                        max(0, first.oEnd - first.oStart))
+        let oEnd: Int
+        if last.isFold {
+            oEnd = last.oEnd
+        } else {
+            oEnd = last.oStart + min(max(0, sEnd - last.dStart),
+                                     max(0, last.oEnd - last.oStart))
+        }
+
+        guard oStart <= oEnd, oEnd <= (original as NSString).length else { return nil }
+        return (original as NSString).substring(with: NSRange(location: oStart, length: oEnd - oStart))
+    }
+
+    override func menu(for event: NSEvent) -> NSMenu? {
+        let menu = super.menu(for: event) ?? NSMenu()
+        let raw = (string as NSString).substring(with: selectedRange())
+        let key = raw.trimmingCharacters(in: CharacterSet(charactersIn: "\"").union(.whitespacesAndNewlines))
+        guard !key.isEmpty else { return menu }
+        let title = "Generate JSONPath for \"\(key)\""
+        if menu.item(withTitle: title) == nil {
+            let item = NSMenuItem(title: title, action: #selector(doGenerateJSONPath), keyEquivalent: "")
+            item.target = self
+            menu.insertItem(NSMenuItem.separator(), at: 0)
+            menu.insertItem(item, at: 0)
+        }
+        return menu
+    }
+
+    @objc private func doGenerateJSONPath() {
+        let raw = (string as NSString).substring(with: selectedRange())
+        let key = raw.trimmingCharacters(in: CharacterSet(charactersIn: "\"").union(.whitespacesAndNewlines))
+        guard !key.isEmpty else { return }
+        onGenerateJSONPath?(key)
     }
 }
 
@@ -87,9 +253,49 @@ struct CodeEditorRepresentable: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> NSScrollView {
+        // Build a TextKit 1 stack explicitly — macOS 15+ NSTextView.scrollableTextView()
+        // returns a TextKit 2 view; the glyph-based NSLayoutManager APIs used by
+        // LineNumberRulerView crash under the compatibility shim on macOS 27+.
+        let textStorage = NSTextStorage()
+        let layoutManager = NSLayoutManager()
+        textStorage.addLayoutManager(layoutManager)
+        let textContainer = NSTextContainer(size: NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude))
+        textContainer.widthTracksTextView = true
+        layoutManager.addTextContainer(textContainer)
+
         let scrollView = NSTextView.scrollableTextView()
-        guard let textView = scrollView.documentView as? NSTextView else {
-            return scrollView
+        guard let origTV = scrollView.documentView as? NSTextView else { return scrollView }
+        let textView = JSONEditorTextView(frame: origTV.frame, textContainer: textContainer)
+        textView.minSize = origTV.minSize
+        textView.maxSize = origTV.maxSize
+        textView.isVerticallyResizable = origTV.isVerticallyResizable
+        textView.isHorizontallyResizable = origTV.isHorizontallyResizable
+        textView.autoresizingMask = origTV.autoresizingMask
+        scrollView.documentView = textView
+
+        let coordinator = context.coordinator
+        textView.onGenerateJSONPath = { key in
+            Task { @MainActor in
+                let model = coordinator.model
+                if let node = model.treeNodes.first(where: { $0.key == key }) {
+                    model.jsonPathQuery = node.path
+                } else {
+                    model.jsonPathQuery = "$..\(key)"
+                }
+                model.runJsonPath()
+            }
+        }
+
+        textView.onDidPaste = {
+            Task { @MainActor in
+                let model = coordinator.model
+                guard model.formatOnPaste else { return }
+                model.formatInPlace()
+            }
+        }
+
+        textView.onSave = {
+            Task { @MainActor in coordinator.model.save() }
         }
 
         // Basic setup
@@ -102,13 +308,11 @@ struct CodeEditorRepresentable: NSViewRepresentable {
         textView.isAutomaticSpellingCorrectionEnabled = false
         textView.isContinuousSpellCheckingEnabled = false
         textView.isGrammarCheckingEnabled = false
-        textView.usesFindBar = true
-        textView.isIncrementalSearchingEnabled = true
-
         // Font
-        let font = NSFont(name: "SF Mono", size: 12.5)
-            ?? NSFont(name: "Menlo", size: 12.5)
-            ?? NSFont.monospacedSystemFont(ofSize: 12.5, weight: .regular)
+        let fontSize = CGFloat(model.editorFontSize)
+        let font = NSFont(name: "SF Mono", size: fontSize)
+            ?? NSFont(name: "Menlo", size: fontSize)
+            ?? NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular)
         textView.font = font
         textView.typingAttributes[.font] = font
 
@@ -143,6 +347,7 @@ struct CodeEditorRepresentable: NSViewRepresentable {
         textView.delegate = context.coordinator
         context.coordinator.textView = textView
         context.coordinator.rulerView = rulerView
+        context.coordinator.setupScrollObserver()
 
         // Cmd+F → toggle find bar
         let findResponder = FindKeyHandler(coordinator: context.coordinator)
@@ -169,16 +374,47 @@ struct CodeEditorRepresentable: NSViewRepresentable {
             : CollapsedResult(text: baseText, displayToOriginal: [:], foldableDisplayLines: Set(model.foldRanges.map { $0.start }))
 
         let displayText = collapsed.text
-        let isReadOnly = isResultMode || hasFolds
+        let isReadOnly = hasFolds  // result mode is now editable (writes back to source files)
 
         let needsTextUpdate = !coordinator.isEditing && textView.string != displayText
         let needsModeUpdate = textView.isEditable == isReadOnly
+        let currentFontSize = textView.font?.pointSize ?? 0
+        let targetFontSize = CGFloat(model.editorFontSize)
+        let needsFontUpdate = abs(currentFontSize - targetFontSize) > 0.1
 
-        if needsTextUpdate || needsModeUpdate {
-            textView.string = displayText
+        if needsFontUpdate {
+            let newFont = NSFont(name: "SF Mono", size: targetFontSize)
+                ?? NSFont(name: "Menlo", size: targetFontSize)
+                ?? NSFont.monospacedSystemFont(ofSize: targetFontSize, weight: .regular)
+            textView.font = newFont
+            textView.typingAttributes[.font] = newFont
+        }
+
+        if needsTextUpdate || needsModeUpdate || needsFontUpdate {
+            coordinator.isUpdatingText = true
+            if model.pendingUndoableTransform && needsTextUpdate {
+                model.pendingUndoableTransform = false
+                let fullRange = NSRange(location: 0, length: (textView.string as NSString).length)
+                if textView.shouldChangeText(in: fullRange, replacementString: displayText) {
+                    textView.textStorage?.replaceCharacters(in: fullRange, with: displayText)
+                    textView.didChangeText()
+                }
+            } else {
+                model.pendingUndoableTransform = false
+                textView.string = displayText
+            }
+            coordinator.isUpdatingText = false
             textView.isEditable = !isReadOnly
             coordinator.applyHighlighting(to: textView)
             (scrollView.verticalRulerView as? LineNumberRulerView)?.needsDisplay = true
+        }
+
+        // Keep fold state in sync for copy: override
+        if let jv = textView as? JSONEditorTextView {
+            jv.originalText = hasFolds ? baseText : nil
+            jv.foldedLines = model.foldedLines
+            jv.foldRanges = model.foldRanges
+            jv.composeFileNames = flattenJSONPaths(model.workspaceFiles)
         }
 
         // Sync ruler with fold state
@@ -191,6 +427,14 @@ struct CodeEditorRepresentable: NSViewRepresentable {
         }
     }
 
+    private func flattenJSONPaths(_ files: [WorkspaceFile], prefix: String = "") -> [String] {
+        files.flatMap { f -> [String] in
+            let name = prefix.isEmpty ? f.name : "\(prefix)/\(f.name)"
+            if f.isDirectory { return flattenJSONPaths(f.children, prefix: name) }
+            return f.url.pathExtension.lowercased() == "json" ? [name] : []
+        }
+    }
+
     // MARK: - Coordinator
 
     final class Coordinator: NSObject, NSTextViewDelegate {
@@ -198,24 +442,140 @@ struct CodeEditorRepresentable: NSViewRepresentable {
         weak var textView: NSTextView?
         weak var rulerView: LineNumberRulerView?
         var isEditing = false
+        var isUpdatingText = false
+        private var scrollObserver: NSObjectProtocol?
+        private var findObserver: NSObjectProtocol?
 
         init(model: AppModel) {
             self.model = model
         }
 
-        func textDidChange(_ notification: Notification) {
-            guard let tv = notification.object as? NSTextView else { return }
-            isEditing = true
-            let text = tv.string
-            model.editorText = text
-            model.isDirty = true
-            applyHighlighting(to: tv)
-            rulerView?.needsDisplay = true
-            if model.autoSave {
-                model.save()
+        func setupScrollObserver() {
+            scrollObserver = NotificationCenter.default.addObserver(
+                forName: .jsonViewScrollToLine,
+                object: nil,
+                queue: .main
+            ) { [weak self] note in
+                guard let self, let line = note.userInfo?["line"] as? Int else { return }
+                let col = note.userInfo?["col"] as? Int ?? 1
+                self.scrollToLine(line, col: col)
             }
-            model.reparse()
-            isEditing = false
+            findObserver = NotificationCenter.default.addObserver(
+                forName: .jsonViewFind,
+                object: nil,
+                queue: .main
+            ) { [weak self] note in
+                guard let self,
+                      let query = note.userInfo?["query"] as? String,
+                      !query.isEmpty else { return }
+                let direction = note.userInfo?["direction"] as? String ?? "next"
+                self.findInEditor(query: query, direction: direction)
+            }
+        }
+
+        func scrollToLine(_ targetLine: Int, col: Int = 1) {
+            guard let tv = textView else { return }
+            let text = tv.string as NSString
+            var currentLine = 1
+            var lineStart = 0
+            while lineStart < text.length && currentLine < targetLine {
+                let lineRange = text.lineRange(for: NSRange(location: lineStart, length: 0))
+                lineStart = lineRange.upperBound
+                currentLine += 1
+            }
+            let lineRange = text.lineRange(for: NSRange(location: lineStart, length: 0))
+            let lineLen = lineRange.length > 0 ? lineRange.length - 1 : 0
+            // col == -1 → end of line; col >= 1 → 1-based column offset
+            let colOffset = col < 0 ? lineLen : max(0, col - 1)
+            let position = min(lineStart + colOffset, lineStart + lineLen)
+            let range = NSRange(location: position, length: 0)
+            tv.scrollRangeToVisible(range)
+            tv.setSelectedRange(range)
+            tv.window?.makeFirstResponder(tv)
+        }
+
+        func findInEditor(query: String, direction: String) {
+            guard let tv = textView else { return }
+            let nsText = tv.string as NSString
+            let cur = tv.selectedRange()
+            let opts: NSString.CompareOptions = .caseInsensitive
+            var found = NSRange(location: NSNotFound, length: 0)
+
+            if direction == "next" {
+                let start = cur.upperBound
+                let tail = NSRange(location: start, length: nsText.length - start)
+                found = nsText.range(of: query, options: opts, range: tail)
+                if found.location == NSNotFound {
+                    found = nsText.range(of: query, options: opts)
+                }
+            } else {
+                let head = NSRange(location: 0, length: max(0, cur.location))
+                found = nsText.range(of: query, options: [opts, .backwards], range: head)
+                if found.location == NSNotFound {
+                    found = nsText.range(of: query, options: [opts, .backwards])
+                }
+            }
+
+            if found.location != NSNotFound {
+                tv.scrollRangeToVisible(found)
+                tv.setSelectedRange(found)
+            }
+        }
+
+        deinit {
+            if let obs = scrollObserver { NotificationCenter.default.removeObserver(obs) }
+            if let obs = findObserver { NotificationCenter.default.removeObserver(obs) }
+        }
+
+        func textDidChange(_ notification: Notification) {
+            guard !isUpdatingText else { return }
+            guard let tv = notification.object as? NSTextView else { return }
+            let text = tv.string
+
+            // Result mode: write changes back to source files, then recompose
+            if !model.isRawMode, let oldResult = model.resolvedCompose,
+               let workspaceRoot = model.workspaceRoot {
+                applyHighlighting(to: tv)
+                rulerView?.needsDisplay = true
+                let template = model.editorText
+                let indent = model.indentSize
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let modified = applyComposeWriteBack(
+                        oldResult: oldResult,
+                        newResult: text,
+                        template: template,
+                        workspaceRoot: workspaceRoot,
+                        indent: indent
+                    )
+                    guard !modified.isEmpty else { return }
+                    DispatchQueue.main.async {
+                        if let sel = self.model.selectedFile, modified.contains(sel) {
+                            self.model.reloadCurrentFile()
+                        }
+                        self.model.reparse()
+                    }
+                }
+            } else {
+                // Raw mode: normal edit
+                isEditing = true
+                model.editorText = text
+                model.isDirty = true
+                applyHighlighting(to: tv)
+                rulerView?.needsDisplay = true
+                if model.autoSave { model.save(explicit: false) }
+                model.reparse()
+                isEditing = false
+            }
+
+            // Trigger {{ compose path completion (raw mode only — meaningful in template files)
+            if model.isRawMode || model.resolvedCompose == nil {
+                let loc = tv.selectedRange().location
+                if loc >= 2 {
+                    let ns = text as NSString
+                    let last2 = ns.substring(with: NSRange(location: loc - 2, length: 2))
+                    if last2 == "{{" { tv.complete(nil) }
+                }
+            }
         }
 
         // MARK: Syntax highlighting
@@ -225,6 +585,9 @@ struct CodeEditorRepresentable: NSViewRepresentable {
             let text = storage.string
             let fullRange = NSRange(text.startIndex..., in: text)
 
+            // Attribute changes must not register with the undo manager —
+            // otherwise every re-highlight pollutes the undo stack.
+            textView.undoManager?.disableUndoRegistration()
             storage.beginEditing()
 
             // Reset to base attributes
@@ -238,13 +601,24 @@ struct CodeEditorRepresentable: NSViewRepresentable {
             tokenize(text: text, storage: storage, font: font)
 
             storage.endEditing()
+            textView.undoManager?.enableUndoRegistration()
         }
+
+        // Bracket depth → color: yellow → cyan → mint → teal → indigo (cycles)
+        private static let bracketColors: [NSColor] = [
+            NSColor.systemYellow,
+            NSColor.systemCyan,
+            NSColor.systemMint,
+            NSColor.systemTeal,
+            NSColor.systemIndigo,
+        ]
 
         private func tokenize(text: String, storage: NSTextStorage, font: NSFont) {
             let nsText = text as NSString
             let length = nsText.length
 
             var i = 0
+            var depth = 0
             while i < length {
                 let ch = nsText.character(at: i)
                 let scalar = Unicode.Scalar(ch)!
@@ -276,15 +650,15 @@ struct CodeEditorRepresentable: NSViewRepresentable {
                     while j < length {
                         let nc = nsText.character(at: j)
                         if nc == 0x20 || nc == 0x09 || nc == 0x0A || nc == 0x0D { j += 1; continue }
-                        if nc == 0x3A { // colon
+                        if nc == 0x3A { // colon — it's a key
                             storage.addAttribute(.foregroundColor, value: NSColor.systemBlue, range: range)
                         } else {
-                            storage.addAttribute(.foregroundColor, value: NSColor.systemOrange, range: range)
+                            storage.addAttribute(.foregroundColor, value: NSColor.systemGreen, range: range)
                         }
                         break
                     }
                     if j >= length {
-                        storage.addAttribute(.foregroundColor, value: NSColor.systemOrange, range: range)
+                        storage.addAttribute(.foregroundColor, value: NSColor.systemGreen, range: range)
                     }
                     continue
                 }
@@ -312,11 +686,11 @@ struct CodeEditorRepresentable: NSViewRepresentable {
 
                 // true / false / null
                 if char == "t" && nsText.length > i + 3 && nsText.substring(with: NSRange(location: i, length: 4)) == "true" {
-                    storage.addAttribute(.foregroundColor, value: NSColor.systemPink, range: NSRange(location: i, length: 4))
+                    storage.addAttribute(.foregroundColor, value: NSColor.systemOrange, range: NSRange(location: i, length: 4))
                     i += 4; continue
                 }
                 if char == "f" && nsText.length > i + 4 && nsText.substring(with: NSRange(location: i, length: 5)) == "false" {
-                    storage.addAttribute(.foregroundColor, value: NSColor.systemPink, range: NSRange(location: i, length: 5))
+                    storage.addAttribute(.foregroundColor, value: NSColor.systemOrange, range: NSRange(location: i, length: 5))
                     i += 5; continue
                 }
                 if char == "n" && nsText.length > i + 3 && nsText.substring(with: NSRange(location: i, length: 4)) == "null" {
@@ -324,8 +698,24 @@ struct CodeEditorRepresentable: NSViewRepresentable {
                     i += 4; continue
                 }
 
-                // Brackets / braces / colon / comma
-                if char == "{" || char == "}" || char == "[" || char == "]" || char == ":" || char == "," {
+                // Opening brackets — color by current depth, then increment
+                if char == "{" || char == "[" {
+                    let color = Self.bracketColors[depth % Self.bracketColors.count]
+                    storage.addAttribute(.foregroundColor, value: color, range: NSRange(location: i, length: 1))
+                    depth += 1
+                    i += 1; continue
+                }
+
+                // Closing brackets — decrement depth, then color
+                if char == "}" || char == "]" {
+                    depth = max(0, depth - 1)
+                    let color = Self.bracketColors[depth % Self.bracketColors.count]
+                    storage.addAttribute(.foregroundColor, value: color, range: NSRange(location: i, length: 1))
+                    i += 1; continue
+                }
+
+                // Colon / comma
+                if char == ":" || char == "," {
                     storage.addAttribute(.foregroundColor, value: NSColor.secondaryLabelColor, range: NSRange(location: i, length: 1))
                     i += 1; continue
                 }
@@ -391,7 +781,19 @@ final class LineNumberRulerView: NSRulerView {
         NSRect(x: bounds.width - 1, y: dirtyRect.minY, width: 1, height: dirtyRect.height).fill()
 
         let text = tv.string as NSString
+        let totalLen = text.length
         let visibleRect = tv.visibleRect
+
+        // Empty document: draw "1" at top and bail — no glyphs to query.
+        if totalLen == 0 {
+            let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: textColor]
+            let numStr = "1" as NSString
+            let strSize = numStr.size(withAttributes: attrs)
+            numStr.draw(in: NSRect(x: rulerWidth - strSize.width - 16, y: tv.textContainerInset.height,
+                                   width: strSize.width, height: strSize.height), withAttributes: attrs)
+            return
+        }
+
         let glyphRange = layoutManager.glyphRange(forBoundingRect: visibleRect, in: textContainer)
         let charRange = layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
 
@@ -399,7 +801,6 @@ final class LineNumberRulerView: NSRulerView {
         var lineStarts: [(line: Int, charIdx: Int)] = []
         var lineNum = 1
         var charIdx = 0
-        let totalLen = text.length
 
         while charIdx <= totalLen {
             lineStarts.append((line: lineNum, charIdx: charIdx))
@@ -496,6 +897,7 @@ final class LineNumberRulerView: NSRulerView {
 
         let text = tv.string as NSString
         let totalLen = text.length
+        guard totalLen > 0 else { return }
         var lineNum = 1
         var charIdx = 0
 
@@ -620,6 +1022,7 @@ struct FindBarView: View {
 
 extension Notification.Name {
     static let jsonViewFind = Notification.Name("jsonViewFind")
+    static let jsonViewScrollToLine = Notification.Name("jsonViewScrollToLine")
 }
 
 // MARK: - RawResultToggle
@@ -655,5 +1058,8 @@ struct RawResultToggle: View {
                 .background(active ? Color(NSColor.controlAccentColor).opacity(0.15) : Color.clear)
         }
         .buttonStyle(.plain)
+        .onHover { hovering in
+            if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+        }
     }
 }
