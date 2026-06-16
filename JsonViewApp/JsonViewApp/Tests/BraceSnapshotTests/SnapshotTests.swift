@@ -1,7 +1,7 @@
 import XCTest
 import SnapshotTesting
 import SwiftUI
-@testable import DevKit
+@testable import Brace
 
 final class SnapshotTests: XCTestCase {
 
@@ -70,6 +70,24 @@ final class SnapshotTests: XCTestCase {
                 .frame(width: 280)
         )
         view.frame = CGRect(x: 0, y: 0, width: 280, height: 36)
+        assertSnapshot(of: view, as: .image, record: record)
+    }
+
+    func test_jsonColorView_nested() {
+        let json = """
+        {
+          "id": "0838b3f9-13b8-4bbd-98cf",
+          "name": "Poc 1 for VN Cong ty TNHH",
+          "active": true,
+          "score": 42,
+          "tags": ["alpha", "beta", "gamma"],
+          "meta": { "region": "UAT", "count": 3, "nested": { "deep": null } }
+        }
+        """
+        let view = NSHostingView(rootView:
+            JSONColorView(text: json).frame(width: 480, height: 360)
+        )
+        view.frame = CGRect(x: 0, y: 0, width: 480, height: 360)
         assertSnapshot(of: view, as: .image, record: record)
     }
 

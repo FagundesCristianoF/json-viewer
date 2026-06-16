@@ -102,8 +102,15 @@ struct JSONColorView: View {
     let text: String
 
     @StateObject private var expandState = JExpandState()
-    @State private var allLines: [JLine] = []
-    @State private var containerIDs: [String] = []
+    @State private var allLines: [JLine]
+    @State private var containerIDs: [String]
+
+    init(text: String) {
+        self.text = text
+        let (lines, ids) = Self.build(text)
+        _allLines = State(initialValue: lines)
+        _containerIDs = State(initialValue: ids)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -121,7 +128,7 @@ struct JSONColorView: View {
 
             Divider()
 
-            ScrollView([.vertical, .horizontal]) {
+            ScrollView(.vertical) {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     ForEach(visibleLines) { line in
                         let collapsed: Bool = {
@@ -131,21 +138,28 @@ struct JSONColorView: View {
                         JLineView(line: line, isCollapsed: collapsed, onToggle: { expandState.toggle(line.id) })
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(8)
             }
         }
-        .onAppear { rebuild() }
-        .onChange(of: text) { _ in rebuild() }
+        .onChange(of: text) { _ in
+            let (lines, ids) = Self.build(text)
+            allLines = lines
+            containerIDs = ids
+        }
     }
 
-    private func rebuild() {
+    private static func build(_ text: String) -> (lines: [JLine], containerIDs: [String]) {
         guard let data = text.data(using: .utf8),
               let obj = try? JSONSerialization.jsonObject(with: data) else {
-            allLines = []; containerIDs = []; return
+            return ([], [])
         }
         let lines = flatten(JNode.from(obj), id: "r", depth: 0, key: nil, comma: false)
-        allLines = lines
-        containerIDs = lines.compactMap { if case .open = $0.content { return $0.id }; return nil }
+        let ids = lines.compactMap { line -> String? in
+            if case .open = line.content { return line.id }
+            return nil
+        }
+        return (lines, ids)
     }
 
     private var visibleLines: [JLine] {

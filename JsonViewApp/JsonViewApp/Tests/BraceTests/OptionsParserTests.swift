@@ -1,5 +1,5 @@
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class OptionsParserTests: XCTestCase {
 
@@ -42,5 +42,40 @@ final class OptionsParserTests: XCTestCase {
         let results = OptionsParser.parse(json)
         XCTAssertEqual(results.count, 1)
         XCTAssertEqual(results[0].id, "valid")
+    }
+
+    // MARK: - JSONPath ID path (wildcard into nested array)
+
+    func test_parse_jsonpath_wildcard_id_path() {
+        // Reported case: options object wrapping an array, ids pulled via $.accounts[*].id
+        let json = """
+        {"accounts":[{"id":"123"},{"id":"456"}]}
+        """
+        let results = OptionsParser.parse(json, idPath: "$.accounts[*].id", namePath: "displayName")
+        XCTAssertEqual(results.count, 2)
+        XCTAssertEqual(results[0].id, "123")
+        XCTAssertEqual(results[1].id, "456")
+    }
+
+    func test_parse_jsonpath_wildcard_id_and_name() {
+        let json = """
+        {"accounts":[{"id":"123","label":"Acme"},{"id":"456","label":"Globex"}]}
+        """
+        let results = OptionsParser.parse(json, idPath: "$.accounts[*].id", namePath: "$.accounts[*].label")
+        XCTAssertEqual(results.count, 2)
+        XCTAssertEqual(results[0].id, "123")
+        XCTAssertEqual(results[0].displayName, "Acme")
+        XCTAssertEqual(results[1].displayName, "Globex")
+    }
+
+    // MARK: - Smart-quote regression guard
+
+    // macOS "smart quotes" rewrite " into “ ” which is invalid JSON. The app
+    // disables quote substitution at the input layer (App.swift); the parser
+    // stays strict and rejects curly-quote JSON rather than silently guessing.
+    func test_parse_curly_quotes_are_invalid_json() {
+        let json = "{\u{201C}accounts\u{201D}: [{\u{201C}id\u{201D}: \u{201C}123\u{201D}}]}"
+        let results = OptionsParser.parse(json, idPath: "$.accounts[*].id", namePath: "displayName")
+        XCTAssertEqual(results.count, 0)
     }
 }
