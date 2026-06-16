@@ -1,8 +1,8 @@
-## DevKit — build, sign, notarize, package
+## Brace — build, sign, notarize, package
 ## Secrets are loaded from secrets.yml (gitignored).
 
-APP_NAME    := DevKit
-BUNDLE_ID   := com.fagundes.devkit
+APP_NAME    := Brace
+BUNDLE_ID   := com.fagundes.brace
 VERSION     := $(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" JsonViewApp/JsonViewApp/Info.plist)
 DERIVED     := JsonViewApp/build/DerivedData
 APP_BUNDLE  := $(DERIVED)/Build/Products/Release/$(APP_NAME).app
@@ -20,11 +20,11 @@ secrets.mk: secrets.yml
 ffi:
 	cargo build --release -p jsonview-ffi
 
-## Build DevKit.app (Release)
+## Build Brace.app (Release)
 build: ffi
 	cd JsonViewApp && xcodebuild \
-		-project DevKit.xcodeproj \
-		-scheme DevKit \
+		-project Brace.xcodeproj \
+		-scheme Brace \
 		-configuration Release \
 		-destination "platform=macOS" \
 		-derivedDataPath build/DerivedData \
@@ -60,8 +60,10 @@ dmg: staple
 	@echo "DMG: $(DMG_PATH)"
 	@echo "SHA256: $$(shasum -a 256 $(DMG_PATH) | awk '{print $$1}')"
 
-## Full pipeline + GitHub release + cask update
-publish: dmg
+## Full pipeline + GitHub release + cask update.
+## scripts/publish.sh is self-contained (build → sign → notarize → staple →
+## dmg → release → cask → tap), so no local prerequisites here.
+publish:
 	bash scripts/publish.sh $(VERSION)
 
 ## Print SHA256 of the DMG (run after dmg)
