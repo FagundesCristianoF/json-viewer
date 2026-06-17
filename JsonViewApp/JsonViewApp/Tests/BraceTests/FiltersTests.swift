@@ -1,5 +1,5 @@
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class FiltersTests: XCTestCase {
 

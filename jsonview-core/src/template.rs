@@ -13,7 +13,14 @@ pub fn find_variables(template: &str) -> Vec<String> {
         rest = &rest[start + 2..];
         if let Some(end) = rest.find("}}") {
             let token = rest[..end].trim();
-            if !token.contains('.') && !token.is_empty() && seen.insert(token.to_string()) {
+            // Exclude: file includes (contain '.'), arg refs (start with '@'),
+            // include-with-args tokens (contain ',')
+            if !token.contains('.')
+                && !token.starts_with('@')
+                && !token.contains(',')
+                && !token.is_empty()
+                && seen.insert(token.to_string())
+            {
                 vars.push(token.to_string());
             }
             rest = &rest[end + 2..];

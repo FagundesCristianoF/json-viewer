@@ -284,6 +284,25 @@ pub extern "C" fn jv_remove_nulls(text: *const c_char, indent: u32) -> *mut c_ch
     }
 }
 
+/// Unwrap all occurrences of `path` (dot-separated) in `text` and re-format.
+/// Returns null on parse error or empty path. Caller must free with `jv_string_free`.
+#[no_mangle]
+pub extern "C" fn jv_unwrap_path(
+    text: *const c_char,
+    path: *const c_char,
+    indent: u32,
+) -> *mut c_char {
+    let src = unsafe { cstr_to_str(text) };
+    let p = unsafe { cstr_to_str(path) };
+    match (src, p) {
+        (Some(s), Some(path_str)) => parser::unwrap_path(s, path_str, indent as usize)
+            .ok()
+            .map(string_to_cptr)
+            .unwrap_or(std::ptr::null_mut()),
+        _ => std::ptr::null_mut(),
+    }
+}
+
 // ---------------------------------------------------------------------------
 // JSONPath
 // ---------------------------------------------------------------------------

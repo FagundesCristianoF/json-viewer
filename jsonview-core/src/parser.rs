@@ -145,6 +145,80 @@ fn arena_path_to_pointer(path: &str) -> String {
     result
 }
 
+/// Unwrap every occurrence of `path` (dot-separated) anywhere in the tree.
+/// The keys in `path` are removed and the leaf object's fields are merged
+/// into the ancestor that held the first key.
+pub fn unwrap_path(text: &str, path: &str, indent: usize) -> Result<String, ParseError> {
+    let mut value: Value = serde_json::from_str(text).map_err(conv)?;
+    let segments: Vec<&str> = path.split('.').filter(|s| !s.is_empty()).collect();
+    if !segments.is_empty() {
+        unwrap_recursive(&mut value, &segments);
+    }
+    let pad = " ".repeat(indent);
+    let mut buf = Vec::new();
+    let fmt = serde_json::ser::PrettyFormatter::with_indent(pad.as_bytes());
+    let mut ser = serde_json::Serializer::with_formatter(&mut buf, fmt);
+    value.serialize(&mut ser).map_err(conv)?;
+    Ok(String::from_utf8(buf).expect("serde_json emits utf8"))
+}
+
+fn unwrap_recursive(value: &mut Value, path: &[&str]) {
+    match value {
+        Value::Array(arr) => {
+            for item in arr.iter_mut() {
+                unwrap_recursive(item, path);
+            }
+        }
+        Value::Object(map) => {
+            // Recurse into children first (bottom-up so inner unwraps don't
+            // interfere with outer key detection).
+            let keys: Vec<String> = map.keys().cloned().collect();
+            for k in &keys {
+                if let Some(child) = map.get_mut(k) {
+                    unwrap_recursive(child, path);
+                }
+            }
+            // Then try to unwrap at this level.
+            unwrap_at_object(map, path);
+        }
+        _ => {}
+    }
+}
+
+/// If `map` contains the full `path`, remove the first key and merge the
+/// leaf object's entries into `map`.
+fn unwrap_at_object(
+    map: &mut serde_json::Map<String, Value>,
+    path: &[&str],
+) {
+    if path.is_empty() {
+        return;
+    }
+    let first = path[0];
+    if !map.contains_key(first) {
+        return;
+    }
+    // Navigate to the leaf to confirm the full path exists and is an object.
+    let leaf = navigate(map.get(first), &path[1..]);
+    if let Some(Value::Object(leaf_map)) = leaf.cloned() {
+        map.remove(first);
+        for (k, v) in leaf_map {
+            map.insert(k, v);
+        }
+    }
+}
+
+fn navigate<'a>(val: Option<&'a Value>, path: &[&str]) -> Option<&'a Value> {
+    let val = val?;
+    if path.is_empty() {
+        return Some(val);
+    }
+    match val {
+        Value::Object(m) => navigate(m.get(path[0]), &path[1..]),
+        _ => None,
+    }
+}
+
 fn strip_nulls(v: Value) -> Value {
     match v {
         Value::Object(map) => Value::Object(

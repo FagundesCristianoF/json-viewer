@@ -66,6 +66,49 @@
 /* Context menu: copy file path */
 "sidebar.context.copy_path" = "Copy Path";
 
+/* Context menu: create new file in selected directory */
+"sidebar.new_file_here" = "New File Here…";
+
+/* Context menu: create new folder in selected directory */
+"sidebar.new_folder_here" = "New Folder Here…";
+
+/* Context menu: reveal file in Finder (alias used by new context menu) */
+"sidebar.reveal_in_finder" = "Reveal in Finder";
+
+/* Context menu: copy file path (alias used by new context menu) */
+"sidebar.copy_path" = "Copy Path";
+
+/* Context menu: rename file */
+"sidebar.rename" = "Rename";
+"sidebar.rename.title" = "Rename \"%@\"";
+
+/* Context menu: move file to trash */
+"sidebar.delete" = "Delete";
+
+/* Tooltip for the new-file button in sidebar header */
+"sidebar.tooltip.new_file" = "New JSON file";
+
+/* Tooltip for the new-folder button in sidebar header */
+"sidebar.tooltip.new_folder" = "New folder";
+
+/* Alert title: create a new JSON file */
+"sidebar.new_file.title" = "New JSON File";
+
+/* Alert informative text for new file dialog */
+"sidebar.new_file.prompt" = "Enter a filename (.json will be added automatically):";
+
+/* Placeholder for the new file name field */
+"sidebar.new_file.placeholder" = "untitled";
+
+/* Alert title: create a new folder */
+"sidebar.new_folder.title" = "New Folder";
+
+/* Alert informative text for new folder dialog */
+"sidebar.new_folder.prompt" = "Enter a folder name:";
+
+/* Placeholder for the new folder name field */
+"sidebar.new_folder.placeholder" = "new-folder";
+
 // MARK: - Toolbar (JSON Editor)
 
 /* Tooltip for the dark/light mode toggle when currently in dark mode */
@@ -82,6 +125,12 @@
 
 /* Tooltip for the mode segmented picker */
 "toolbar.tooltip.switch_mode" = "Switch mode";
+
+/* Tooltip shown when hovering the JSON Editor mode button */
+"toolbar.mode.json_editor.hint" = "JSON Editor — browse, edit, format and validate JSON files";
+
+/* Tooltip shown when hovering the HTTP Scanner mode button */
+"toolbar.mode.http_scanner.hint" = "HTTP Scanner — run parameterised HTTP requests and compare responses";
 
 // MARK: - Action Bar / Toolbar buttons
 
@@ -121,6 +170,18 @@
 /* Placeholder for the JSONPath query field */
 "actionbar.jsonpath.placeholder" = "JSONPath…";
 
+/* Tooltip for the Unwrap button */
+"actionbar.tooltip.unwrap" = "Unwrap a nested key path into its parent";
+
+/* Title of the Unwrap popover */
+"actionbar.unwrap.title" = "Unwrap Path";
+
+/* Description shown in the Unwrap popover */
+"actionbar.unwrap.description" = "Enter a dot-separated key path. Every matching nested structure will be removed and its fields merged into the parent.";
+
+/* Button label in the Unwrap popover */
+"actionbar.unwrap.button" = "Unwrap";
+
 // MARK: - Scanner Sidebar
 
 /* Section header: cURL command input */
@@ -134,6 +195,12 @@
 
 /* Button tooltip: import content from a file */
 "action.import_file" = "Import from file";
+
+/* Button: confirm and create */
+"action.create" = "Create";
+
+/* Button: cancel a dialog */
+"action.cancel" = "Cancel";
 
 // MARK: - Config Panel
 
@@ -249,6 +316,12 @@
 /* Toggle label: auto-save on format/transform */
 "settings.toggle.autosave" = "Auto-save on format / transform";
 
+/* Toggle label: format document when saving explicitly */
+"settings.toggle.format_on_save" = "Format on save";
+
+/* Toggle label: format pasted text automatically */
+"settings.toggle.format_on_paste" = "Format on paste";
+
 /* LabeledContent label: Indent size */
 "settings.label.indent_size" = "Indent size";
 
@@ -301,3 +374,15 @@
 /* NSOpenPanel prompt button for opening a workspace */
 "panel.open_workspace.prompt" = "Open Workspace";
 "editor.toast.key_renamed" = "Renamed \"%@\" → \"%@\"";
+
+/* Delete confirmation alert title — %@ is the filename */
+"sidebar.delete.confirm.title" = "Delete \"%@\"?";
+
+/* Delete confirmation alert message */
+"sidebar.delete.confirm.message" = "This will move the file to the Trash.";
+
+/* Menu item: delete the selected file */
+"menu.delete_file" = "Delete File";
+
+/* Drop zone label shown at the bottom of the file list to move files out of folders */
+"sidebar.move_to_root" = "Move to root";

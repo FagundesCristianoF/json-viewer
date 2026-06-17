@@ -68,12 +68,32 @@ private struct GeneralSettingsTab: View {
             }
 
             Section {
-                Toggle("Auto-save on format / transform", isOn: $prefs.autoSave)
+                Toggle(String(localized: "settings.toggle.autosave"), isOn: $prefs.autoSave)
+                Toggle(String(localized: "settings.toggle.format_on_save"), isOn: $prefs.formatOnSave)
+                Toggle(String(localized: "settings.toggle.format_on_paste"), isOn: $prefs.formatOnPaste)
 
                 LabeledContent("Indent size") {
                     Stepper("\(prefs.indentSize) spaces", value: $prefs.indentSize, in: 1...8)
                         .fixedSize()
                 }
+
+                LabeledContent("Editor font size") {
+                    Stepper("\(Int(prefs.editorFontSize)) pt",
+                            value: $prefs.editorFontSize, in: 10...24, step: 1)
+                        .fixedSize()
+                }
+
+                LabeledContent("UI font size") {
+                    Stepper("\(Int(prefs.uiFontSize)) pt",
+                            value: $prefs.uiFontSize, in: 10...18, step: 1)
+                        .fixedSize()
+                }
+
+                Button("Reset to Defaults") {
+                    prefs.resetEditorDefaults()
+                }
+                .controlSize(.small)
+                .disabled(prefs.editorDefaultsAreDefault)
             } header: {
                 Text("Editor")
             }
@@ -220,8 +240,8 @@ private struct AboutSettingsTab: View {
                 }
 
                 AboutActionButton(
-                    icon: "arrow.down.circle",
-                    label: "Check for Updates",
+                    icon: "arrow.up.right.circle",
+                    label: "View Releases",
                     tint: .accentColor
                 ) {
                     NSWorkspace.shared.open(URL(string: "https://github.com/FagundesCristianoF/json-viewer/releases")!)

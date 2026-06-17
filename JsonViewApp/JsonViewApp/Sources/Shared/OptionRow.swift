@@ -32,7 +32,7 @@ struct OptionRow: View {
         switch result.status {
         case .pending, .running: return .primary
         case .matched:
-            if let code = result.statusCode { return badgeColor(for: code) }
+            if let code = result.statusCode { return statusColor(code) }
             return .green
         case .notMatched: return .secondary
         case .error: return .red
@@ -47,8 +47,8 @@ struct OptionRow: View {
                 .font(.system(size: 10, weight: .semibold, design: .monospaced))
                 .padding(.horizontal, 5)
                 .padding(.vertical, 2)
-                .background(badgeColor(for: code).opacity(0.15))
-                .foregroundStyle(badgeColor(for: code))
+                .background(statusColor(code).opacity(0.15))
+                .foregroundStyle(statusColor(code))
                 .clipShape(RoundedRectangle(cornerRadius: 3))
         } else if case .error(let msg) = result.status {
             Text(shortError(msg))
@@ -73,15 +73,6 @@ struct OptionRow: View {
         }
     }
 
-    private func badgeColor(for code: Int) -> Color {
-        switch code {
-        case 200...299: return .green
-        case 400...499: return .orange
-        case 500...599: return .red
-        default: return .secondary
-        }
-    }
-
     private func shortError(_ msg: String) -> String {
         if msg.contains("timed out") || msg.contains("timeout") { return "TIMEOUT" }
         if msg.contains("cancelled") { return "CANCEL" }
@@ -100,20 +91,11 @@ struct StatusDot: View {
         case .pending: return .secondary.opacity(0.4)
         case .running: return .accentColor
         case .matched:
-            if let code = statusCode { return httpStatusColor(code) }
+            if let code = statusCode { return statusColor(code) }
             return .green
         case .notMatched: return Color(nsColor: .systemGray)
         case .error: return .red
         case .skipped: return .orange
-        }
-    }
-
-    private func httpStatusColor(_ code: Int) -> Color {
-        switch code {
-        case 200...299: return .green
-        case 400...499: return .orange
-        case 500...599: return .red
-        default: return .secondary
         }
     }
 

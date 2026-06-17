@@ -45,6 +45,7 @@
 		941BFFBC5CD5D6FE206A070A /* test_optionRow_error.1.png in Resources */ = {isa = PBXBuildFile; fileRef = A8E27FD4D482B610B54A902B /* test_optionRow_error.1.png */; };
 		941F81F37B54A88676792CBD /* JSONColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749CF519A19283D1ADF831CC /* JSONColorView.swift */; };
 		972D3A5E36EB072EA6560D36 /* FiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4569438A6D0C25BDCCFFF /* FiltersTests.swift */; };
+		FEED0001CAFE0001BEEF0001 /* TextSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEED0002CAFE0002BEEF0002 /* TextSearchTests.swift */; };
 		97B53F5718DAC307064B4268 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = C4DBEA3FFA2BA4A4C6A3D302 /* SnapshotTesting */; };
 		99B0BAAB846DA816A1E799C8 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE232451328206FE1561B7 /* SettingsView.swift */; };
 		A48740B473E6AE8B38B50202 /* IssuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F3BDADBF0626B576D77D76 /* IssuesView.swift */; };
@@ -139,6 +140,7 @@
 		8E58967C4EE30FD6D155DE37 /* ConfigPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigPanelView.swift; sourceTree = "<group>"; };
 		93D54C70A8EDB03B69D9725F /* ScanConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanConfig.swift; sourceTree = "<group>"; };
 		94E4569438A6D0C25BDCCFFF /* FiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersTests.swift; sourceTree = "<group>"; };
+		FEED0002CAFE0002BEEF0002 /* TextSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSearchTests.swift; sourceTree = "<group>"; };
 		95E7C27633DE2DEB003B3AD6 /* ParsedCurl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedCurl.swift; sourceTree = "<group>"; };
 		9924333529CD5FD20B73A271 /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		9D1C7D831BC38C795BEC0A0E /* AppMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMode.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				B3C7A912F4D56E8012345678 /* ComposeWriteBackTests.swift */,
 				1BB8756D031A447213128F38 /* CurlParserTests.swift */,
 				94E4569438A6D0C25BDCCFFF /* FiltersTests.swift */,
+				FEED0002CAFE0002BEEF0002 /* TextSearchTests.swift */,
 				4D60DA38C5209738ED8B7065 /* OptionsParserTests.swift */,
 				14E866CA500EDDE77FCB6C25 /* ReparseTests.swift */,
 				A90AD8402BFCD821F3C2A736 /* ScanConfigTests.swift */,
@@ -517,6 +520,7 @@
 				A1F2E3D4C5B6A7980123ABCD /* ComposeWriteBackTests.swift in Sources */,
 				51CE470F219C828FB4DB420D /* CurlParserTests.swift in Sources */,
 				972D3A5E36EB072EA6560D36 /* FiltersTests.swift in Sources */,
+				FEED0001CAFE0001BEEF0001 /* TextSearchTests.swift in Sources */,
 				58BA8D3D0BCBB276ACE8CBE4 /* OptionsParserTests.swift in Sources */,
 				0C96EFF679F3B4282DD4DEDF /* ReparseTests.swift in Sources */,
 				2738AC71FD0EF8503289B871 /* ScanConfigTests.swift in Sources */,

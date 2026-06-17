@@ -62,6 +62,8 @@ final class AppModel: ObservableObject {
     }
     @Published var toast: String? = nil
     @Published var showFind: Bool = false
+    // Persisted across find-bar open/close so the toggle state survives Cmd+F.
+    @Published var findCaseSensitive: Bool = false
     @Published var foldRanges: [FoldRange] = []
     @Published var foldedLines: Set<Int> = []
     var pendingUndoableTransform: Bool = false

@@ -20,19 +20,15 @@ use std::path::{Path, PathBuf};
 /// Resolve all `{{...}}` placeholders in `template`, reading files relative
 /// to `base_dir`. Returns the formatted JSON string, or an error.
 pub fn compose(template: &str, base_dir: &Path, indent: usize) -> Result<String, String> {
+    let _ = indent; // reserved for future use
     let resolved = resolve(template, base_dir, &mut HashSet::new())?;
 
-    // Validate the result is well-formed JSON.
-    let value: serde_json::Value =
-        serde_json::from_str(&resolved).map_err(|e| format!("result is not valid JSON: {e}"))?;
+    // Validate the result is well-formed JSON without reformatting,
+    // so original spacing and key order are preserved.
+    serde_json::from_str::<serde_json::Value>(&resolved)
+        .map_err(|e| format!("result is not valid JSON: {e}"))?;
 
-    let pad = " ".repeat(indent);
-    let mut buf = Vec::new();
-    let fmt = serde_json::ser::PrettyFormatter::with_indent(pad.as_bytes());
-    let mut ser = serde_json::Serializer::with_formatter(&mut buf, fmt);
-    use serde::Serialize;
-    value.serialize(&mut ser).map_err(|e| e.to_string())?;
-    Ok(String::from_utf8(buf).expect("utf8"))
+    Ok(resolved)
 }
 
 /// Recursively resolve `{{...}}` tokens, tracking `visited` to detect cycles.

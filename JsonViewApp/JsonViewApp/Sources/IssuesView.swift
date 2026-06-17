@@ -1,5 +1,16 @@
 import SwiftUI
 
+// col == -1 means "end of line" (handled in scrollToLine)
+private func smartTarget(message: String, line: Int, col: Int) -> (Int, Int) {
+    let msg = message.lowercased()
+    // Missing comma: parser detects the problem at the next token's position.
+    // The fix belongs at the end of the previous line.
+    if (msg.contains("expected `,`") || msg.contains("expected `,` or")) && line > 1 {
+        return (line - 1, -1)
+    }
+    return (line, col)
+}
+
 // MARK: - IssuesView
 
 struct IssuesView: View {
@@ -73,23 +84,24 @@ struct SyntaxTabView: View {
         VStack(alignment: .leading, spacing: 12) {
             if let err = model.parseError {
                 // Error state
+                let fs = model.uiFontSize
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.red)
-                        .font(.system(size: 16))
+                        .font(.system(size: fs + 4))
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Parse Error")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: fs, weight: .semibold))
                             .foregroundColor(.red)
                         Text(err.message)
-                            .font(.system(size: 11))
+                            .font(.system(size: fs - 1))
                             .foregroundColor(.primary)
                             .textSelection(.enabled)
                         HStack(spacing: 12) {
                             Label("Line \(err.line)", systemImage: "text.alignleft")
                             Label("Col \(err.col)", systemImage: "arrow.right")
                         }
-                        .font(.system(size: 11))
+                        .font(.system(size: fs - 1))
                         .foregroundColor(.secondary)
                     }
                 }
@@ -97,18 +109,28 @@ struct SyntaxTabView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.red.opacity(0.07))
                 .clipShape(RoundedRectangle(cornerRadius: 6))
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    let (line, col) = smartTarget(message: err.message, line: err.line, col: err.col)
+                    NotificationCenter.default.post(
+                        name: .jsonViewScrollToLine,
+                        object: nil,
+                        userInfo: ["line": line, "col": col]
+                    )
+                }
             } else if !model.treeNodes.isEmpty {
                 // Valid state
+                let fs = model.uiFontSize
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
-                        .font(.system(size: 16))
+                        .font(.system(size: fs + 4))
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Valid JSON")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: fs, weight: .semibold))
                             .foregroundColor(.green)
                         Text("\(model.treeNodes.count) nodes")
-                            .font(.system(size: 11))
+                            .font(.system(size: fs - 1))
                             .foregroundColor(.secondary)
                     }
                 }
@@ -162,15 +184,7 @@ private struct NodeKindBadge: View {
     let kind: String
 
     private var color: Color {
-        switch kind {
-        case "object": return .blue
-        case "array":  return .purple
-        case "string": return .green
-        case "number": return .orange
-        case "bool":   return .cyan
-        case "null":   return .gray
-        default:       return .secondary
-        }
+        JVColor.kind(raw: kind)
     }
 
     var body: some View {
@@ -254,22 +268,80 @@ private struct SmellRow: View {
                 Text(smell.message)
                     .font(.system(size: 11))
                     .foregroundColor(.primary)
-                    .textSelection(.enabled)
                 Text(smell.path)
                     .font(.system(size: 10).monospaced())
                     .foregroundColor(.secondary)
-                    .textSelection(.enabled)
                     .lineLimit(1)
                     .truncationMode(.middle)
             }
 
             Spacer(minLength: 0)
+
+            Image(systemName: "arrow.right.circle")
+                .font(.system(size: 10))
+                .foregroundColor(.accentColor.opacity(isHovered ? 0.7 : 0))
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(isHovered ? Color(NSColor.selectedContentBackgroundColor).opacity(0.15) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 4))
+        .contentShape(Rectangle())
         .onHover { isHovered = $0 }
+        .onTapGesture { navigateToSmell() }
+        .cursor(.pointingHand)
+    }
+
+    private func navigateToSmell() {
+        // Duplicate key smells encode line directly: "line N"
+        if smell.path.hasPrefix("line "), let lineNum = Int(smell.path.dropFirst(5)) {
+            NotificationCenter.default.post(
+                name: .jsonViewScrollToLine,
+                object: nil,
+                userInfo: ["line": lineNum]
+            )
+            return
+        }
+        // JSONPath smells: extract last key and search for it
+        let key = lastPathKey(smell.path)
+        if !key.isEmpty {
+            NotificationCenter.default.post(
+                name: .jsonViewFind,
+                object: nil,
+                userInfo: ["query": "\"\(key)\"", "direction": "next"]
+            )
+        }
+    }
+
+    private func lastPathKey(_ path: String) -> String {
+        guard path != "$", !path.isEmpty else { return "" }
+        // Bracket notation at tail: $.foo['my.key'] or $.arr[0]
+        if path.hasSuffix("]"), let bracketOpen = path.lastIndex(of: "[") {
+            let afterBracket = path.index(after: bracketOpen)
+            let beforeClose = path.index(before: path.endIndex)
+            guard afterBracket < beforeClose else { return "" }
+            let inner = String(path[afterBracket..<beforeClose])
+            if (inner.hasPrefix("'") && inner.hasSuffix("'")) ||
+               (inner.hasPrefix("\"") && inner.hasSuffix("\"")) {
+                return String(inner.dropFirst().dropLast())
+            }
+            // Array index — navigate to the array name
+            return lastPathKey(String(path[..<bracketOpen]))
+        }
+        // Dot notation — take segment after the last dot
+        if let lastDot = path.lastIndex(of: ".") {
+            return String(path[path.index(after: lastDot)...])
+        }
+        return ""
+    }
+}
+
+private extension View {
+    func cursor(_ cursor: NSCursor) -> some View {
+        // set()/arrow.set() instead of push()/pop(): push/pop imbalances and
+        // stacks the cursor stack if a row leaves the hierarchy while hovered.
+        onHover { inside in
+            if inside { cursor.set() } else { NSCursor.arrow.set() }
+        }
     }
 }
 

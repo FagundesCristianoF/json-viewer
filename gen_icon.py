@@ -1,62 +1,37 @@
 #!/usr/bin/env python3
-"""Generate Brace macOS app icon — { globe } concept."""
+"""Generate Brace macOS app icon — render 2048px master, LANCZOS-downscale all sizes."""
 
 import math
 import os
 import json
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-AMBER = (0, 212, 170)   # Neon Teal
-BG = (10, 26, 24)
+TEAL = (0, 212, 170)
+BG = (9, 22, 20)
 ICON_DIR = "JsonViewApp/JsonViewApp/Assets.xcassets/AppIcon.appiconset"
+MASTER = 2048
 
 
-def draw_globe(draw, cx, cy, r, color, line_width):
-    """Draw a simple globe: outer circle + 2 latitude lines + 2 longitude ellipses."""
-    box = [cx - r, cy - r, cx + r, cy + r]
-    draw.ellipse(box, outline=color, width=line_width)
-
-    # Equator
-    draw.line([(cx - r, cy), (cx + r, cy)], fill=color, width=line_width)
-
-    # Upper/lower latitude lines
-    for lat_frac in [0.45]:
-        lat_y_off = r * lat_frac
-        lat_r = math.sqrt(max(0, r * r - lat_y_off * lat_y_off))
-        for sign in [-1, 1]:
-            ly = cy + sign * lat_y_off
-            draw.ellipse([cx - lat_r, ly - line_width // 2,
-                          cx + lat_r, ly + line_width // 2],
-                         outline=color, width=1)
-
-    # Vertical meridian (center)
-    draw.ellipse(box, outline=color, width=line_width)
-
-    # Two longitude arcs as narrow ellipses
-    for x_stretch in [0.55]:
-        draw.ellipse([cx - r * x_stretch, cy - r, cx + r * x_stretch, cy + r],
-                     outline=color, width=line_width)
-
-
-def draw_icon(size: int) -> Image.Image:
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+def draw_master() -> Image.Image:
+    S = MASTER
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
 
     # Background rounded rect
-    bg_draw = ImageDraw.Draw(img, "RGBA")
-    radius = int(size * 0.225)
-    bg_draw.rounded_rectangle([0, 0, size - 1, size - 1], radius=radius, fill=BG + (255,))
+    bg = ImageDraw.Draw(img, "RGBA")
+    radius = int(S * 0.225)
+    bg.rounded_rectangle([0, 0, S - 1, S - 1], radius=radius, fill=BG + (255,))
 
-    draw = ImageDraw.Draw(img, "RGBA")
-    cx, cy = size / 2, size / 2
+    cx, cy = S / 2, S / 2
 
     # Thin circular arc — 3/4 circle, gap at bottom-right
-    arc_width = max(1, int(size * 0.022))
-    arc_r = size * 0.40
+    draw = ImageDraw.Draw(img, "RGBA")
+    arc_width = max(1, int(S * 0.022))
+    arc_r = S * 0.40
     arc_box = [cx - arc_r, cy - arc_r, cx + arc_r, cy + arc_r]
-    draw.arc(arc_box, start=45, end=315, fill=AMBER + (70,), width=arc_width)
+    draw.arc(arc_box, start=45, end=315, fill=TEAL + (70,), width=arc_width)
 
     # {/} centered
-    font_size = int(size * 0.38)
+    font_size = int(S * 0.38)
     try:
         font = ImageFont.truetype("/System/Library/Fonts/SFNSMono.ttf", font_size)
     except Exception:
@@ -69,18 +44,31 @@ def draw_icon(size: int) -> Image.Image:
     tx = cx - tw / 2 - bbox[0]
     ty = cy - th / 2 - bbox[1]
 
-    if size >= 64:
-        glow_color = AMBER + (30,)
-        for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
-            draw.text((tx + dx, ty + dy), text, font=font, fill=glow_color)
+    # Glow layer 1 — wide soft glow
+    glow1 = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    gd1 = ImageDraw.Draw(glow1, "RGBA")
+    gd1.text((tx, ty), text, font=font, fill=TEAL + (120,))
+    glow1 = glow1.filter(ImageFilter.GaussianBlur(S // 22))
+    img = Image.alpha_composite(img, glow1)
 
-    draw.text((tx, ty), text, font=font, fill=AMBER + (255,))
+    # Glow layer 2 — tight inner glow
+    glow2 = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    gd2 = ImageDraw.Draw(glow2, "RGBA")
+    gd2.text((tx, ty), text, font=font, fill=TEAL + (180,))
+    glow2 = glow2.filter(ImageFilter.GaussianBlur(S // 55))
+    img = Image.alpha_composite(img, glow2)
+
+    # Crisp text on top
+    draw = ImageDraw.Draw(img, "RGBA")
+    draw.text((tx, ty), text, font=font, fill=TEAL + (255,))
 
     return img
 
 
 def main():
     os.makedirs(ICON_DIR, exist_ok=True)
+
+    master = draw_master()
 
     size_map = {
         "icon_16x16.png": 16,
@@ -96,7 +84,7 @@ def main():
     }
 
     for filename, px in size_map.items():
-        icon = draw_icon(px)
+        icon = master.resize((px, px), Image.LANCZOS)
         path = os.path.join(ICON_DIR, filename)
         icon.save(path, "PNG")
         print(f"  {path}")

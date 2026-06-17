@@ -19,7 +19,7 @@ struct StatusBarView: View {
                             .frame(width: 5, height: 5)
                     }
                 } else {
-                    Text("No file open")
+                    Text("No file loaded")
                         .font(.system(size: 11.5))
                         .foregroundStyle(JVColor.tertiary)
                 }

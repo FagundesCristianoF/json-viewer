@@ -68,6 +68,10 @@ char *jv_minify(const char *text);
 /// Remove all null values (object keys and array elements) and re-format.
 char *jv_remove_nulls(const char *text, uint32_t indent);
 
+/// Unwrap every occurrence of the dot-separated `path` in `text`, hoisting
+/// the leaf object's fields into the ancestor that held the first key.
+char *jv_unwrap_path(const char *text, const char *path, uint32_t indent);
+
 // ---------------------------------------------------------------------------
 // JSONPath
 // ---------------------------------------------------------------------------

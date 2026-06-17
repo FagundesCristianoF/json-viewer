@@ -94,11 +94,11 @@ struct ScannerSidebarView: View {
                         Button { vm.optionsText = "" } label: {
                             Image(systemName: "xmark.circle").font(.system(size: 11))
                         }
-                        .buttonStyle(.plain).foregroundStyle(.secondary).help("Clear")
+                        .buttonStyle(.plain).foregroundStyle(.secondary).help(String(localized: "action.clear"))
                         Button { showOptionsImporter = true } label: {
                             Image(systemName: "doc.badge.arrow.up").font(.system(size: 11))
                         }
-                        .buttonStyle(.plain).foregroundStyle(.secondary).help("Import from file")
+                        .buttonStyle(.plain).foregroundStyle(.secondary).help(String(localized: "action.import_file"))
                     }
                     .padding(.horizontal, 10).padding(.bottom, 4)
 

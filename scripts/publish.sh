@@ -2,20 +2,28 @@
 set -euo pipefail
 
 # Load secrets
-source <(grep -v '^#' secrets.yml | sed 's/: /=/' | sed 's/^/export /' | sed 's/"//g')
+while IFS= read -r line; do
+  [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+  key="${line%%: *}"
+  value="${line#*: }"
+  value="${value%\"}"
+  value="${value#\"}"
+  export "$key=$value"
+done < secrets.yml
 
-VERSION="${1:-1.0.0}"
+VERSION="${1:-0.2.0}"
 APP_NAME="Brace"
 BUNDLE_ID="com.fagundes.brace"
 REPO="FagundesCristianoF/json-viewer"
 DERIVED="JsonViewApp/build/DerivedData"
 APP_PATH="$DERIVED/Build/Products/Release/$APP_NAME.app"
+ENTITLEMENTS="JsonViewApp/JsonViewApp/JsonViewApp.entitlements"
 DMG_PATH="${APP_NAME}-${VERSION}.dmg"
 
 echo "==> Building Rust FFI (release)"
 cargo build --release -p jsonview-ffi
 
-echo "==> Building $APP_NAME $VERSION (Release)"
+echo "==> Building $APP_NAME $VERSION (Release, unsigned)"
 cd JsonViewApp
 xcodebuild \
   -project Brace.xcodeproj \
@@ -23,10 +31,20 @@ xcodebuild \
   -configuration Release \
   -destination "platform=macOS" \
   -derivedDataPath build/DerivedData \
-  DEVELOPMENT_TEAM=VP83767PVX \
-  CODE_SIGN_STYLE=Automatic \
-  build 2>&1 | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)"
+  CODE_SIGN_IDENTITY="" \
+  CODE_SIGNING_REQUIRED=NO \
+  CODE_SIGNING_ALLOWED=NO \
+  build 2>&1 | grep -E "error:|BUILD (SUCCEEDED|FAILED)"
 cd ..
+
+echo "==> Signing with Developer ID (hardened runtime + timestamp)"
+codesign --deep --force --options runtime \
+  --timestamp \
+  --entitlements "$ENTITLEMENTS" \
+  --sign "$APPLE_IDENTITY" \
+  "$APP_PATH"
+codesign --verify --deep --strict "$APP_PATH"
+echo "    Signed OK"
 
 echo "==> Notarizing"
 ditto -c -k --keepParent "$APP_PATH" /tmp/brace-notarize.zip
@@ -54,7 +72,7 @@ rm -rf "$STAGING"
 
 echo "==> SHA256"
 SHA=$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')
-echo "sha256: $SHA"
+echo "    sha256: $SHA"
 
 echo "==> Creating GitHub release v$VERSION"
 gh release create "v$VERSION" "$DMG_PATH" \
@@ -72,6 +90,17 @@ git add homebrew/brace.rb
 git commit -m "chore: bump cask to v$VERSION"
 git push origin HEAD:master
 
+echo "==> Pushing to homebrew tap (FagundesCristianoF/homebrew-brace)"
+TAP_DIR=$(mktemp -d)
+git clone https://github.com/FagundesCristianoF/homebrew-brace "$TAP_DIR"
+cp homebrew/brace.rb "$TAP_DIR/Casks/brace.rb"
+cd "$TAP_DIR"
+git add Casks/brace.rb
+git commit -m "chore: brace v$VERSION"
+git push origin HEAD:master
+cd -
+rm -rf "$TAP_DIR"
+
 echo ""
 echo "Done! Install with:"
-echo "  brew install --cask $APP_NAME"
+echo "  brew install --cask brace"

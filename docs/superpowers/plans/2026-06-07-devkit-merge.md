@@ -1,10 +1,10 @@
-# DevKit Merge Implementation Plan
+# Brace Merge Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Merge `jsonview` (JSON editor, Rust FFI) and `requester` (ParamScan HTTP scanner) into a single macOS SwiftUI app called DevKit, with a toolbar segmented control to switch between modes, a persistent `NavigationSplitView` shell whose sidebar adapts per mode.
+**Goal:** Merge `jsonview` (JSON editor, Rust FFI) and `requester` (ParamScan HTTP scanner) into a single macOS SwiftUI app called Brace, with a toolbar segmented control to switch between modes, a persistent `NavigationSplitView` shell whose sidebar adapts per mode.
 
-**Architecture:** `DevKitModel` owns both `AppModel` (JSON editor state) and `ScanViewModel` (HTTP scanner state) plus an `AppMode` enum. A new `ContentView` wraps both modes in a `NavigationSplitView`; the sidebar and detail areas swap content via `.animation(.easeInOut(0.2))` on mode change. The toolbar shows a centered segmented Picker for mode switching plus mode-specific items.
+**Architecture:** `BraceModel` owns both `AppModel` (JSON editor state) and `ScanViewModel` (HTTP scanner state) plus an `AppMode` enum. A new `ContentView` wraps both modes in a `NavigationSplitView`; the sidebar and detail areas swap content via `.animation(.easeInOut(0.2))` on mode change. The toolbar shows a centered segmented Picker for mode switching plus mode-specific items.
 
 **Tech Stack:** Swift 5.9, SwiftUI, AppKit, macOS 13+, XcodeGen (`project.yml`), Rust FFI (jsonview-ffi), XCTest, swift-snapshot-testing (added via SPM)
 
@@ -13,7 +13,7 @@
 ## File Map
 
 ### New files (create)
-- `JsonViewApp/JsonViewApp/Sources/Core/AppMode.swift` — `AppMode` enum + `DevKitModel`
+- `JsonViewApp/JsonViewApp/Sources/Core/AppMode.swift` — `AppMode` enum + `BraceModel`
 - `JsonViewApp/JsonViewApp/Sources/Shared/MonoTextView.swift` — extracted NSTextView wrapper
 - `JsonViewApp/JsonViewApp/Sources/Shared/SuggestionTextField.swift` — extracted from requester SidebarView
 - `JsonViewApp/JsonViewApp/Sources/JSONEditor/JsonEditorSidebarView.swift` — renamed from SidebarView
@@ -26,7 +26,7 @@
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/HistoryView.swift` — from requester
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/CurlParser.swift`
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/Filters.swift`
-- `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HistoryStore.swift` — "ParamScan" → "DevKit"
+- `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HistoryStore.swift` — "ParamScan" → "Brace"
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/HTTPExecutor.swift`
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/JSONPathEvaluator.swift`
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Core/OptionsParser.swift`
@@ -37,18 +37,18 @@
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ParsedCurl.swift`
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanConfig.swift`
 - `JsonViewApp/JsonViewApp/Sources/HTTPScanner/Models/ScanResult.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitTests/CurlParserTests.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitTests/OptionsParserTests.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitTests/FiltersTests.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitTests/ScanConfigTests.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitTests/AppModeTests.swift`
-- `JsonViewApp/JsonViewApp/Tests/DevKitSnapshotTests/SnapshotTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceTests/CurlParserTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceTests/OptionsParserTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceTests/FiltersTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceTests/ScanConfigTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceTests/AppModeTests.swift`
+- `JsonViewApp/JsonViewApp/Tests/BraceSnapshotTests/SnapshotTests.swift`
 
 ### Modified files
-- `JsonViewApp/JsonViewApp/App.swift` — `JsonViewApp` → `DevKitApp`, inject `DevKitModel`, update commands
+- `JsonViewApp/JsonViewApp/App.swift` — `JsonViewApp` → `BraceApp`, inject `BraceModel`, update commands
 - `JsonViewApp/JsonViewApp/Sources/ContentView.swift` — replace with `NavigationSplitView` shell
 - `JsonViewApp/JsonViewApp/Sources/Theme.swift` — upgrade `SectionHeader` to requester version
-- `JsonViewApp/JsonViewApp/Sources/ToolbarView.swift` — repurpose as `DevKitToolbar` (mode toggle + conditional items)
+- `JsonViewApp/JsonViewApp/Sources/ToolbarView.swift` — repurpose as `BraceToolbar` (mode toggle + conditional items)
 - `JsonViewApp/project.yml` — add new sources, test targets, SPM dependencies
 
 ### Deleted (content moved)
@@ -56,7 +56,7 @@
 
 ---
 
-## Task 1: Create AppMode + DevKitModel
+## Task 1: Create AppMode + BraceModel
 
 **Files:**
 - Create: `JsonViewApp/JsonViewApp/Sources/Core/AppMode.swift`
@@ -87,7 +87,7 @@ enum AppMode: String, CaseIterable {
 }
 
 @MainActor
-final class DevKitModel: ObservableObject {
+final class BraceModel: ObservableObject {
     @Published var mode: AppMode = .jsonEditor {
         didSet { UserDefaults.standard.set(mode.rawValue, forKey: "devKitMode") }
     }
@@ -108,7 +108,7 @@ final class DevKitModel: ObservableObject {
 
 ```bash
 rtk git add JsonViewApp/JsonViewApp/Sources/Core/AppMode.swift
-rtk git commit -m "feat: add AppMode enum and DevKitModel"
+rtk git commit -m "feat: add AppMode enum and BraceModel"
 ```
 
 ---
@@ -514,13 +514,13 @@ Copy the following files verbatim from `/Users/cristianofagundes/Projects/reques
 
 - [ ] **Step 2: Copy and modify HistoryStore.swift**
 
-Copy `HistoryStore.swift` but change `"ParamScan"` to `"DevKit"` in the `fileURL` computed property:
+Copy `HistoryStore.swift` but change `"ParamScan"` to `"Brace"` in the `fileURL` computed property:
 
 ```swift
 // Change this line:
 let dir = support.appendingPathComponent("ParamScan", isDirectory: true)
 // To:
-let dir = support.appendingPathComponent("DevKit", isDirectory: true)
+let dir = support.appendingPathComponent("Brace", isDirectory: true)
 ```
 
 - [ ] **Step 3: Commit**
@@ -824,10 +824,10 @@ Replace the existing content entirely.
 import SwiftUI
 import AppKit
 
-// MARK: - DevKit Root
+// MARK: - Brace Root
 
 struct ContentView: View {
-    @EnvironmentObject var devKit: DevKitModel
+    @EnvironmentObject var devKit: BraceModel
 
     var body: some View {
         NavigationSplitView {
@@ -839,7 +839,7 @@ struct ContentView: View {
                 .animation(.easeInOut(duration: 0.2), value: devKit.mode)
         }
         .toolbar {
-            DevKitToolbar()
+            BraceToolbar()
         }
         .preferredColorScheme(devKit.editorModel.darkMode ? .dark : .light)
     }
@@ -898,7 +898,7 @@ struct ScannerDetailView: View {
 // MARK: - AppCommands (menu bar)
 
 struct AppCommands: Commands {
-    @ObservedObject var devKit: DevKitModel
+    @ObservedObject var devKit: BraceModel
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) { }
@@ -961,27 +961,27 @@ extension Notification.Name {
 
 ```bash
 rtk git add JsonViewApp/JsonViewApp/Sources/ContentView.swift
-rtk git commit -m "feat: replace ContentView with DevKit NavigationSplitView shell"
+rtk git commit -m "feat: replace ContentView with Brace NavigationSplitView shell"
 ```
 
 ---
 
-## Task 15: Update ToolbarView with DevKitToolbar + mode toggle
+## Task 15: Update ToolbarView with BraceToolbar + mode toggle
 
 **Files:**
 - Modify: `JsonViewApp/JsonViewApp/Sources/ToolbarView.swift`
 
-Replace the entire file. Keep all existing structs (`ActionBarView`, `JsonPathField`, `NoFocusRingTextField`, `ReplacePopover`, etc.) under `// MARK: - JSON Editor Action Bar`. Add the new `DevKitToolbar` and `ScannerToolbarItems` at the top.
+Replace the entire file. Keep all existing structs (`ActionBarView`, `JsonPathField`, `NoFocusRingTextField`, `ReplacePopover`, etc.) under `// MARK: - JSON Editor Action Bar`. Add the new `BraceToolbar` and `ScannerToolbarItems` at the top.
 
-- [ ] **Step 1: Add DevKitToolbar at the top of ToolbarView.swift**
+- [ ] **Step 1: Add BraceToolbar at the top of ToolbarView.swift**
 
 Insert before the `// MARK: - Toolbar Items` block:
 
 ```swift
-// MARK: - DevKit Toolbar (mode toggle + per-mode items)
+// MARK: - Brace Toolbar (mode toggle + per-mode items)
 
-struct DevKitToolbar: ToolbarContent {
-    @EnvironmentObject var devKit: DevKitModel
+struct BraceToolbar: ToolbarContent {
+    @EnvironmentObject var devKit: BraceModel
 
     var body: some ToolbarContent {
         // Mode toggle — centered, always visible
@@ -1069,7 +1069,7 @@ struct ScannerToolbarItems: ToolbarContent {
 
 ```bash
 rtk git add JsonViewApp/JsonViewApp/Sources/ToolbarView.swift
-rtk git commit -m "feat: add DevKitToolbar with mode toggle segmented control"
+rtk git commit -m "feat: add BraceToolbar with mode toggle segmented control"
 ```
 
 ---
@@ -1085,8 +1085,8 @@ rtk git commit -m "feat: add DevKitToolbar with mode toggle segmented control"
 import SwiftUI
 
 @main
-struct DevKitApp: App {
-    @StateObject private var devKit = DevKitModel()
+struct BraceApp: App {
+    @StateObject private var devKit = BraceModel()
 
     var body: some Scene {
         WindowGroup {
@@ -1105,7 +1105,7 @@ struct DevKitApp: App {
 
 ```bash
 rtk git add JsonViewApp/JsonViewApp/App.swift
-rtk git commit -m "feat: update App.swift to DevKitApp with DevKitModel"
+rtk git commit -m "feat: update App.swift to BraceApp with BraceModel"
 ```
 
 ---
@@ -1118,7 +1118,7 @@ rtk git commit -m "feat: update App.swift to DevKitApp with DevKitModel"
 - [ ] **Step 1: Replace project.yml with new version**
 
 ```yaml
-name: DevKit
+name: Brace
 options:
   bundleIdPrefix: com.fagundes
   deploymentTarget:
@@ -1134,12 +1134,12 @@ settings:
   base:
     SWIFT_VERSION: "5.9"
     MACOSX_DEPLOYMENT_TARGET: "13.0"
-    PRODUCT_BUNDLE_IDENTIFIER: com.fagundes.devkit
+    PRODUCT_BUNDLE_IDENTIFIER: com.fagundes.brace
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: VP83767PVX
 
 targets:
-  DevKit:
+  Brace:
     type: application
     platform: macOS
     sources:
@@ -1153,7 +1153,7 @@ targets:
     settings:
       base:
         INFOPLIST_FILE: JsonViewApp/Info.plist
-        PRODUCT_NAME: DevKit
+        PRODUCT_NAME: Brace
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         OTHER_LDFLAGS:
           - "-L/Users/cristianofagundes/Projects/jsonview/target/release"
@@ -1171,24 +1171,24 @@ targets:
           cargo build --release -p jsonview-ffi 2>&1
         basedOnDependencyAnalysis: false
 
-  DevKitTests:
+  BraceTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: JsonViewApp/Tests/DevKitTests
+      - path: JsonViewApp/Tests/BraceTests
     dependencies:
-      - target: DevKit
+      - target: Brace
     settings:
       base:
         SWIFT_VERSION: "5.9"
 
-  DevKitSnapshotTests:
+  BraceSnapshotTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: JsonViewApp/Tests/DevKitSnapshotTests
+      - path: JsonViewApp/Tests/BraceSnapshotTests
     dependencies:
-      - target: DevKit
+      - target: Brace
       - package: swift-snapshot-testing
     settings:
       base:
@@ -1207,7 +1207,7 @@ Expected output: `⚙️  Generating plists...` then `✅  Created at JsonViewAp
 
 ```bash
 rtk git add JsonViewApp/project.yml JsonViewApp/JsonViewApp.xcodeproj/
-rtk git commit -m "feat: update project.yml for DevKit with test targets and SPM"
+rtk git commit -m "feat: update project.yml for Brace with test targets and SPM"
 ```
 
 ---
@@ -1219,7 +1219,7 @@ rtk git commit -m "feat: update project.yml for DevKit with test targets and SPM
 - [ ] **Step 1: Build**
 
 ```bash
-cd JsonViewApp && xcodebuild -scheme DevKit -configuration Debug \
+cd JsonViewApp && xcodebuild -scheme Brace -configuration Debug \
   -destination "platform=macOS" build 2>&1 | grep -E "error:|warning:|Build succeeded|Build FAILED"
 ```
 
@@ -1227,7 +1227,7 @@ cd JsonViewApp && xcodebuild -scheme DevKit -configuration Debug \
 
 Common expected errors and fixes:
 
-**`ToolbarItems` not found** → Remove any remaining references to the old `ToolbarItems` struct; it's been replaced by `DevKitToolbar` and `JsonEditorToolbarItems`.
+**`ToolbarItems` not found** → Remove any remaining references to the old `ToolbarItems` struct; it's been replaced by `BraceToolbar` and `JsonEditorToolbarItems`.
 
 **`SidebarView` not found** → Update any remaining references to use `JsonEditorSidebarView`.
 
@@ -1290,7 +1290,7 @@ final class CommandResponderView: NSView {
 - [ ] **Step 3: Re-build until clean**
 
 ```bash
-cd JsonViewApp && xcodebuild -scheme DevKit -configuration Debug \
+cd JsonViewApp && xcodebuild -scheme Brace -configuration Debug \
   -destination "platform=macOS" build 2>&1 | tail -5
 ```
 
@@ -1300,7 +1300,7 @@ Expected: `** BUILD SUCCEEDED **`
 
 ```bash
 rtk git add -A
-rtk git commit -m "fix: resolve compile errors after DevKit merge"
+rtk git commit -m "fix: resolve compile errors after Brace merge"
 ```
 
 ---
@@ -1308,17 +1308,17 @@ rtk git commit -m "fix: resolve compile errors after DevKit merge"
 ## Task 19: Write unit tests
 
 **Files:**
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitTests/AppModeTests.swift`
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitTests/ScanConfigTests.swift`
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitTests/CurlParserTests.swift`
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitTests/OptionsParserTests.swift`
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitTests/FiltersTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceTests/AppModeTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceTests/ScanConfigTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceTests/CurlParserTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceTests/OptionsParserTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceTests/FiltersTests.swift`
 
 - [ ] **Step 1: Create AppModeTests.swift**
 
 ```swift
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class AppModeTests: XCTestCase {
 
@@ -1355,7 +1355,7 @@ final class AppModeTests: XCTestCase {
 
 ```swift
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class ScanConfigTests: XCTestCase {
 
@@ -1424,7 +1424,7 @@ final class ScanConfigTests: XCTestCase {
 
 ```swift
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class CurlParserTests: XCTestCase {
 
@@ -1472,7 +1472,7 @@ final class CurlParserTests: XCTestCase {
 
 ```swift
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class OptionsParserTests: XCTestCase {
 
@@ -1521,7 +1521,7 @@ final class OptionsParserTests: XCTestCase {
 
 ```swift
 import XCTest
-@testable import DevKit
+@testable import Brace
 
 final class FiltersTests: XCTestCase {
 
@@ -1587,7 +1587,7 @@ final class FiltersTests: XCTestCase {
 - [ ] **Step 6: Run tests**
 
 ```bash
-cd JsonViewApp && xcodebuild test -scheme DevKitTests \
+cd JsonViewApp && xcodebuild test -scheme BraceTests \
   -destination "platform=macOS" 2>&1 | grep -E "Test Suite|passed|failed|error:"
 ```
 
@@ -1596,7 +1596,7 @@ Expected: All tests pass.
 - [ ] **Step 7: Commit**
 
 ```bash
-rtk git add JsonViewApp/JsonViewApp/Tests/DevKitTests/
+rtk git add JsonViewApp/JsonViewApp/Tests/BraceTests/
 rtk git commit -m "test: add unit tests for AppMode, ScanConfig, CurlParser, OptionsParser, Filters"
 ```
 
@@ -1605,7 +1605,7 @@ rtk git commit -m "test: add unit tests for AppMode, ScanConfig, CurlParser, Opt
 ## Task 20: Write snapshot tests
 
 **Files:**
-- Create: `JsonViewApp/JsonViewApp/Tests/DevKitSnapshotTests/SnapshotTests.swift`
+- Create: `JsonViewApp/JsonViewApp/Tests/BraceSnapshotTests/SnapshotTests.swift`
 
 - [ ] **Step 1: Create SnapshotTests.swift**
 
@@ -1613,7 +1613,7 @@ rtk git commit -m "test: add unit tests for AppMode, ScanConfig, CurlParser, Opt
 import XCTest
 import SnapshotTesting
 import SwiftUI
-@testable import DevKit
+@testable import Brace
 
 final class SnapshotTests: XCTestCase {
 
@@ -1703,7 +1703,7 @@ final class SnapshotTests: XCTestCase {
 Edit the test file temporarily: set `let record = true`, then run:
 
 ```bash
-cd JsonViewApp && xcodebuild test -scheme DevKitSnapshotTests \
+cd JsonViewApp && xcodebuild test -scheme BraceSnapshotTests \
   -destination "platform=macOS" 2>&1 | grep -E "Test Suite|passed|failed|error:|Recorded"
 ```
 
@@ -1714,7 +1714,7 @@ Expected: Tests "fail" with "Recorded snapshot" messages — this is correct, it
 Set `let record = false` in `SnapshotTests.swift`, then run again:
 
 ```bash
-cd JsonViewApp && xcodebuild test -scheme DevKitSnapshotTests \
+cd JsonViewApp && xcodebuild test -scheme BraceSnapshotTests \
   -destination "platform=macOS" 2>&1 | grep -E "passed|failed"
 ```
 
@@ -1723,8 +1723,8 @@ Expected: All snapshot tests pass.
 - [ ] **Step 4: Commit**
 
 ```bash
-rtk git add JsonViewApp/JsonViewApp/Tests/DevKitSnapshotTests/
-rtk git add JsonViewApp/JsonViewApp/Tests/DevKitSnapshotTests/__Snapshots__/
+rtk git add JsonViewApp/JsonViewApp/Tests/BraceSnapshotTests/
+rtk git add JsonViewApp/JsonViewApp/Tests/BraceSnapshotTests/__Snapshots__/
 rtk git commit -m "test: add snapshot tests for shared UI components"
 ```
 
@@ -1735,7 +1735,7 @@ rtk git commit -m "test: add snapshot tests for shared UI components"
 - [ ] **Step 1: Full clean build**
 
 ```bash
-cd JsonViewApp && xcodebuild -scheme DevKit -configuration Release \
+cd JsonViewApp && xcodebuild -scheme Brace -configuration Release \
   -destination "platform=macOS" build 2>&1 | tail -3
 ```
 
@@ -1744,7 +1744,7 @@ Expected: `** BUILD SUCCEEDED **`
 - [ ] **Step 2: Run all unit tests**
 
 ```bash
-cd JsonViewApp && xcodebuild test -scheme DevKitTests \
+cd JsonViewApp && xcodebuild test -scheme BraceTests \
   -destination "platform=macOS" 2>&1 | grep -E "Test Suite|passed|failed"
 ```
 
@@ -1754,5 +1754,5 @@ Expected: All tests pass.
 
 ```bash
 rtk git add -A
-rtk git commit -m "feat: complete DevKit merge — jsonview + requester unified app"
+rtk git commit -m "feat: complete Brace merge — jsonview + requester unified app"
 ```

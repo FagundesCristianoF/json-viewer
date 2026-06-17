@@ -7,7 +7,6 @@ struct JsonEditorDetailView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                ActionBarView()
                 VSplitView {
                     HSplitView {
                         EditorView()

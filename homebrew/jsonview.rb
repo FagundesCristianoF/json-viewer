@@ -10,7 +10,7 @@ cask "dev-json-viewer" do
   homepage "https://github.com/FagundesCristianoF/json-viewer"
 
   # macOS 12+ (Monterey) required
-  depends_on macos: ">= :monterey"
+  depends_on macos: :monterey
 
   app "Json Viewer.app"
 

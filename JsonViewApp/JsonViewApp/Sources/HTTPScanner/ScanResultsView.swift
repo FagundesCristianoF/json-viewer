@@ -104,12 +104,13 @@ struct ResponseDetailView: View {
                 }
                 Spacer()
                 if let code = result.statusCode {
+                    let tint = statusColor(code)
                     Text("\(code)")
                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(code == 200 ? Color.green.opacity(0.15) : Color.orange.opacity(0.15))
-                        .foregroundStyle(code == 200 ? .green : .orange)
+                        .background(tint.opacity(0.15))
+                        .foregroundStyle(tint)
                         .clipShape(Capsule())
                 }
                 Toggle("Raw", isOn: $showRaw)
@@ -151,6 +152,17 @@ struct ResponseDetailView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+    }
+}
+
+// HTTP status class → color: 2xx green, 3xx blue, 4xx orange, 5xx red.
+func statusColor(_ code: Int) -> Color {
+    switch code {
+    case 200..<300: return .green
+    case 300..<400: return .blue
+    case 400..<500: return .orange
+    case 500..<600: return .red
+    default:        return .secondary
     }
 }
 
@@ -237,7 +249,7 @@ struct FilteredResultsView: View {
 struct UnfilteredResultsHint: View {
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: "cursorarrow.click").font(.system(size: 28)).foregroundStyle(.tertiary)
+            Image(systemName: "cursorarrow.click").font(.system(size: 32)).foregroundStyle(.tertiary)
             Text("Select an option from the sidebar to view its response")
                 .font(.system(size: 13)).foregroundStyle(.secondary).multilineTextAlignment(.center)
         }
@@ -250,7 +262,7 @@ struct EmptySelectionView: View {
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: "line.3.horizontal.decrease.circle")
-                .font(.system(size: 28)).foregroundStyle(.tertiary)
+                .font(.system(size: 32)).foregroundStyle(.tertiary)
             Text("Filter mode — matching options will appear here")
                 .font(.system(size: 13)).foregroundStyle(.secondary).multilineTextAlignment(.center)
         }
@@ -265,9 +277,9 @@ struct NoMatchesView: View {
             Image(systemName: "xmark.circle")
                 .font(.system(size: 36)).foregroundStyle(.tertiary)
             Text("No matches found")
-                .font(.system(size: 16, weight: .semibold)).foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .semibold)).foregroundStyle(.secondary)
             Text("No options matched the active filters.\nTry adjusting the JSONPath or filter criteria.")
-                .font(.system(size: 13)).foregroundStyle(.tertiary)
+                .font(.system(size: 12)).foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -281,9 +293,9 @@ struct ScannerEmptyStateView: View {
             Image(systemName: "network")
                 .font(.system(size: 36)).foregroundStyle(.tertiary)
             Text("HTTP Scanner")
-                .font(.system(size: 18, weight: .semibold)).foregroundStyle(.secondary)
+                .font(.system(size: 15, weight: .semibold)).foregroundStyle(.secondary)
             Text("Paste a curl command in the sidebar,\nadd option IDs, configure filters, then run.")
-                .font(.system(size: 13)).foregroundStyle(.tertiary)
+                .font(.system(size: 12)).foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

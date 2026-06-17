@@ -34,6 +34,12 @@ enum JVColor {
         }
     }
 
+    // Raw-string overload so non-typed callers (e.g. breakdown badges) share
+    // the SAME palette as the tree — keeps type→color consistent everywhere.
+    static func kind(raw: String) -> Color {
+        NodeKind(rawValue: raw).map(kind) ?? secondary
+    }
+
     static func kindLabel(_ k: NodeKind) -> String {
         switch k {
         case .object: return "{ }"
@@ -43,23 +49,6 @@ enum JVColor {
         case .bool:   return "bool"
         case .null:   return "null"
         }
-    }
-}
-
-// MARK: - Type Badge
-
-struct TypeBadge: View {
-    let kind: NodeKind
-    private var color: Color { JVColor.kind(kind) }
-    private var label: String { JVColor.kindLabel(kind) }
-
-    var body: some View {
-        Text(label)
-            .font(.system(size: 9.5, weight: .semibold, design: .monospaced))
-            .foregroundColor(color)
-            .padding(.horizontal, 5)
-            .padding(.vertical, 2)
-            .background(color.opacity(0.12), in: Capsule())
     }
 }
 

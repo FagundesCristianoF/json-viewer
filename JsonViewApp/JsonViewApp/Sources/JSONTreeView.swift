@@ -60,7 +60,7 @@ struct JSONTreeView: View {
                     .font(.system(size: 11))
                 TextField("Filter keys…", text: $searchText)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 12))
+                    .font(.system(size: model.uiFontSize))
                 if !searchText.isEmpty {
                     Button { searchText = "" } label: {
                         Image(systemName: "xmark.circle.fill")
@@ -78,7 +78,7 @@ struct JSONTreeView: View {
             // Tree body
             if model.treeNodes.isEmpty {
                 Spacer()
-                Text(model.parseError != nil ? "Parse error" : "No JSON loaded")
+                Text(model.parseError != nil ? "Parse error" : "No file loaded")
                     .font(.system(size: 11))
                     .foregroundStyle(.tertiary)
                 Spacer()
@@ -163,26 +163,26 @@ struct NodeRowView: View {
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.secondary)
-                        .frame(width: 12, height: 12)
+                        .frame(width: 18, height: 18)
                         .contentShape(Rectangle())
                         .onTapGesture { toggleExpand() }
                 } else {
-                    Spacer().frame(width: 12)
+                    Spacer().frame(width: 18)
                 }
 
                 // Key label
                 if let key = node.key {
                     Text(key)
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .font(.system(size: model.uiFontSize, weight: .medium, design: .monospaced))
                         .foregroundStyle(.primary)
                     Text(":")
-                        .font(.system(size: 12, design: .monospaced))
+                        .font(.system(size: model.uiFontSize, design: .monospaced))
                         .foregroundStyle(.tertiary)
                 }
 
                 // Kind badge
                 Text(kindLabel(node.kind))
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                    .font(.system(size: max(8, model.uiFontSize - 3), weight: .semibold, design: .monospaced))
                     .padding(.horizontal, 4)
                     .padding(.vertical, 1)
                     .background(kindColor(node.kind).opacity(0.15))
@@ -192,7 +192,7 @@ struct NodeRowView: View {
                 // Value preview
                 if let value = node.value, !hasChildren {
                     Text(value)
-                        .font(.system(size: 12, design: .monospaced))
+                        .font(.system(size: model.uiFontSize, design: .monospaced))
                         .foregroundStyle(kindColor(node.kind))
                         .lineLimit(1)
                         .truncationMode(.tail)
@@ -200,7 +200,7 @@ struct NodeRowView: View {
                     Text(node.kind == .array
                          ? "\(node.children.count) item\(node.children.count == 1 ? "" : "s")"
                          : "\(node.children.count) key\(node.children.count == 1 ? "" : "s")")
-                        .font(.system(size: 11))
+                        .font(.system(size: max(9, model.uiFontSize - 1)))
                         .foregroundStyle(.tertiary)
                 }
 

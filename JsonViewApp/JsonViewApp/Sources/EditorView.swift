@@ -74,7 +74,9 @@ struct EditorView: View {
         }
         .background(Color(NSColor.textBackgroundColor))
         .onReceive(NotificationCenter.default.publisher(for: .editorActivateFind)) { _ in
-            withAnimation(.easeInOut(duration: 0.15)) { model.showFind.toggle() }
+            // Always open (never toggle closed) so Cmd+F reliably lands in the
+            // find field. FindBarView focuses itself on appear / re-activation.
+            withAnimation(.easeInOut(duration: 0.15)) { model.showFind = true }
         }
     }
 }
@@ -469,7 +471,8 @@ struct CodeEditorRepresentable: NSViewRepresentable {
                       let query = note.userInfo?["query"] as? String,
                       !query.isEmpty else { return }
                 let direction = note.userInfo?["direction"] as? String ?? "next"
-                self.findInEditor(query: query, direction: direction)
+                let caseSensitive = note.userInfo?["caseSensitive"] as? Bool ?? false
+                self.findInEditor(query: query, direction: direction, caseSensitive: caseSensitive)
             }
         }
 
@@ -494,32 +497,23 @@ struct CodeEditorRepresentable: NSViewRepresentable {
             tv.window?.makeFirstResponder(tv)
         }
 
-        func findInEditor(query: String, direction: String) {
+        func findInEditor(query: String, direction: String, caseSensitive: Bool = false) {
             guard let tv = textView else { return }
-            let nsText = tv.string as NSString
-            let cur = tv.selectedRange()
-            let opts: NSString.CompareOptions = .caseInsensitive
-            var found = NSRange(location: NSNotFound, length: 0)
-
-            if direction == "next" {
-                let start = cur.upperBound
-                let tail = NSRange(location: start, length: nsText.length - start)
-                found = nsText.range(of: query, options: opts, range: tail)
-                if found.location == NSNotFound {
-                    found = nsText.range(of: query, options: opts)
-                }
-            } else {
-                let head = NSRange(location: 0, length: max(0, cur.location))
-                found = nsText.range(of: query, options: [opts, .backwards], range: head)
-                if found.location == NSNotFound {
-                    found = nsText.range(of: query, options: [opts, .backwards])
-                }
+            let dir: TextSearch.Direction
+            switch direction {
+            case "first": dir = .first   // live search: land on first match from top
+            case "prev":  dir = .previous
+            default:      dir = .next
             }
-
-            if found.location != NSNotFound {
-                tv.scrollRangeToVisible(found)
-                tv.setSelectedRange(found)
-            }
+            guard let found = TextSearch.match(in: tv.string, query: query,
+                                               selection: tv.selectedRange(),
+                                               direction: dir, caseSensitive: caseSensitive)
+            else { return }
+            tv.scrollRangeToVisible(found)
+            tv.setSelectedRange(found)
+            // Animated yellow pulse — draws the eye to the match even though
+            // the find field (not the text view) holds first-responder.
+            tv.showFindIndicator(for: found)
         }
 
         deinit {
@@ -945,12 +939,66 @@ extension Notification.Name {
     static let jsonViewToggleFold = Notification.Name("jsonViewToggleFold")
 }
 
+// MARK: - TextSearch (pure, testable find logic)
+
+enum TextSearch {
+    enum Direction { case first, next, previous }
+
+    static func options(caseSensitive: Bool) -> NSString.CompareOptions {
+        caseSensitive ? [] : .caseInsensitive
+    }
+
+    /// Count of non-overlapping matches of `query` in `text`.
+    static func count(in text: String, query: String, caseSensitive: Bool) -> Int {
+        guard !query.isEmpty else { return 0 }
+        let opts = options(caseSensitive: caseSensitive)
+        let ns = text as NSString
+        var count = 0
+        var loc = 0
+        while loc <= ns.length {
+            let r = ns.range(of: query, options: opts,
+                             range: NSRange(location: loc, length: ns.length - loc))
+            if r.location == NSNotFound { break }
+            count += 1
+            loc = r.location + max(1, r.length) // max(1,…) guards zero-length matches
+        }
+        return count
+    }
+
+    /// Match range for `direction`, anchored at `selection`. Wraps around the
+    /// document ends. Returns nil only when the query matches nowhere.
+    static func match(in text: String, query: String, selection: NSRange,
+                      direction: Direction, caseSensitive: Bool) -> NSRange? {
+        guard !query.isEmpty else { return nil }
+        let ns = text as NSString
+        guard ns.length > 0 else { return nil }
+        let opts = options(caseSensitive: caseSensitive)
+        var found = NSRange(location: NSNotFound, length: 0)
+
+        switch direction {
+        case .first:
+            found = ns.range(of: query, options: opts)
+        case .previous:
+            let head = NSRange(location: 0, length: max(0, min(selection.location, ns.length)))
+            found = ns.range(of: query, options: [opts, .backwards], range: head)
+            if found.location == NSNotFound { found = ns.range(of: query, options: [opts, .backwards]) }
+        case .next:
+            let start = min(selection.location + selection.length, ns.length)
+            let tail = NSRange(location: start, length: ns.length - start)
+            found = ns.range(of: query, options: opts, range: tail)
+            if found.location == NSNotFound { found = ns.range(of: query, options: opts) }
+        }
+        return found.location == NSNotFound ? nil : found
+    }
+}
+
 // MARK: - FindBarView
 
 struct FindBarView: View {
     @EnvironmentObject var model: AppModel
     @State private var query: String = ""
     @State private var matchCount: Int = 0
+    @FocusState private var focused: Bool
 
     var body: some View {
         HStack(spacing: 8) {
@@ -962,14 +1010,33 @@ struct FindBarView: View {
                 .textFieldStyle(.plain)
                 .font(.system(size: 12, design: .monospaced))
                 .frame(maxWidth: 260)
+                .focused($focused)
                 .onSubmit { findNext() }
                 .onChange(of: query) { _ in updateMatches() }
 
-            if matchCount > 0 {
-                Text("\(matchCount) match\(matchCount == 1 ? "" : "es")")
+            if !query.isEmpty {
+                Text(matchCount == 0 ? "No matches" : "\(matchCount) match\(matchCount == 1 ? "" : "es")")
                     .font(.system(size: 11))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(matchCount == 0 ? .red.opacity(0.85) : .secondary)
             }
+
+            // Case-sensitivity toggle
+            Button {
+                model.findCaseSensitive.toggle()
+                updateMatches()
+            } label: {
+                Text("Aa")
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .foregroundColor(model.findCaseSensitive ? Color.accentColor : .secondary)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(model.findCaseSensitive ? Color.accentColor.opacity(0.15) : Color.clear)
+                    )
+            }
+            .buttonStyle(.plain)
+            .help(model.findCaseSensitive ? "Case-sensitive (on)" : "Case-sensitive (off)")
 
             Spacer()
 
@@ -997,26 +1064,38 @@ struct FindBarView: View {
         .overlay(alignment: .bottom) {
             Divider()
         }
+        // Focus when the bar first appears (closed → open)...
+        // Deferred: setting FocusState synchronously in onAppear races the
+        // view entering the responder chain and often no-ops.
+        .onAppear { DispatchQueue.main.async { focused = true } }
+        // ...and re-focus when Cmd+F is pressed while the bar is already open.
+        .onReceive(NotificationCenter.default.publisher(for: .editorActivateFind)) { _ in
+            focused = true
+        }
     }
 
     private func updateMatches() {
         guard !query.isEmpty else { matchCount = 0; return }
-        let text = model.editorText
-        var count = 0
-        var searchRange = text.startIndex..<text.endIndex
-        while let range = text.range(of: query, options: .caseInsensitive, range: searchRange) {
-            count += 1
-            searchRange = range.upperBound..<text.endIndex
-        }
-        matchCount = count
+        matchCount = TextSearch.count(in: model.editorText, query: query,
+                                      caseSensitive: model.findCaseSensitive)
+        // Live jump to the first match as the query changes.
+        post(direction: "first")
     }
 
-    private func findNext() {
-        NotificationCenter.default.post(name: .jsonViewFind, object: nil, userInfo: ["query": query, "direction": "next"])
-    }
+    private func findNext() { post(direction: "next") }
+    private func findPrev() { post(direction: "prev") }
 
-    private func findPrev() {
-        NotificationCenter.default.post(name: .jsonViewFind, object: nil, userInfo: ["query": query, "direction": "prev"])
+    private func post(direction: String) {
+        guard !query.isEmpty else { return }
+        NotificationCenter.default.post(
+            name: .jsonViewFind,
+            object: nil,
+            userInfo: [
+                "query": query,
+                "direction": direction,
+                "caseSensitive": model.findCaseSensitive,
+            ]
+        )
     }
 }
 

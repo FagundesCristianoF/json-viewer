@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import AppKit
 
 enum AppTheme: String, CaseIterable {
     case system, light, dark
@@ -26,22 +27,49 @@ enum AppTheme: String, CaseIterable {
 final class Preferences: ObservableObject {
     static let shared = Preferences()
 
+    // MARK: - Editor defaults
+
+    static let defaultIndentSize = 2
+    static let defaultEditorFontSize: Double = 13
+    static let defaultUIFontSize: Double = 12
+
     // MARK: - Keys
 
     private enum Key {
         static let theme               = "appTheme"
         static let autoSave            = "autoSave"
         static let indentSize          = "indentSize"
+        static let editorFontSize      = "editorFontSize"
+        static let uiFontSize          = "uiFontSize"
         static let workspaceRoot       = "workspaceRoot"
         static let devKitMode          = "devKitMode"
         static let historyDirectory    = "historyDirectory"
         static let analytics           = "analytics"
+        static let formatOnSave        = "formatOnSave"
+        static let formatOnPaste       = "formatOnPaste"
     }
 
     // MARK: - Appearance
 
     @Published var theme: AppTheme {
-        didSet { UserDefaults.standard.set(theme.rawValue, forKey: Key.theme) }
+        didSet {
+            UserDefaults.standard.set(theme.rawValue, forKey: Key.theme)
+            applyAppearance()
+        }
+    }
+
+    /// Drives the whole-app NSAppearance so the window chrome (toolbar +
+    /// titlebar) switches with the theme. `.preferredColorScheme` only repaints
+    /// the SwiftUI content — without this the toolbar keeps the old appearance
+    /// and icons go low-contrast after an in-app theme switch.
+    func applyAppearance() {
+        let appearance: NSAppearance?
+        switch theme {
+        case .system: appearance = nil
+        case .light:  appearance = NSAppearance(named: .aqua)
+        case .dark:   appearance = NSAppearance(named: .darkAqua)
+        }
+        NSApplication.shared.appearance = appearance
     }
 
     // MARK: - Editor
@@ -50,8 +78,24 @@ final class Preferences: ObservableObject {
         didSet { UserDefaults.standard.set(autoSave, forKey: Key.autoSave) }
     }
 
+    @Published var formatOnSave: Bool {
+        didSet { UserDefaults.standard.set(formatOnSave, forKey: Key.formatOnSave) }
+    }
+
+    @Published var formatOnPaste: Bool {
+        didSet { UserDefaults.standard.set(formatOnPaste, forKey: Key.formatOnPaste) }
+    }
+
     @Published var indentSize: Int {
         didSet { UserDefaults.standard.set(indentSize, forKey: Key.indentSize) }
+    }
+
+    @Published var editorFontSize: Double {
+        didSet { UserDefaults.standard.set(editorFontSize, forKey: Key.editorFontSize) }
+    }
+
+    @Published var uiFontSize: Double {
+        didSet { UserDefaults.standard.set(uiFontSize, forKey: Key.uiFontSize) }
     }
 
     // MARK: - Privacy
@@ -96,9 +140,25 @@ final class Preferences: ObservableObject {
         let savedAutoSave = UserDefaults.standard.object(forKey: Key.autoSave)
         autoSave = savedAutoSave != nil ? UserDefaults.standard.bool(forKey: Key.autoSave) : true
 
+        // formatOnSave — default false
+        let savedFormatOnSave = UserDefaults.standard.object(forKey: Key.formatOnSave)
+        formatOnSave = savedFormatOnSave != nil ? UserDefaults.standard.bool(forKey: Key.formatOnSave) : false
+
+        // formatOnPaste — default false
+        let savedFormatOnPaste = UserDefaults.standard.object(forKey: Key.formatOnPaste)
+        formatOnPaste = savedFormatOnPaste != nil ? UserDefaults.standard.bool(forKey: Key.formatOnPaste) : false
+
         // indentSize — default 2
         let savedIndent = UserDefaults.standard.integer(forKey: Key.indentSize)
-        indentSize = savedIndent > 0 ? savedIndent : 2
+        indentSize = savedIndent > 0 ? savedIndent : Self.defaultIndentSize
+
+        // editorFontSize — default 13
+        let savedEditor = UserDefaults.standard.double(forKey: Key.editorFontSize)
+        editorFontSize = savedEditor > 0 ? savedEditor : Self.defaultEditorFontSize
+
+        // uiFontSize — default 12
+        let savedUI = UserDefaults.standard.double(forKey: Key.uiFontSize)
+        uiFontSize = savedUI > 0 ? savedUI : Self.defaultUIFontSize
 
         // analytics — default true
         let savedAnalytics = UserDefaults.standard.object(forKey: Key.analytics)
@@ -112,6 +172,7 @@ final class Preferences: ObservableObject {
         }
 
         ensureHistoryDirectoryExists()
+        applyAppearance()
     }
 
     // MARK: - Helpers
@@ -132,5 +193,19 @@ final class Preferences: ObservableObject {
     /// Resets historyDirectory to the default path.
     func resetHistoryDirectoryToDefault() {
         historyDirectory = Self.defaultHistoryDirectory
+    }
+
+    /// Resets indent + font sizes to their defaults.
+    func resetEditorDefaults() {
+        indentSize = Self.defaultIndentSize
+        editorFontSize = Self.defaultEditorFontSize
+        uiFontSize = Self.defaultUIFontSize
+    }
+
+    /// True when indent + font sizes already match their defaults.
+    var editorDefaultsAreDefault: Bool {
+        indentSize == Self.defaultIndentSize &&
+        editorFontSize == Self.defaultEditorFontSize &&
+        uiFontSize == Self.defaultUIFontSize
     }
 }

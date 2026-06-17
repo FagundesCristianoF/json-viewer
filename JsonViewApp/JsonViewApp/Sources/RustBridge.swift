@@ -80,6 +80,16 @@ enum RustBridge {
         }
     }
 
+    static func unwrapPath(_ text: String, path: String, indent: Int = 2) -> String? {
+        text.withCString { cText -> String? in
+            path.withCString { cPath -> String? in
+                guard let raw = jv_unwrap_path(cText, cPath, UInt32(indent)) else { return nil }
+                defer { jv_string_free(raw) }
+                return String(cString: raw)
+            }
+        }
+    }
+
     // MARK: JSONPath
 
     /// Evaluate a JSONPath query against an already-parsed handle.
