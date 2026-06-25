@@ -242,6 +242,37 @@
 /* Placeholder when a response has no body */
 "results.no_response_body" = "No response body";
 
+/* Chip shown when JSONPath filter is applied to the response */
+"results.chip.jsonpath" = "JSONPath";
+
+/* Chip and empty-state title when a JSONPath returns zero results */
+"results.chip.no_matches" = "No matches";
+
+// MARK: - Config Panel (Require Groups)
+
+/* AND separator label between require groups */
+"config.require.and" = "AND";
+
+/* OR label between rules within a group */
+"config.require.or" = "OR";
+
+/* Button to add an OR rule inside a group */
+"config.require.add_or_rule" = "OR rule";
+
+/* Hint text when no require groups are configured */
+"config.require.empty_hint" = "No groups — add one to filter by path";
+
+/* Button label when no groups exist yet */
+"config.require.add_first_group" = "Add require filter";
+
+/* Button label when at least one group exists */
+"config.require.add_and_group" = "Add AND group";
+
+// MARK: - Scanner Sidebar
+
+/* Button shown in filter mode when a result is selected; %lld is the match count */
+"scanner.show_matches" = "Show %lld matches";
+
 /* Tooltip for the copy-response button */
 "results.tooltip.copy_response" = "Copy response";
 

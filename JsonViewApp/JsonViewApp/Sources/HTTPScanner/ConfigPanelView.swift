@@ -47,10 +47,7 @@ struct ConfigPanelView: View {
                             .monoTextField()
                     }
 
-                    fieldRow(String(localized: "field.require_results")) {
-                        TextField("$.products[*]", text: $vm.config.requireResultsPath)
-                            .monoTextField()
-                    }
+                    requireGroupsSection
 
                     fieldRow(String(localized: "field.body_query")) {
                         TextField("search term", text: $vm.config.query)
@@ -115,6 +112,108 @@ struct ConfigPanelView: View {
             }
         }
         .background(Color(nsColor: .underPageBackgroundColor))
+    }
+
+    @ViewBuilder
+    var requireGroupsSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(String(localized: "field.require_results"))
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+
+            VStack(spacing: 4) {
+                ForEach(vm.config.requireGroups.indices, id: \.self) { gi in
+                    VStack(spacing: 0) {
+                        // AND separator between groups
+                        if gi > 0 {
+                            HStack {
+                                Rectangle().frame(height: 0.5).foregroundStyle(Color(nsColor: .separatorColor))
+                                Text(String(localized: "config.require.and"))
+                                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize()
+                                Rectangle().frame(height: 0.5).foregroundStyle(Color(nsColor: .separatorColor))
+                            }
+                            .padding(.vertical, 4)
+                        }
+
+                        // Group box
+                        VStack(alignment: .leading, spacing: 0) {
+                            ForEach(vm.config.requireGroups[gi].rules.indices, id: \.self) { ri in
+                                VStack(spacing: 0) {
+                                    if ri > 0 {
+                                        HStack {
+                                            Text(String(localized: "config.require.or"))
+                                                .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                                                .foregroundStyle(.tertiary)
+                                                .padding(.leading, 8)
+                                            Spacer()
+                                        }
+                                        .padding(.vertical, 2)
+                                    }
+                                    HStack(spacing: 4) {
+                                        TextField("$.path[*]", text: $vm.config.requireGroups[gi].rules[ri].path)
+                                            .monoTextField()
+                                        Button {
+                                            if vm.config.requireGroups[gi].rules.count == 1 {
+                                                vm.config.requireGroups.remove(at: gi)
+                                            } else {
+                                                vm.config.requireGroups[gi].rules.remove(at: ri)
+                                            }
+                                        } label: {
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 9, weight: .medium))
+                                                .foregroundStyle(.secondary)
+                                                .frame(width: 16, height: 16)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                            }
+
+                            Button {
+                                vm.config.requireGroups[gi].rules.append(FilterRule(path: ""))
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 9, weight: .semibold))
+                                    Text(String(localized: "config.require.add_or_rule"))
+                                        .font(.system(size: 10))
+                                }
+                                .foregroundStyle(Color.accentColor)
+                                .padding(.top, 5)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(8)
+                        .background(Color(nsColor: .textBackgroundColor))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color(nsColor: .separatorColor), lineWidth: 0.5))
+                    }
+                }
+
+                Button {
+                    vm.config.requireGroups.append(FilterGroup())
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 11))
+                        Text(vm.config.requireGroups.isEmpty
+                             ? String(localized: "config.require.add_first_group")
+                             : String(localized: "config.require.add_and_group"))
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .foregroundStyle(Color.accentColor)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                    .background(Color.accentColor.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 3)
     }
 
     @ViewBuilder

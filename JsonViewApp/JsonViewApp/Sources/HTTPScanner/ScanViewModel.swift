@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 final class ScanViewModel: ObservableObject {
@@ -17,6 +18,19 @@ final class ScanViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var parseError: String? = nil
     @Published var logs: [String] = []
+
+    // MARK: - Combine
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        $config
+            .dropFirst()
+            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                Task { @MainActor [weak self] in self?.reapplyFilters() }
+            }
+            .store(in: &cancellables)
+    }
 
     // MARK: - History
     @Published var history: [HistoryEntry] = HistoryStore.shared.entries
@@ -289,6 +303,34 @@ final class ScanViewModel: ObservableObject {
         }
     }
 
+    func reapplyFilters() {
+        guard !isRunning, !results.isEmpty else { return }
+        let cfg = config
+        let options = parsedOptions
+        for i in results.indices {
+            guard results[i].responseBody != nil else { continue }
+            let parsedData: Any? = results[i].responseBody.flatMap {
+                $0.data(using: .utf8).flatMap { try? JSONSerialization.jsonObject(with: $0) }
+            }
+
+            if cfg.isFilterMode {
+                if parsedData == nil {
+                    results[i].status = .skipped("non-JSON (status \(results[i].statusCode ?? 0))")
+                    continue
+                }
+                let filterArgs = Filters.FilterArgs(
+                    jsonpath: cfg.effectiveJsonpath,
+                    requireGroups: cfg.effectiveRequireGroups
+                )
+                results[i].status = Filters.matches(response: results[i], data: parsedData, args: filterArgs)
+                    ? .matched : .notMatched
+            } else {
+                results[i].status = .matched
+            }
+        }
+        buildMatchingEntries(options: options, config: cfg)
+    }
+
     func stop() {
         scanTask?.cancel()
         scanTask = nil
@@ -340,7 +382,7 @@ final class ScanViewModel: ObservableObject {
 
             let filterArgs = Filters.FilterArgs(
                 jsonpath: config.effectiveJsonpath,
-                requireResultsPath: config.effectiveRequireResultsPath
+                requireGroups: config.effectiveRequireGroups
             )
 
             if Filters.matches(response: results[idx], data: parsedData, args: filterArgs) {

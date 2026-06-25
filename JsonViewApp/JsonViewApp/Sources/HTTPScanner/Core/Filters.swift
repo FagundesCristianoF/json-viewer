@@ -4,16 +4,20 @@ enum Filters {
 
     struct FilterArgs {
         var jsonpath: String?
-        var requireResultsPath: String?
+        var requireGroups: [[String]]   // outer = AND, inner = OR
     }
 
     static func matches(response: OptionResult, data: Any?, args: FilterArgs) -> Bool {
-        guard args.jsonpath != nil || args.requireResultsPath != nil else { return true }
+        let hasFilters = args.jsonpath != nil || !args.requireGroups.isEmpty
+        guard hasFilters else { return true }
 
-        if let path = args.requireResultsPath {
+        // Groups: AND — all groups must match; rules within a group: OR — any rule suffices
+        for group in args.requireGroups {
             guard response.statusCode == 200, let data else { return false }
-            let matched = (try? JSONPathEvaluator.hasMatches(path: path, in: data)) ?? false
-            if !matched { return false }
+            let groupMatched = group.contains { path in
+                (try? JSONPathEvaluator.hasMatches(path: path, in: data)) ?? false
+            }
+            if !groupMatched { return false }
         }
 
         if let path = args.jsonpath {

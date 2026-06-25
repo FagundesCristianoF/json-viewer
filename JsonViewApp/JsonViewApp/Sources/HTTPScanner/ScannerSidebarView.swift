@@ -128,6 +128,29 @@ struct ScannerSidebarView: View {
 
                     if !vm.mergedForDisplay.isEmpty {
                         Divider().padding(.horizontal, 8).padding(.vertical, 2)
+
+                        if vm.config.isFilterMode && vm.selectedResultID != nil && !vm.matchingEntries.isEmpty {
+                            Button {
+                                vm.selectedResultID = nil
+                            } label: {
+                                HStack(spacing: 5) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(.green)
+                                    Text(String(format: String(localized: "scanner.show_matches"), vm.matchingEntries.count))
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundStyle(Color.accentColor)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 5)
+                                .background(Color.accentColor.opacity(0.08))
+                                .clipShape(RoundedRectangle(cornerRadius: 4))
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.horizontal, 8)
+                            .padding(.bottom, 4)
+                        }
+
                         ScrollView {
                             LazyVStack(spacing: 1) {
                                 ForEach(vm.mergedForDisplay) { result in
@@ -138,7 +161,7 @@ struct ScannerSidebarView: View {
                             }
                             .padding(.horizontal, 4)
                         }
-                        .frame(maxHeight: 320)
+                        .frame(maxHeight: .infinity)
                     }
                 }
             } label: {
@@ -172,8 +195,21 @@ struct ScannerSidebarView: View {
 struct SidebarDisclosureStyle: DisclosureGroupStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack(spacing: 0) {
-            configuration.label
-                .onTapGesture { withAnimation(.easeInOut(duration: 0.15)) { configuration.isExpanded.toggle() } }
+            HStack(spacing: 0) {
+                configuration.label
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .rotationEffect(.degrees(configuration.isExpanded ? 90 : 0))
+                    .animation(.easeInOut(duration: 0.15), value: configuration.isExpanded)
+                    .padding(.trailing, 12)
+                    .padding(.vertical, 8)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { withAnimation(.easeInOut(duration: 0.15)) { configuration.isExpanded.toggle() } }
+            .onHover { hovering in
+                if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+            }
             if configuration.isExpanded { configuration.content }
         }
     }

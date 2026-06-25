@@ -4,9 +4,7 @@ import XCTest
 final class ScanConfigTests: XCTestCase {
 
     func test_isFilterMode_false_when_all_empty() {
-        var config = ScanConfig()
-        config.jsonpath = ""
-        config.requireResultsPath = ""
+        let config = ScanConfig()
         XCTAssertFalse(config.isFilterMode)
     }
 
@@ -16,9 +14,9 @@ final class ScanConfigTests: XCTestCase {
         XCTAssertTrue(config.isFilterMode)
     }
 
-    func test_isFilterMode_true_when_requireResultsPath_set() {
+    func test_isFilterMode_true_when_requireGroups_set() {
         var config = ScanConfig()
-        config.requireResultsPath = "$.data"
+        config.requireGroups = [FilterGroup(rules: [FilterRule(path: "$.data")])]
         XCTAssertTrue(config.isFilterMode)
     }
 
@@ -34,10 +32,13 @@ final class ScanConfigTests: XCTestCase {
         XCTAssertEqual(config.effectiveJsonpath, "$.items")
     }
 
-    func test_effectiveRequireResultsPath_nil_when_empty() {
+    func test_effectiveRequireGroups_filters_empty_paths() {
         var config = ScanConfig()
-        config.requireResultsPath = ""
-        XCTAssertNil(config.effectiveRequireResultsPath)
+        config.requireGroups = [
+            FilterGroup(rules: [FilterRule(path: "$.data"), FilterRule(path: "")]),
+            FilterGroup(rules: [FilterRule(path: "")])
+        ]
+        XCTAssertEqual(config.effectiveRequireGroups, [["$.data"]])
     }
 
     func test_effectiveSearchQuery_nil_when_empty() {
@@ -52,6 +53,7 @@ final class ScanConfigTests: XCTestCase {
         config.jsonpath = "$.users[*]"
         config.workers = 8
         config.timeout = 15.0
+        config.requireGroups = [FilterGroup(rules: [FilterRule(path: "$.data[*]")])]
 
         let data = try JSONEncoder().encode(config)
         let decoded = try JSONDecoder().decode(ScanConfig.self, from: data)
@@ -60,5 +62,16 @@ final class ScanConfigTests: XCTestCase {
         XCTAssertEqual(decoded.jsonpath, "$.users[*]")
         XCTAssertEqual(decoded.workers, 8)
         XCTAssertEqual(decoded.timeout, 15.0)
+        XCTAssertEqual(decoded.requireGroups.count, 1)
+        XCTAssertEqual(decoded.requireGroups[0].rules[0].path, "$.data[*]")
+    }
+
+    func test_legacy_requireResultsPath_migrates_to_group() throws {
+        let legacy = """
+        {"param":"x","optionIdPath":"id","optionNamePath":"n","jsonpath":"","requireResultsPath":"$.items[*]","query":"","workers":4,"timeout":10}
+        """
+        let decoded = try JSONDecoder().decode(ScanConfig.self, from: legacy.data(using: .utf8)!)
+        XCTAssertEqual(decoded.requireGroups.count, 1)
+        XCTAssertEqual(decoded.requireGroups[0].rules[0].path, "$.items[*]")
     }
 }

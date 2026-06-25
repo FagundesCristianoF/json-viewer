@@ -84,8 +84,49 @@ struct ProgressHeader: View {
 
 struct ResponseDetailView: View {
     let result: OptionResult
+    @EnvironmentObject var vm: ScanViewModel
     @State private var showRaw = false
     @State private var copied = false
+
+    private enum JSONPathResult {
+        case noFilter
+        case extracted(String)
+        case empty        // valid path, zero matches
+        case invalid      // bad path or parse error → fall through to full JSON
+    }
+
+    private var jsonPathResult: JSONPathResult {
+        guard !showRaw else { return .noFilter }
+        let displayPath = vm.config.effectiveJsonpath
+        let requirePaths = vm.config.effectiveRequireGroups.flatMap { $0 }
+        guard displayPath != nil || !requirePaths.isEmpty else { return .noFilter }
+
+        guard let body = result.responseBody,
+              let data = body.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data) else { return .invalid }
+
+        var merged: [Any] = []
+        if let path = displayPath {
+            guard let m = try? JSONPathEvaluator.evaluate(path: path, in: json) else { return .invalid }
+            merged.append(contentsOf: m)
+        }
+        for path in requirePaths {
+            if let m = try? JSONPathEvaluator.evaluate(path: path, in: json) {
+                merged.append(contentsOf: m)
+            }
+        }
+
+        if merged.isEmpty { return .empty }
+        guard let pretty = try? JSONSerialization.data(withJSONObject: merged, options: [.prettyPrinted, .sortedKeys]),
+              let str = String(data: pretty, encoding: .utf8) else { return .invalid }
+        return .extracted(str)
+    }
+
+    var copyText: String {
+        if showRaw { return result.responseBody ?? "" }
+        if case .extracted(let str) = jsonPathResult { return str }
+        return result.prettyBody ?? result.responseBody ?? ""
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -103,6 +144,23 @@ struct ResponseDetailView: View {
                     }
                 }
                 Spacer()
+                if case .extracted = jsonPathResult {
+                    Text(String(localized: "results.chip.jsonpath"))
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(Color.accentColor)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 2)
+                        .background(Color.accentColor.opacity(0.12))
+                        .clipShape(Capsule())
+                } else if case .empty = jsonPathResult {
+                    Text(String(localized: "results.chip.no_matches"))
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 2)
+                        .background(Color.secondary.opacity(0.12))
+                        .clipShape(Capsule())
+                }
                 if let code = result.statusCode {
                     let tint = statusColor(code)
                     Text("\(code)")
@@ -118,9 +176,8 @@ struct ResponseDetailView: View {
                     .font(.system(size: 11))
 
                 Button {
-                    let text = showRaw ? (result.responseBody ?? "") : (result.prettyBody ?? "")
                     NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(text, forType: .string)
+                    NSPasteboard.general.setString(copyText, forType: .string)
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
                 } label: {
@@ -137,13 +194,27 @@ struct ResponseDetailView: View {
 
             Divider()
 
-            // Body — error message or response body
+            // Body
             if case .error(let msg) = result.status, result.responseBody == nil {
                 ErrorDetailView(message: msg)
             } else if showRaw, let body = result.responseBody {
                 MonoTextView(text: body)
-            } else if !showRaw, let body = result.responseBody, result.prettyBody != nil {
+            } else if case .extracted(let str) = jsonPathResult {
+                JSONColorView(text: str)
+                    .id("extracted-\(result.id)-\(vm.config.jsonpath)-\(vm.config.requireGroups.hashValue)")
+            } else if case .empty = jsonPathResult {
+                VStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 28)).foregroundStyle(.tertiary)
+                    Text(String(localized: "results.chip.no_matches"))
+                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(.secondary)
+                    Text(vm.config.jsonpath)
+                        .font(.system(size: 11, design: .monospaced)).foregroundStyle(.tertiary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let body = result.responseBody, result.prettyBody != nil {
                 JSONColorView(text: body)
+                    .id("body-\(result.id)")
             } else if let body = result.responseBody {
                 MonoTextView(text: body)
             } else {
