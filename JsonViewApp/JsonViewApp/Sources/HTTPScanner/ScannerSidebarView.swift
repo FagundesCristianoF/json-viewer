@@ -7,6 +7,15 @@ struct ScannerSidebarView: View {
     @State private var showOptionsImporter = false
     @State private var curlExpanded = true
     @State private var optionsExpanded = true
+    @State private var resultSearch: String = ""
+
+    private var filteredResults: [OptionResult] {
+        guard !resultSearch.isEmpty else { return vm.mergedForDisplay }
+        return vm.mergedForDisplay.filter {
+            $0.responseBody?.localizedCaseInsensitiveContains(resultSearch) == true ||
+            ($0.displayName ?? $0.id).localizedCaseInsensitiveContains(resultSearch)
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -152,9 +161,33 @@ struct ScannerSidebarView: View {
                             .padding(.bottom, 4)
                         }
 
+                        if !vm.results.isEmpty {
+                            HStack(spacing: 6) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.tertiary)
+                                TextField("Search responses…", text: $resultSearch)
+                                    .textFieldStyle(.plain)
+                                    .font(.system(size: 11))
+                                if !resultSearch.isEmpty {
+                                    Button { resultSearch = "" } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(.system(size: 10))
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Color(nsColor: .textBackgroundColor).opacity(0.6))
+
+                            Divider().padding(.horizontal, 8)
+                        }
+
                         ScrollView {
                             LazyVStack(spacing: 1) {
-                                ForEach(vm.mergedForDisplay) { result in
+                                ForEach(filteredResults) { result in
                                     OptionRow(result: result, isSelected: vm.selectedResultID == result.id)
                                         .contentShape(Rectangle())
                                         .onTapGesture { vm.selectedResultID = result.id }
@@ -183,6 +216,9 @@ struct ScannerSidebarView: View {
             }
         }
         .background(Color(nsColor: .windowBackgroundColor))
+        .onChange(of: vm.isRunning) { running in
+            if running { resultSearch = "" }
+        }
         .fileImporter(isPresented: $showCurlImporter, allowedContentTypes: [.text, .plainText]) { result in
             if case .success(let url) = result { vm.importCurlFile(url) }
         }
