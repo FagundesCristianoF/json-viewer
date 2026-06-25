@@ -53,6 +53,10 @@ struct ScannerToolbarItems: ToolbarContent {
             .badge(vm.history.isEmpty ? 0 : min(vm.history.count, 99))
         }
 
+        ToolbarItem(placement: .navigation) {
+            SaveBookmarkButton()
+        }
+
         if vm.isRunning {
             ToolbarItem(placement: .primaryAction) {
                 ProgressView()
@@ -372,5 +376,128 @@ private struct UnwrapPopover: View {
     private func apply() {
         model.unwrapPath(pathText)
         dismiss()
+    }
+}
+
+// MARK: - Save Bookmark Button
+
+struct SaveBookmarkButton: View {
+    @EnvironmentObject var vm: ScanViewModel
+    @State private var showPopover = false
+    @State private var saveName = ""
+    @State private var showNewSaveForm = false
+
+    private var currentSaved: SavedRequest? {
+        guard let id = vm.currentSavedRequestID else { return nil }
+        return vm.savedRequests.first { $0.id == id }
+    }
+
+    var body: some View {
+        Button { showPopover.toggle() } label: {
+            Image(systemName: vm.currentSavedRequestID != nil ? "bookmark.fill" : "bookmark")
+                .foregroundStyle(vm.currentSavedRequestID != nil ? Color.accentColor : Color.primary)
+        }
+        .help(helpText)
+        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
+            savePopoverContent
+        }
+        .onChange(of: showPopover) { isShowing in
+            if !isShowing { showNewSaveForm = false }
+        }
+    }
+
+    private var helpText: String {
+        if let saved = currentSaved {
+            return vm.hasPendingChanges ? "Update or save \"\(saved.name)\"" : "Saved: \(saved.name)"
+        }
+        return "Save current request"
+    }
+
+    @ViewBuilder
+    private var savePopoverContent: some View {
+        if showNewSaveForm {
+            newSavePopover
+        } else if let saved = currentSaved {
+            if vm.hasPendingChanges {
+                pendingChangesPopover(saved: saved)
+            } else {
+                activeRequestPopover(saved: saved)
+            }
+        } else {
+            newSavePopover
+        }
+    }
+
+    private var newSavePopover: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Save Request")
+                .font(.system(size: 13, weight: .semibold))
+            TextField("Name", text: $saveName)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 220)
+                .onAppear { saveName = "" }
+                .onSubmit { commitSave() }
+            HStack {
+                Spacer()
+                Button("Save") { commitSave() }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(saveName.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+        .padding(16)
+    }
+
+    @ViewBuilder
+    private func pendingChangesPopover(saved: SavedRequest) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Unsaved changes")
+                .font(.system(size: 13, weight: .semibold))
+            Text("\"\(saved.name)\" has pending changes.")
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                Button("Update \"\(saved.name)\"") {
+                    vm.updateCurrentSavedRequest()
+                    showPopover = false
+                }
+                .buttonStyle(.borderedProminent)
+                Button("Save as new\u{2026}") {
+                    showNewSaveForm = true
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(16)
+        .frame(width: 260)
+    }
+
+    @ViewBuilder
+    private func activeRequestPopover(saved: SavedRequest) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(saved.name)
+                .font(.system(size: 13, weight: .semibold))
+            HStack(spacing: 8) {
+                Button("Rename\u{2026}") {
+                    showPopover = false
+                }
+                .buttonStyle(.bordered)
+                Button("Delete") {
+                    vm.deleteSavedRequest(id: saved.id)
+                    showPopover = false
+                }
+                .buttonStyle(.bordered)
+                .foregroundStyle(.red)
+            }
+        }
+        .padding(16)
+        .frame(width: 220)
+    }
+
+    private func commitSave() {
+        let name = saveName.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { return }
+        vm.saveCurrentRequest(name: name)
+        showNewSaveForm = false
+        showPopover = false
     }
 }
