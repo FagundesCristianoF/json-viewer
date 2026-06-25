@@ -32,6 +32,18 @@ final class ScanViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    // MARK: - Saved Requests
+    @Published var savedRequests: [SavedRequest] = SavedRequestsStore.shared.items
+    @Published var currentSavedRequestID: UUID? = nil
+
+    var hasPendingChanges: Bool {
+        guard let id = currentSavedRequestID,
+              let saved = SavedRequestsStore.shared.item(id: id) else { return false }
+        return saved.curlText != curlText ||
+               saved.optionsText != optionsText ||
+               saved.config != config
+    }
+
     // MARK: - History
     @Published var history: [HistoryEntry] = HistoryStore.shared.entries
 
@@ -50,6 +62,62 @@ final class ScanViewModel: ObservableObject {
     func clearHistory() {
         HistoryStore.shared.clear()
         history = HistoryStore.shared.entries
+    }
+
+    func loadSavedRequest(_ entry: SavedRequest) {
+        curlText = entry.curlText
+        optionsText = entry.optionsText
+        config = entry.config
+        currentSavedRequestID = entry.id
+        validateCurl()
+    }
+
+    @discardableResult
+    func saveCurrentRequest(name: String) -> SavedRequest {
+        let saved = SavedRequestsStore.shared.add(
+            name: name,
+            curlText: curlText,
+            optionsText: optionsText,
+            config: config
+        )
+        savedRequests = SavedRequestsStore.shared.items
+        currentSavedRequestID = saved.id
+        return saved
+    }
+
+    func updateCurrentSavedRequest() {
+        guard let id = currentSavedRequestID else { return }
+        SavedRequestsStore.shared.update(
+            id: id,
+            name: SavedRequestsStore.shared.item(id: id)?.name ?? "Untitled",
+            curlText: curlText,
+            optionsText: optionsText,
+            config: config
+        )
+        savedRequests = SavedRequestsStore.shared.items
+    }
+
+    func deleteSavedRequest(id: UUID) {
+        SavedRequestsStore.shared.delete(id: id)
+        savedRequests = SavedRequestsStore.shared.items
+        if currentSavedRequestID == id { currentSavedRequestID = nil }
+    }
+
+    func renameSavedRequest(id: UUID, name: String) {
+        SavedRequestsStore.shared.rename(id: id, name: name)
+        savedRequests = SavedRequestsStore.shared.items
+    }
+
+    func overwriteSavedRequest(id: UUID) {
+        SavedRequestsStore.shared.update(
+            id: id,
+            name: SavedRequestsStore.shared.item(id: id)?.name ?? "Untitled",
+            curlText: curlText,
+            optionsText: optionsText,
+            config: config
+        )
+        savedRequests = SavedRequestsStore.shared.items
+        currentSavedRequestID = id
     }
 
     private func saveToHistory() {
