@@ -9,6 +9,8 @@ final class ScanViewModel: ObservableObject {
     @Published var curlText: String = ""
     @Published var optionsText: String = ""
     @Published var config = ScanConfig()
+    @Published var curlBreakdown: CurlBreakdown? = nil
+    private var lastBuiltCurl: String = ""
 
     // MARK: - State
     @Published var results: [OptionResult] = []
@@ -28,6 +30,29 @@ final class ScanViewModel: ObservableObject {
             .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
             .sink { [weak self] _ in
                 Task { @MainActor [weak self] in self?.reapplyFilters() }
+            }
+            .store(in: &cancellables)
+
+        // curlText → breakdown: re-parse when user edits the curl text directly
+        $curlText
+            .dropFirst()
+            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
+            .sink { [weak self] text in
+                guard let self else { return }
+                guard text != self.lastBuiltCurl else { return }
+                self.curlBreakdown = try? CurlParser.parseBreakdown(text)
+            }
+            .store(in: &cancellables)
+
+        // breakdown → curlText: rebuild curl when user edits the breakdown
+        $curlBreakdown
+            .dropFirst()
+            .compactMap { $0 }
+            .sink { [weak self] bd in
+                guard let self else { return }
+                let built = CurlBuilder.build(bd)
+                self.lastBuiltCurl = built
+                self.curlText = built
             }
             .store(in: &cancellables)
     }
@@ -214,6 +239,32 @@ final class ScanViewModel: ObservableObject {
             parsedCurl = nil
             parseError = error.localizedDescription
         }
+    }
+
+    func updateBreakdownRawBody(_ raw: String) {
+        guard curlBreakdown != nil else { return }
+        curlBreakdown!.rawBody = raw
+        if let data = raw.data(using: .utf8),
+           let dict = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] {
+            curlBreakdown!.bodyParams = dict.keys.sorted().compactMap { key -> HTTPParam? in
+                guard let val = dict[key] else { return nil }
+                let fragment: String
+                if let str = val as? String {
+                    fragment = "\"\(str.replacingOccurrences(of: "\"", with: "\\\""))\""
+                } else if let num = val as? NSNumber {
+                    fragment = CFGetTypeID(num) == CFBooleanGetTypeID() ?
+                        (num.boolValue ? "true" : "false") : num.stringValue
+                } else if val is NSNull {
+                    fragment = "null"
+                } else if let enc = try? JSONSerialization.data(withJSONObject: val),
+                          let s = String(data: enc, encoding: .utf8) {
+                    fragment = s
+                } else { return nil }
+                return HTTPParam(key: key, value: fragment)
+            }
+            curlBreakdown!.bodyIsRaw = false
+        }
+        // If not valid JSON, bodyIsRaw stays true and bodyParams remain unchanged
     }
 
     // MARK: - Run
