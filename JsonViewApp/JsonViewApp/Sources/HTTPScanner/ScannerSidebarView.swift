@@ -39,6 +39,7 @@ struct ScannerSidebarView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "exclamationmark.circle.fill").foregroundStyle(.red)
                             Text(err).font(.system(size: 10)).foregroundStyle(.red).lineLimit(2)
+                                .textSelection(.enabled)
                         }
                         .padding(.horizontal, 10).padding(.bottom, 6)
                     }
@@ -176,6 +177,7 @@ struct ScannerSidebarView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
                     Text(err).font(.system(size: 11)).foregroundStyle(.orange).lineLimit(3)
+                        .textSelection(.enabled)
                 }
                 .padding(10)
             }

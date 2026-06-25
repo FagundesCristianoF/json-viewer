@@ -205,6 +205,7 @@ private struct JLineView: View {
         }
         .font(.system(size: 11, design: .monospaced))
         .lineSpacing(1)
+        .textSelection(.enabled)
     }
 
     @ViewBuilder

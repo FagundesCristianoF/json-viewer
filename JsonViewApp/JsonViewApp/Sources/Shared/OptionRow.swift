@@ -12,11 +12,13 @@ struct OptionRow: View {
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(labelColor)
                     .lineLimit(1)
+                    .textSelection(.enabled)
                 if result.displayName != nil {
                     Text(result.id)
                         .font(.system(size: 10, weight: .regular, design: .monospaced))
                         .foregroundColor(labelColor.opacity(0.6))
                         .lineLimit(1)
+                        .textSelection(.enabled)
                 }
             }
             Spacer()
