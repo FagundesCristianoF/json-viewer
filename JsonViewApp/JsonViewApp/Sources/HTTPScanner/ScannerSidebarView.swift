@@ -139,6 +139,11 @@ struct ScannerSidebarView: View {
                         .buttonStyle(.plain).foregroundStyle(.secondary).help(String(localized: "action.import_file"))
                     }
                     .padding(.horizontal, 10).padding(.bottom, 6)
+
+                    if vm.curlBreakdown != nil {
+                        CurlBreakdownView()
+                            .padding(.bottom, 4)
+                    }
                 }
             } label: {
                 SectionHeader(title: String(localized: "section.curl_command"), systemImage: "terminal")
