@@ -23,6 +23,7 @@ final class ScanViewModel: ObservableObject {
 
     // MARK: - Combine
     private var cancellables = Set<AnyCancellable>()
+    private var suppressBreakdownBuild = false
 
     init() {
         $config
@@ -49,7 +50,7 @@ final class ScanViewModel: ObservableObject {
             .dropFirst()
             .compactMap { $0 }
             .sink { [weak self] bd in
-                guard let self else { return }
+                guard let self, !self.suppressBreakdownBuild else { return }
                 let built = CurlBuilder.build(bd)
                 self.lastBuiltCurl = built
                 self.curlText = built
@@ -64,7 +65,14 @@ final class ScanViewModel: ObservableObject {
     var hasPendingChanges: Bool {
         guard let id = currentSavedRequestID,
               let saved = SavedRequestsStore.shared.item(id: id) else { return false }
-        return saved.curlText != curlText ||
+        let liveCurl = (curlBreakdown.map { CurlBuilder.build($0) }) ?? curlText
+        let savedCurl: String
+        if let bd = try? CurlParser.parseBreakdown(saved.curlText) {
+            savedCurl = CurlBuilder.build(bd)
+        } else {
+            savedCurl = saved.curlText
+        }
+        return liveCurl != savedCurl ||
                saved.optionsText != optionsText ||
                saved.config != config
     }
@@ -90,10 +98,14 @@ final class ScanViewModel: ObservableObject {
     }
 
     func loadSavedRequest(_ entry: SavedRequest) {
+        suppressBreakdownBuild = true
         curlText = entry.curlText
+        lastBuiltCurl = entry.curlText
         optionsText = entry.optionsText
         config = entry.config
         currentSavedRequestID = entry.id
+        curlBreakdown = try? CurlParser.parseBreakdown(entry.curlText)
+        suppressBreakdownBuild = false
         validateCurl()
     }
 

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+@MainActor
 final class SavedRequestsStore: ObservableObject {
 
     static let shared = SavedRequestsStore()

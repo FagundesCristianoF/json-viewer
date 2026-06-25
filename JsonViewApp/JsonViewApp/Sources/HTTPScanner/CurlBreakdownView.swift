@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CurlBreakdownView: View {
     @EnvironmentObject var vm: ScanViewModel
-    @State private var urlExpanded = true
     @State private var queryExpanded = true
     @State private var headersExpanded = true
     @State private var bodyExpanded = true

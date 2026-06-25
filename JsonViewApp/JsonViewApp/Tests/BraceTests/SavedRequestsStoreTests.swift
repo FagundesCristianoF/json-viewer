@@ -1,6 +1,7 @@
 import XCTest
 @testable import Brace
 
+@MainActor
 final class SavedRequestsStoreTests: XCTestCase {
 
     func test_add_and_retrieve() {
