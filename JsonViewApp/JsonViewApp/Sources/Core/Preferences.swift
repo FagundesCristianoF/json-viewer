@@ -190,6 +190,11 @@ final class Preferences: ObservableObject {
         historyDirectory.appendingPathComponent("history.json")
     }
 
+    /// Full path to saved_requests.json inside the history directory.
+    var savedRequestsFileURL: URL {
+        historyDirectory.appendingPathComponent("saved_requests.json")
+    }
+
     /// Resets historyDirectory to the default path.
     func resetHistoryDirectoryToDefault() {
         historyDirectory = Self.defaultHistoryDirectory
