@@ -5,6 +5,9 @@ struct ScannerSidebarView: View {
     @EnvironmentObject var vm: ScanViewModel
     @State private var showCurlImporter = false
     @State private var showOptionsImporter = false
+    @State private var savedExpanded = true
+    @State private var renamingID: UUID? = nil
+    @State private var renameText: String = ""
     @State private var curlExpanded = true
     @State private var optionsExpanded = true
     @State private var resultSearch: String = ""
@@ -17,8 +20,79 @@ struct ScannerSidebarView: View {
         }
     }
 
+    @ViewBuilder
+    private var savedSection: some View {
+        if !vm.savedRequests.isEmpty {
+            DisclosureGroup(isExpanded: $savedExpanded) {
+                VStack(spacing: 1) {
+                    ForEach(vm.savedRequests) { entry in
+                        savedRow(entry)
+                    }
+                }
+                .padding(.horizontal, 4)
+                .padding(.bottom, 6)
+            } label: {
+                SectionHeader(title: "Saved", systemImage: "bookmark.fill")
+                    .contentShape(Rectangle())
+            }
+            .disclosureGroupStyle(SidebarDisclosureStyle())
+
+            Divider().padding(.horizontal, 8)
+        }
+    }
+
+    @ViewBuilder
+    private func savedRow(_ entry: SavedRequest) -> some View {
+        let isActive = vm.currentSavedRequestID == entry.id
+
+        HStack(spacing: 8) {
+            Image(systemName: isActive ? "bookmark.fill" : "bookmark")
+                .font(.system(size: 11))
+                .foregroundStyle(isActive ? Color.accentColor : Color.secondary)
+                .frame(width: 16)
+
+            if renamingID == entry.id {
+                TextField("Name", text: $renameText)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 12))
+                    .onSubmit {
+                        vm.renameSavedRequest(id: entry.id, name: renameText.isEmpty ? entry.name : renameText)
+                        renamingID = nil
+                    }
+                    .onExitCommand { renamingID = nil }
+            } else {
+                Text(entry.name)
+                    .font(.system(size: 12, weight: isActive ? .semibold : .regular))
+                    .foregroundStyle(isActive ? Color.accentColor : Color.primary)
+                    .lineLimit(1)
+                    .textSelection(.enabled)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(isActive ? Color.accentColor.opacity(0.08) : Color.clear)
+        .cornerRadius(4)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            vm.loadSavedRequest(entry)
+        }
+        .contextMenu {
+            Button("Load") { vm.loadSavedRequest(entry) }
+            Button("Rename") {
+                renameText = entry.name
+                renamingID = entry.id
+            }
+            Button("Overwrite with current") { vm.overwriteSavedRequest(id: entry.id) }
+            Divider()
+            Button("Delete", role: .destructive) { vm.deleteSavedRequest(id: entry.id) }
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
+            savedSection
 
             // MARK: Curl section
             DisclosureGroup(isExpanded: $curlExpanded) {
