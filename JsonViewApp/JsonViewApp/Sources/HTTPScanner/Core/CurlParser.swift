@@ -165,6 +165,71 @@ enum CurlParser {
         )
     }
 
+    // MARK: - Breakdown
+
+    static func parseBreakdown(_ input: String) throws -> CurlBreakdown {
+        let parsed = try parse(input)
+
+        // Split URL into base + query params
+        var baseURL = parsed.url
+        var queryParams: [HTTPParam] = []
+        if var components = URLComponents(string: parsed.url) {
+            queryParams = (components.queryItems ?? []).map {
+                HTTPParam(key: $0.name, value: $0.value ?? "")
+            }
+            components.query = nil
+            baseURL = components.string ?? parsed.url
+        }
+
+        // Headers dict → ordered array
+        let headers: [HTTPParam] = parsed.headers
+            .sorted { $0.key < $1.key }
+            .map { HTTPParam(key: $0.key, value: $0.value) }
+
+        // Body
+        let rawBody = parsed.data ?? ""
+        var bodyParams: [HTTPParam] = []
+        var bodyIsRaw = true
+
+        if !rawBody.isEmpty,
+           let data = rawBody.data(using: .utf8),
+           let dict = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] {
+            bodyIsRaw = false
+            bodyParams = dict.keys.sorted().compactMap { key -> HTTPParam? in
+                guard let val = dict[key] else { return nil }
+                let fragment: String
+                if let str = val as? String {
+                    fragment = "\"\(str.replacingOccurrences(of: "\"", with: "\\\""))\""
+                } else if let num = val as? NSNumber {
+                    if CFGetTypeID(num) == CFBooleanGetTypeID() {
+                        fragment = num.boolValue ? "true" : "false"
+                    } else {
+                        fragment = num.stringValue
+                    }
+                } else if val is NSNull {
+                    fragment = "null"
+                } else if let encoded = try? JSONSerialization.data(withJSONObject: val),
+                          let str = String(data: encoded, encoding: .utf8) {
+                    fragment = str
+                } else {
+                    return nil
+                }
+                return HTTPParam(key: key, value: fragment)
+            }
+        }
+
+        return CurlBreakdown(
+            method: parsed.method,
+            baseURL: baseURL,
+            queryParams: queryParams,
+            headers: headers,
+            bodyParams: bodyParams,
+            rawBody: rawBody,
+            bodyIsRaw: bodyIsRaw,
+            insecure: parsed.insecure
+        )
+    }
+
     // MARK: - Helpers
 
     private static func stripWrappingQuotes(_ s: String) -> String {
