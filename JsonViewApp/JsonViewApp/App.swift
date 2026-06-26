@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Sentry
 
 // Grabs the real NSWindow on first layout and locks down tabbing + minimum size.
 private struct WindowConfigurator: NSViewRepresentable {
@@ -29,6 +30,7 @@ struct BraceApp: App {
     @StateObject private var devKit = BraceModel()
 
     init() {
+        Telemetry.start(enabled: true)
         NSWindow.allowsAutomaticWindowTabbing = false
 
         // Disable macOS "smart" substitutions app-wide. Writing to the app's own

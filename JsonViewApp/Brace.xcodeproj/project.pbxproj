@@ -61,6 +61,7 @@
 		B6A2B66964C9DD151FB1BC61 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E29B5FE997CA6EB30A6C20 /* Preferences.swift */; };
 		B7514E88E0A35510A745B901 /* JsonEditorSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866833C94BA811717C5FA18B /* JsonEditorSidebarView.swift */; };
 		C204BDB54907C55982EFA1CB /* AppMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1C7D831BC38C795BEC0A0E /* AppMode.swift */; };
+		AABB0055CC66DD77EE88FF99 /* TelemetryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB0066CC77DD88EE99FFAA /* TelemetryService.swift */; };
 		C86C4EDFCA803EA84FBD117A /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675260FBA2AE6307092B750B /* RequestBuilder.swift */; };
 		CC801818B9F590422E0A08AC /* OptionEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8B2695DCD5F15F0774A377 /* OptionEntry.swift */; };
 		CE787FAFEACF16BA379FC85F /* JsonEditorDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50DAC1447128444A4AB0114 /* JsonEditorDetailView.swift */; };
@@ -80,6 +81,7 @@
 		EF8DC67030D708D3056832DE /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D8D780BECC646375B543B1 /* StatusBarView.swift */; };
 		F7728468F4627006573933DD /* test_statusDot_error.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BEB70F75B331056BC9FF65 /* test_statusDot_error.1.png */; };
 		FFD76DB017DE30C11311ECA5 /* HTTPParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249057DEC610126D46014B75 /* HTTPParam.swift */; };
+		AABB0033CC44DD55EE66FF77 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = AABB0022CC33DD44EE55FF66 /* Sentry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +159,7 @@
 		9806C8ED906D888C53019475 /* test_jsonColorView_nested.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test_jsonColorView_nested.1.png; sourceTree = "<group>"; };
 		9924333529CD5FD20B73A271 /* HistoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryEntry.swift; sourceTree = "<group>"; };
 		9D1C7D831BC38C795BEC0A0E /* AppMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMode.swift; sourceTree = "<group>"; };
+		AABB0066CC77DD88EE99FFAA /* TelemetryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryService.swift; sourceTree = "<group>"; };
 		A8E27FD4D482B610B54A902B /* test_optionRow_error.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test_optionRow_error.1.png; sourceTree = "<group>"; };
 		A90AD8402BFCD821F3C2A736 /* ScanConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanConfigTests.swift; sourceTree = "<group>"; };
 		ADBD09F877A219B3B3BCA089 /* ComposeWriteBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeWriteBack.swift; sourceTree = "<group>"; };
@@ -181,6 +184,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AABB0044CC55DD66EE77FF88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AABB0033CC44DD55EE66FF77 /* Sentry in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4956B629C0F3210A732B0774 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +268,7 @@
 				9D1C7D831BC38C795BEC0A0E /* AppMode.swift */,
 				C3E29B5FE997CA6EB30A6C20 /* Preferences.swift */,
 				4DFE232451328206FE1561B7 /* SettingsView.swift */,
+				AABB0066CC77DD88EE99FFAA /* TelemetryService.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -418,6 +430,7 @@
 				ABF567A743C20CB8E57B3279 /* Build Rust FFI */,
 				9B36E427A1192D0EACB3D39A /* Sources */,
 				ABDBA9850D9815DE7E954D13 /* Resources */,
+				AABB0044CC55DD66EE77FF88 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -425,6 +438,7 @@
 			);
 			name = Brace;
 			packageProductDependencies = (
+				AABB0022CC33DD44EE55FF66 /* Sentry */,
 			);
 			productName = Brace;
 			productReference = 4415780CB20E7234BECBBE6B /* Brace.app */;
@@ -485,6 +499,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				DF652DFE58116AE610827F42 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+				AABB0011CC22DD33EE44FF55 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0ACA4C0F273F11A85C75C09E /* Products */;
@@ -622,6 +637,7 @@
 				B0D966BC6FAB943401CBAE49 /* ScanViewModel.swift in Sources */,
 				8512457DC0BB01C7D527F844 /* ScannerSidebarView.swift in Sources */,
 				99B0BAAB846DA816A1E799C8 /* SettingsView.swift in Sources */,
+				AABB0055CC66DD77EE88FF99 /* TelemetryService.swift in Sources */,
 				298A291C9028011C7A9AD335 /* SplitViewAutosaver.swift in Sources */,
 				EF8DC67030D708D3056832DE /* StatusBarView.swift in Sources */,
 				219EBF239D5D9B518D5B1A42 /* SuggestionTextField.swift in Sources */,
@@ -952,6 +968,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AABB0011CC22DD33EE44FF55 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.36.0;
+			};
+		};
 		DF652DFE58116AE610827F42 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
@@ -963,6 +987,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AABB0022CC33DD44EE55FF66 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AABB0011CC22DD33EE44FF55 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
 		C4DBEA3FFA2BA4A4C6A3D302 /* SnapshotTesting */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DF652DFE58116AE610827F42 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
